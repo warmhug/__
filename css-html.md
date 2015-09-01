@@ -4,7 +4,7 @@
 
 ## html标签使用注意点
 - [div和span都是作为容器元素](http://www.w3.org/wiki/Generic_containers_-_the_div_and_span_elements)
-- p标签里不能有div（深层div也不能有），会解析错误，也会连环导致其他标签解析错误
+- p标签里不能有块(block)标签，否则<p>标签会提前结束导致解析错误，也会连环导致其他标签解析错误
 - `<select>` is inline by default
 - span标签里可以放几乎任何标签？
 - a标签带href并不为空，按enter键都会触发其上的click事件，否则不会触发！
