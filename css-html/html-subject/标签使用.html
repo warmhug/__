@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+  注意：错误的标签嵌套，会引起解析错误
+  <div class="name">
+    <span class="xx">
+
+      <p> span里可以放p吗？可以 </p>
+      <span><p> span里可以放p吗？可以 </p></span>
+
+      <!-- 因为p标签里放了div，解析出错，导致下边元素解析都有出错！ -->
+      <!-- 
+      <p>
+        <span>
+          <div>p里的div，可以吗？不可以</div>
+        </span>
+      </p>
+      -->
+      
+      <ul>
+        <li>
+          span里可以放ul/li吗？
+        </li>
+        <li>
+          <a href="#">span里的div里可以放a标签吗？不可以，会让div也解析出错</a>
+        </li>
+      </ul>
+    
+      <span>
+        <div>span里的div，可以吗？可以的</div>
+      </span>
+      
+      <a href="#">span里可以放a标签吗？可以</a>
+      <div> <a href="#">span里的div里可以放a标签吗？可以</a> </div>   
+      <span> <a href="#">span里的span里可以放a标签吗？可以</a> </span> 
+
+    </span>
+  </div>
+</body>
+</html>

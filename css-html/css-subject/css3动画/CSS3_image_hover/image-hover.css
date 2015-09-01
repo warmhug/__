@@ -1,0 +1,129 @@
+html{
+	height:100%;
+	margin:0;
+	min-height:100%;
+	padding:0;
+	width:100%;
+}
+body{
+	height:100%;
+	margin:0 auto;
+	min-height:100%;
+	padding:0;
+	width:980px;
+	background-color:#000;
+}
+#container{
+	width:100%;
+	height:97%;	
+	min-height:800px;
+	background-color:#000;
+}
+a{
+color: rgb(0, 114, 191); text-decoration: none;	
+}
+.legal{
+	position:static;
+	bottom:0px;
+	text-align:center;
+	color:#5f5f5f;
+	height:22px;
+}
+a{
+color: rgb(0, 114, 191); text-decoration: none;	
+}
+.lable{
+	font-size:16px;
+	color:#dfdfdf;
+	margin-top:20px;
+	text-align:center;
+	line-height:0.4em;
+}
+.clearfix{
+	clear:both;
+	float:none;
+}
+
+.img{
+	-webkit-transform:scale(0.6);
+	-moz-transform:scale(0.6);
+	-o-transform:scale(0.6);
+	float:left;
+	margin-left:-50px;
+	margin-right:-50px;
+	margin-top:-10px;
+	-webkit-transition-duration: 0.5s;
+	-moz-transition-duration: 0.5s;
+	-o-transition-duration: 0.5s;
+	}
+.img img{
+		padding:10px;
+		border:1px solid #fff;
+}
+.img:hover{
+	-webkit-transform:scale(0.8);
+	-webkit-box-shadow:0px 0px 30px #ccc;
+	-moz-transform:scale(0.8);
+	-moz-box-shadow:0px 0px 30px #ccc;
+	-o-transform:scale(0.8);
+	-o-box-shadow:0px 0px 30px #ccc;
+}	
+.img .mask{
+	width: 100%;
+	background-color: rgb(0, 0, 0);
+	position: absolute;
+	height: 100%; 
+	opacity:0.6;
+	-webkit-transition-duration: 0.5s;
+	-moz-transition-duration: 0.5s;
+	-o-transition-duration: 0.5s;
+}
+#img-1:hover .mask{
+	height:0%;	
+}
+#img-2:hover .mask{
+	width:0%;	
+}
+#img-3:hover .mask{
+	height:0%;	
+	margin-top:130px;
+}
+#img-4:hover .mask{
+	margin-left:219px;
+	margin-top:135px;
+	height:0%;
+	width:0%;
+}
+#img-5 #mask-1 {
+	width:50%;
+}
+#img-5 #mask-2{
+	width:50%;
+	margin-left:211px;
+}
+#img-5:hover #mask-1{
+	width:0%;
+}
+#img-5:hover #mask-2{
+	margin-left:430px;
+	width:0%;
+}
+#img-6:hover .mask{
+	margin-left:219px;
+	margin-top:135px;
+	height:0%;
+	width:0%;
+	-webkit-transform: rotateX(360deg);
+	-moz-transform: rotate(360deg);
+	-o-transform: rotate(-360deg);
+}
+#img-7:hover .mask{
+	margin-left:219px;
+	margin-top:135px;
+	height:0%;
+	width:0%;
+	-webkit-transform: rotateZ(750deg);
+	-moz-transform: rotate(750deg);
+	-o-transform: rotate(750deg);
+}
+

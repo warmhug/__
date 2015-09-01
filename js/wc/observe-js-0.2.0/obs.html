@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+</head>
+<body>
+
+    <script src="src/observe.js"></script>
+    <script>
+        /*
+        *  PathObserver
+        * */
+        var obj = { foo: { bar: 'baz' } };
+        var observer = new PathObserver(obj, 'foo.bar');
+        observer.open(function(newValue, oldValue) {
+          // respond to obj.foo.bar having changed value.
+            console.log(newValue, oldValue)
+        });
+        observer.setValue('boo');
+        observer.setValue('boo1');
+
+
+        //obj.foo.bar = 'zzz';
+
+        //当浏览器不存在 Object.observe() 时
+        Platform.performMicrotaskCheckpoint();
+
+        </script>
+</body>
+</html>

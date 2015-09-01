@@ -1,0 +1,42 @@
+/**
+ *  新增
+ */
+@tenNum: 10;
+@tenPx: 10px;
+.make-padding-margin (@num:0, @val:0) {
+
+    .padding@{num}{ padding: @val; }
+    .padd-l@{num}{  padding-left: @val; }
+    .padd-r@{num}{  padding-right: @val; }
+    .padd-t@{num}{  padding-top: @val; }
+    .padd-b@{num}{  padding-bottom: @val; }
+
+    .margin@{num}{ margin: @val; }
+    .ml@{num}{  margin-left: @val; }
+    .mr@{num}{  margin-right: @val; }
+    .mt@{num}{  margin-top: @val; }
+    .mb@{num}{  margin-bottom: @val; }
+
+}
+.make-padding-margin();
+.make-padding-margin(@tenNum, @tenPx);
+
+/**
+ *  覆盖
+ */
+table {
+    table-layout: fixed;
+}
+
+.radio-inline + .radio-inline,
+.checkbox-inline + .checkbox-inline {
+    margin-left: 0;
+}
+//面包屑
+.breadcrumb {
+  margin-bottom: 0;
+}
+
+/**
+ *  IE8 兼容
+ */

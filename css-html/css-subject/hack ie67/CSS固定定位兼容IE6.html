@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>DIV始终固定在网页右下角位置的CSS实现方法丨芯晴网页特效丨www.CsrCode.cn</title>
+<style>
+body {margin:0; padding:0 10px 0 10px;height:100%;overflow:auto;background:#333;font-size:12px;}
+#wrap{display:block; bottom:0px;
+	right:1px!important;right:18px; width:200px; line-height:30px;
+	position:fixed; border:1px solid #fff; text-align:center;color:#fff; background:#000;}
+*html{overflow-x:auto;overflow-y:auto;} 
+* html #wrap {position:absolute;}
+</style>
+</head>
+<body>
+<!-- 由於ie6不支持position:fixed。所以设计者用了绝对定位把wrap脱离出来位於最上层，
+再把body设定为height拉伸和溢出设定为滚动模式，形成一个用滚动条控制的窗口，
+所以绝对定位wrap也一直保持在bottom:0和right:18px的位置上。当用户拉滚动条，就形成了fixed的效果。 -->
+
+<div style="height:3986px;"></div>
+<div id="wrap">我是不会动的，只有这个地方是属于我的，在你没有更改我的位置之前。<br>
+<a href="http://www.CsrCode.cn">CsrCode.CN</a>丨<a href="http://www.CsrCode.cn">芯晴网页特效</a>丨<a href="http://www.CsrCode.cn">seo优化</a>
+</div>
+</body>
+</html>

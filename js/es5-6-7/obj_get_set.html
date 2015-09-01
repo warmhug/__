@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>obj_get_set</title>
+</head>
+<body>
+    <script>
+    var o = {
+      a: 7,
+      d: 20,
+      get b() { return this.a + 1; },
+      set b(x) { this.a = x / 2; this.d = x / 2 }
+    };
+    console.log(o.a, o.d)
+    console.log(o.b)
+    o.b = 10
+    console.log(o.a, o.d)
+
+
+    function Vehicle(name) {
+      this._name = name;
+    }
+    Object.defineProperty(Vehicle.prototype, 'name', {
+      get: function () {
+        return this._name;
+      },
+      set: function (value) {
+        this._name = value
+      }
+    });
+
+    var o = { a:0 }
+    Object.defineProperties(o, {
+        "b": { get: function () { return this.a + 1; } },
+        "c": { set: function (x) { this.a = x / 2; } }
+    });
+    o.c = 10 // Runs the setter, which assigns 10 / 2 (5) to the 'a' property
+    console.log(o.b) // Runs the getter, which yields a + 1 or 6
+
+    </script>
+</body>
+</html>

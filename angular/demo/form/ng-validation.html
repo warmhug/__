@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body{
+            padding: 10px
+        }
+        .ng-valid 		{  }
+        .ng-invalid 	{  }
+        .ng-pristine 	{  }
+        .ng-dirty 		{  }
+        .ng-invalid-required 		{  }
+        .ng-invalid-minlength 		{  }
+        .ng-valid-max-length 		{  }
+    </style>
+    <script>
+        var app = angular.module('app', []);
+        app.controller('main', ['$scope', function($scope){
+            var ori = {
+                name: '',
+                age: ''
+            };
+            $scope.reset = function () {
+                $scope.user = angular.copy(ori);
+            };
+            $scope.reset();
+
+            $scope.submit = function () {
+                $scope.submitted = true;
+            };
+
+            $scope.log = function () {
+                console.log($scope.user.name );
+            };
+
+        }])
+    </script>
+</head>
+<body ng-app="app" ng-controller="main">
+<div class="container">
+
+    <form name="myForm" class="form-horizontal" role="form"
+          ng-submit="submit()" novalidate>
+
+        <!-- 输入框 + 错误消息  可设置 autofocus 触发blur效果 -->
+        <div class="form-group"
+             ng-class="{ 'has-error' : myForm.userName.$invalid && !myForm.userName.$pristine }">
+            <label class="col-sm-1 control-label">userName</label>
+            <div class="col-sm-4">
+                <input type="text" name="userName" class="form-control"
+                       required 
+                       ng-model="user.name"
+                       ng-minlength="5"
+                       ng-maxlength="10"
+                       ng-pattern="/^[a-z]{4,}$/"
+                       ng-change="log()"
+                       ng-blur="myForm.userName.$setViewValue(myForm.userName.$viewValue)" >
+
+                <span ng-show="!myForm.userName.$pristine && myForm.userName.$error.required"
+                      class="help-block">必填</span>
+                <span ng-show="myForm.userName.$error.pattern"
+                      class="help-block">需要为字母a-z，大于4个</span>
+                <span ng-show="myForm.userName.$error.minlength"
+                      class="help-block">小于最小长度</span>
+                <span ng-show="myForm.userName.$error.maxlength"
+                      class="help-block">超过最大长度</span>
+            </div>
+            <div>错误对象： {{ myForm.userName.$error | json }}</div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-1 control-label">age</label>
+            <div class="col-sm-4">
+                <input ng-model="user.age" ng-if="_show" name="age" class="form-control" 
+                    required placeholder="ss" />
+                <input ng-model="user.age" ng-if="!_show" name="age" class="form-control"  
+                    required placeholder="sss"/>
+
+                <span ng-show="!myForm.age.$pristine && myForm.age.$error.required"
+                      class="help-block">必填</span>       
+            </div>
+            <div class="col-sm-4">
+                <a ng-click="_show=!_show">ng-if切换</a>            
+        </div>
+        
+
+        <div class="form-group">
+            <div class="col-sm-6 col-sm-offset-2">
+                <div class="btn-group pull-right">
+                    <button type="reset" class="btn btn-default"
+                            ng-click="reset()">重置</button>
+                </div>
+                <div class="btn-group pull-right">
+                    <button type="submit" class="btn btn-primary"
+                            ng-disabled="myForm.$invalid">查询</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <script>
+    // audio/video
+    
+    //1）事件：
+    var events = 'loadstart progress suspend abort error emptied stalled play pause loadedmetadata loadeddata waiting playing canplay canplaythrough seeking seeked timeupdate ended ratechange durationchange volumechange'.split(' '),
+    i = events.length;
+    while (i--) {
+        this.audioEle.on(events[i], function (e) {
+            console.log(e.type);
+        });
+    }
+    
+    that.audioEle[0].play();
+    that.audioEle[0].pause();
+    //...
+    
+    //2）注意：
+    that.audioEle.attr('currentTime', parseInt(pos)); // 这样不起作用 ！！
+    that.audioEle[0].currentTime = pos;
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+#! /usr/bin/expect -f
+
+set timeout 30
+set user "admin@partnerprod.d4366aqcn.xx.net"
+set password "password22"
+
+spawn ssh $user
+
+## expect yes/no { send yes\r ; exp_continue }
+
+expect "$user's password:"
+send "$password\n"
+
+send "cd ccbin && ./ccupdate.sh \n"
+
+interact 
+
+## send -- "exit\n"

@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+</head>
+<body>
+
+- undefined 是 window 上的一个属性，但null不是,null是空对象的直接量（null == undefined  null !== undefined）
+- 老浏览器上，window.undefined 是可以覆盖的，但新浏览器，已经做了保护，不允许覆盖，window 上有很多属性覆盖都无效的，是只读的。
+- undefined是不可靠的，可用 void 0 代替：http://shapeshed.com/the-void-of-undefined-in-javascript/
+		```js
+		_.isUndefined = function(obj) {
+		  return obj === void 0;
+		}
+		```
+
+
+	<script>
+		var undefined = 8;
+		(function(window, undefined) {
+			console.log(window.undefined); //8
+			console.log(undefined); //此处undefined参数为局部的名称为undefined变量，值为undefined
+		})(window);
+		/*
+		undefined在老一辈的浏览器是不被支持的，直接使用会报错，js框架要考虑到兼容性，因此增加一个形参undefined。
+		不要用window.undefined传递给形参，有可能window.undefined被其他人修改了，
+		最好就是甚么都不传，形参的undefined就是真正的undefined了。
+		*/
+
+		console.log('undefined' in window); //输出：true
+		var anObj = {};
+		console.log('undefined' in anObj); //输出：false
+
+		console.log(window.undefined === undefined);
+		console.log(window.null === null);
+		console.log(window.null === undefined);
+	</script>
+
+	<script>
+	// Immutable undefined
+	//https://gist.github.com/mzgol/5356300
+	(function ( undefined ) {
+		console.log( '-1: ' + undefined );
+	})( -1 ); // => -1
+
+	(function ( undefined ) {
+		// undefined 作为函数参数，是可变的
+		'use strict';
+		console.log( '1: ' + undefined );
+		undefined = 12345;
+		console.log(typeof undefined);
+	})( 1 ); // => 1
+
+	(function () {
+		undefined = 2;
+		console.log( '2: ' + undefined );
+	})(); // => undefined || 2
+
+	(function () {
+		'use strict';
+		try {
+		undefined = 3;
+		console.log( '3: ' + undefined );
+		} catch (e) {
+		console.log( '3: ' + e );
+		}
+	})(); // => TypeError
+
+	(function () {
+		var undefined = 4;
+		console.log( '4: ' + undefined );
+	})(); // => 4
+
+	(function () {
+		'use strict';
+		var undefined = 5;
+		console.log( '5: ' + undefined );
+	})(); // => 5
+
+	var undefined = 6;
+	(function () {
+		console.log( '6: ' + undefined );
+	})(); // => undefined
+
+	var undefined = 7;
+	(function () {
+		'use strict';
+		console.log( '7: ' + undefined );
+	})(); // => undefined
+	</script>
+
+	<script>
+		/* 偏题 */
+		var s = 'test'; //创建字符串类型变量
+		s.len = 4; //创建包装对象，为包装对象添加属性len
+		//引用完毕，销毁包装对象
+		console.log(s.len); //创建包装对象，查找其len属性，没有找到，返回undefined
+
+		var o = {
+			x: 8,
+			valueOf: function() {
+				return this.x + 2;
+			},
+			toString: function() {
+				return this.x;
+			}
+		};
+		console.log(o + '1'); //"101"
+		console.log(o + 1); //11
+
+
+		/* 比较 */
+		window.localStorage != undefined //undefined默认值为‘undefined’
+		typeof window.localStorage != 'undefined';
+		//完善判断
+		'localStorage' in window && window['localStorage'] != null;
+
+
+		console.log(null == undefined == '' == 0 == 0.0 == -0 == false);
+		console.log(1 == true && 2 == true);
+		console.log(0.1 + 0.2 === 0.3); //false  浮点数精度丢失
+		console.log('a' == new String('a'));
+
+
+
+		/* instanceof，判断对象是否是某个类的实例
+			如果obj instanceof Class返回true，那么Class的原型与obj原型链上的某个原型是同一个对象，
+			但这并不意味着obj拥有Class的所有实例属性(但肯定拥有Class的所有原型属性)。
+		*/
+		console.log(1 instanceof Number);
+		console.log(new Number(1) instanceof Number);
+		//iframe内js对象和父文档js对象是两套
+		console.log(top.a instanceof Array);
+		console.log(top.a instanceof top.Array);
+
+		function t() {};
+		t.prototype = Array.prototype;
+		var x = new t();
+		console.log(x instanceof t); //true
+		console.log(x instanceof Array); //true
+		console.log(x instanceof Object); //true
+
+		/*
+		 */
+		function Person(name) {
+			this.name = name;
+		}
+		var p = new Person('a');
+		console.log(p instanceof Person);
+
+		Person.prototype = {};
+		Person.prototype.constructor = Person;
+		var q = new Person('a');
+
+		console.log(p instanceof Person); //一直为false，因为p的原型链已经指向别处？
+		console.log(q instanceof Person);
+
+	</script>
+
+</body>
+
+</html>

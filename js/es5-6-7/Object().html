@@ -1,0 +1,41 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+</head>
+<body>
+
+    <script>
+        // from es5-shim.js
+        // ES5 9.9
+        // http://es5.github.com/#x9.9
+        var prepareString = "a"[0] != "a";
+        var toObject = function (o) {
+            if (o == null) { // this matches both null and undefined
+                throw new TypeError("can't convert " + o + " to object");
+            }
+            // If the implementation doesn't support by-index access of
+            // string characters (ex. IE < 9), split the string
+            if (prepareString && typeof o == "string" && o) {
+                return o.split("");
+            }
+            return Object(o);
+        };
+
+        console.log(Object('aaa'));
+        console.log(toObject('aaa'));
+
+        var ob = function () { };
+        //ob = [];
+        //ob = {};
+        //ob = undefined;
+        //ob = null;
+        //ob = true;
+        //ob = 'aa';
+        //ob = 3;
+        console.log(typeof ob); 
+        console.log(Object(ob) === ob); 
+    </script>
+</body>
+</html>

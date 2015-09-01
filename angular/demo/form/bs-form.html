@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+<div class="container" >
+
+    <form class="form-horizontal" role="form">
+
+        <!-- 面包屑导航 -->
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >面包屑导航</label>
+            <div class="col-sm-6">
+                <ol class="breadcrumb">
+                  <li><a href="#">Home</a></li>
+                  <li><a href="#">Library</a></li>
+                  <li class="active">Data</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 纯文本显示 -->
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Email</label>
+            <div class="col-sm-6">
+                <p class="form-control-static">email@example.com</p>
+            </div>
+        </div>
+
+        <!-- 输入框 -->
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">name</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="name" placeholder="name">
+            </div>
+        </div>
+
+        <!-- 输入框 -->
+        <div class="form-group">
+            <label for="name1" class="col-sm-2 control-label">password</label>
+            <div class="col-sm-4">
+                <input type="password" class="form-control" id="name1" placeholder="password">
+                <label class="checkbox-inline">
+                    <input type="checkbox" ng-model="" />记住密码
+                </label>
+            </div>
+            <label class="checkbox-inline">
+                <input type="checkbox" ng-model="" />不区分大小写
+            </label>
+        </div>
+
+        <!-- 输入框 + 错误消息 -->
+        <div class="form-group has-feedback has-error">
+            <label for="" class="col-sm-2 control-label">Password</label>
+            <div class="col-sm-4">
+                <input type="password" class="form-control input-sm" id="">
+                <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+            </div>
+            <span class="help-block pull-left">错误消息</span>
+        </div>
+
+        <div class="form-group has-error">
+            <label for="" class="col-sm-2 control-label">userName</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" />
+                <span class="help-block">error</span>
+            </div>
+        </div>
+
+        <!-- input-group-addon -->
+        <div class="form-group">
+            <label for="" class="col-sm-2 control-label">xx</label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <div class="input-group-addon">@</div>
+                    <input class="form-control" type="email" placeholder="Enter email">
+                </div>
+            </div>
+        </div>
+
+        <!-- input + select  -->
+        <div class="form-group">
+            <label for="" class="col-sm-2 control-label">xx</label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                    <input type="text" class="form-control" name="q" />
+                    <div class="input-group-btn">
+                        <select class="btn btn-default" name="">
+                            <option value="0">select1</option>
+                            <option value="1">select2</option>
+                            <option value="2">select3</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- input + dropdown-menu -->
+        <div class="form-group">
+            <label for="" class="col-sm-2 control-label">xx</label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" />
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle"
+                                data-toggle="dropdown">
+                            Inches <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Inches</a></li>
+                            <li><a href="#">Feet</a></li>
+                            <li><a href="#">mm</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- checkbox radio select 组 -->
+        <div class="form-group">
+            <label class="col-sm-2 control-label">checkbox 组</label>
+            <div class="col-sm-6">
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox1" value="option1">
+                    11111111111111111111111111111
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox2" value="option2">
+                    22222222222222222222222222222222222
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox3" value="option3">
+                    3333333333333333333333333333
+                </label>
+            </div>
+
+            <div class="col-sm-6 col-sm-offset-2">
+                <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                    1
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                    2
+                </label>
+            </div>
+
+            <div class="col-sm-6 col-sm-offset-2">
+                <br />
+
+                <select class="form-control">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                </select>
+
+                <br />
+
+                <select multiple class="form-control">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                </select>
+            </div>
+
+            <div class="col-sm-6 col-sm-offset-2">
+                <div class="checkbox disabled"> <!-- 这个样式附到独立标签上 -->
+                    <label>
+                        <input type="checkbox" value="" disabled>
+                        Option two is disabled
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-6 col-sm-offset-2">
+                <div class="btn-group pull-right">
+                    <button class="btn btn-default" type="reset">重置</button>
+                </div>
+                <div class="btn-group pull-right mr10">
+                    <button class="btn btn-primary" type="submit">查询</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-6 col-sm-offset-2">
+                <p class="center-block" style="width: 300px;">
+                  <button type="button" class="btn btn-primary btn-lg">Large button</button>
+                  <button type="button" class="btn btn-default btn-lg">Large button</button>
+                </p>
+            </div>
+        </div>
+
+    </form>
+</div>
+</body>
+</html>

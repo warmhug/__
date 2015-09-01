@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>combo select</title>
+    <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular-sanitize.min.js"></script>
+    <script src="buttons.js"></script>
+    <!-- combo-select -->
+    <script src="combo-select.js"></script>
+    <link rel="stylesheet" href="combo-select.css" />
+</head>
+<body>
+    <div ng-controller="mainCtrl" class="container">
+        <combo-select left-list-data="leftList"
+                      right-list-data="rightList"
+                      item-check-key-name="check"
+                      item-value="val"
+                      html="1"
+                      move="0"
+                      ></combo-select>
+        <!-- 可通过script template修改覆盖原来的模板 -->
+        <!--<script type="text/ng-template" id="template/combo-select/combo-select.tpl.html">-->
+            <!--<div>ddddd</div>-->
+        <!--</script>-->
+    </div>
+
+    <script>
+        var app = angular.module('demo', ['ngSanitize', 'ui.bootstrap.buttons', 'combo-select']);
+        app.controller('mainCtrl', ['$scope', function ($scope) {
+            $scope.leftList = [
+                { check: false, val: '这是combo-select业务场景包装' },
+                { check: false, val: '支持多选' },
+                { check: false, val: '<span style="color:red">支持自定义html</span>' },
+                { check: false, val: '支持移动配置' },
+                { check: false, val: '数据key名不限制' },
+                { check: false, val: '样式自定义' },
+                { check: false, val: '模板自定义' },
+                { check: true, val: '依赖ui bootstrap btnCheckbox' }
+            ];
+            $scope.rightList = [
+                { check: false, val: 'right' }
+            ];
+
+        }]);
+
+        //手动启动
+        angular.element(document).ready(function () {
+            angular.bootstrap(document, ['demo']);
+        })
+    </script>
+</body>
+</html>

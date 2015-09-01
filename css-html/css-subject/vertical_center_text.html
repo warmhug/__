@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>文字垂直居中</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta name="format-detection" content="telephone=no" />
+	
+	<style>
+	  ul,li{list-style:none;}
+	</style>
+
+</head>
+<body>
+	
+	<pre>
+	    1、单行文本 - 容器定高（line-height ）：
+	    div { 
+            height:25px; 
+            line-height:25px; 
+            overflow:hidden; 
+        } 
+
+        2、多行文本 - 容器不定高（display:table-cell）：
+        div.parent{
+            height:100px; 
+            display:table; 
+        }
+        div.text{
+            display:table-cell; 
+            vertical-align:middle; 
+        }
+
+        3、多行文本 - 绝对定位
+        div{
+	        position:absolute;
+	        top:50%;
+	        margin-top: -自身高度/2; 
+        }
+
+        4、多行文本 - 绝对定位
+        div{
+	        position:absolute;
+	        top:0; bottom:0;
+	        left:0; right:0;
+	        margin:auto;
+	        height:240px;
+	        width:70%;
+        }
+
+        5、多行文本 - 伪元素
+        .parent{
+              height:200px;
+              width:300px;
+              background:pink;
+              margin:30px auto;
+              font-size:0;
+        }
+        .parent:before{
+              content: '????????';
+              display: inline-block;
+              vertical-align: middle;
+              width: 0;
+              height: 100%;
+        }
+        .text{
+              display: inline-block;
+              font-size:16px;
+              vertical-align: middle;/* ???????? */
+        }
+	</pre>
+
+	
+</body>
+</html>

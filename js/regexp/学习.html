@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <script>
+        /**
+         *  元字符  ( [ { / ^ $ | ) ? * + .
+         *  预定义字符  \t \n \r . \d \D \w
+         *  要对它们进行转义
+         */
+        console.log( 'S89(KKK,L)'.test(/S\d+[\(]\w+,\w+\)/g) );
+
+        /**
+         *  "\b" 与 "^" 和 "$" 类似，本身不匹配任何字符，但是它要求它在匹配结果中所处位置的左右两边，
+         *  其中一边是 "\w" 范围，另一边是 非"\w" 的范围。
+         */
+        var re2 = /\bend\b/;
+        var str2 = "weekend , endFor , end";
+        console.log(re2.test(str2));  // 匹配到的内容是："end"；匹配到的位置是：开始于15，结束于18。
+
+        /**
+         * 加不加括号的区别
+         */
+        console.log( /^a|bc$/.exec("add") ); //匹配开始位置的a或结束位置的bc
+        console.log( /^(a|bc)$/.exec("bc") ); //匹配a或bc
+
+        /**
+         *  非捕获分组 ?:
+         */
+        console.log( /(abc){2}/.exec("abcabc ###") );
+        console.log( /(?:abc){2}/.exec("abcabc ###") );
+
+        /**
+         *  反向引用
+         *  反向引用被存储在RegExp对象的静态属性$1―$9中
+         *  反向引用也可以在正则表达式中使用\1 ,\2...这类的形式
+         */
+        console.log( /(A?(B?(C?)))/.exec("ABC") );
+        console.log( RegExp.$1 + "\n" + RegExp.$2 + "\n" + RegExp.$3 );
+        console.log( "1234 5678".replace(/(\d)\s(\d)/, "$2 $1") );
+        // \1 \2 形式
+        console.log( /\d+(\D)\d+\1\d+/.exec("2008-1-1") );
+        console.log( /(\w)(\w)\2\1/.exec("woow") );
+        console.log( /(\w)\1{4,}/.exec("aa bbbb ccccc 999999999") );
+
+        /**
+         *  多行匹配
+         */
+        console.log( "ab\ncdef".replace(/[a-z]$/g, '#') );
+        console.log( "ab\ncdef".replace(/[a-z]$/gm, '#') );
+
+        /**
+         *  正向前瞻(?=)，用来捕获出现在特定字符之前的字符,只有当字符后面跟着某个特定字符才去捕获它。
+         *  负向前瞻(?!)，用来匹配只有当字符后面不跟着某个特定字符时才去匹配它。
+         */
+        var re = /([a-z]+(?=\d))/i;
+        console.log( re.test("abc every1 abc") ); //true
+        console.log( RegExp.$1 ); //every，不返回数字
+        console.log( re.lastIndex ); //使用前瞻的好处是,前瞻的内容(?=\d)并不会当成一次匹配，下次匹配仍从它开始
+        //负向前瞻
+        re = /([a-z](?!\d))/i;
+        console.log( re.test("abc1 one") );
+        console.log( RegExp.$1 ); //one
+    </script>
+    <script>
+        /**
+         * new RegExp使用
+         */
+        var str = 'aaa-bb', bb = 'bb';
+        if (/(a+)/.test(str)) {
+            str = str.replace(RegExp.$1, 'cc');
+        }
+        if (new RegExp('(' + bb + ')').test(str)) {
+            str = str.replace(RegExp.$1, 'dd');
+        }
+        console.log(str);
+        /**
+         *  search方法，无需在search时用g标识。
+         */
+        console.log( 'my age is 180 year old'.search(/\d+/) );
+    </script>
+
+
+</body>
+</html>

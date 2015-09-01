@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>strict_mode</title>
+</head>
+<body>
+	最好在函数中使用 "use strict"; 不要在全局中使用
+    <script>
+        // 防止意外的全局变量（Prevents accidental globals）
+		// 严格模式中抛出一个错误
+		(function() {
+			//"use strict";
+		    someUndeclaredVar = "foo";
+		}());
+		
+		
+		
+		//取消this值的强制转换（Eliminates this coercion）
+		window.color = "red";
+		function sayColor() {
+		    // 严格模式下，this不会指向window
+		    "use strict";
+		    alert(this.color);
+		    console.log(arguments);
+		}
+		
+		sayColor.call(window);
+		sayColor.call(undefined);
+		
+		// 以下两种情况，在严格模式下都抛出错误
+		sayColor();
+		sayColor.call(null);
+		
+		
+		//根本而言，this值必须赋值，否则将保留undefined值。这意味着调用构造函数时若漏掉了new关键字也会导致错误：
+		function Person(name) {
+		    this.name = name;
+		}
+		// 严格模式下导致错误
+		var me = Person("Nicholas");
+		//在这段代码里，调用Person构造函数时缺少了new关键字，此时this值为undefined。由于你不能给undefined添加属性，这段代码抛出了一个错误。在非严格模式下，this会强制转换为全局对象，因此name属性能够被正确赋值为全局变量。
+    </script>
+</body>
+</html>

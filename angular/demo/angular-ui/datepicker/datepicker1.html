@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="https://a.alipayobjects.com/knight/bizdev/2.0.4/bizdev.css" rel="stylesheet" />
+    <script src="https://a.alipayobjects.com/laputa/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://a.alipayobjects.com/laputa/angularjs/1.2.16/angular.min.js"></script>
+    <!--  -->
+    <script src="datepicker-tpls.js"></script>
+    <script src="angular-locale_zh-cn.js"></script>
+</head>
+<body ng-app="app">
+    <div ng-controller="DatepickerDemoCtrl">
+        <div class="row">
+            <div class="col-md-6">
+                <p class="input-group">
+                  <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <script>
+        angular.module('app', ['ui.bootstrap']);
+        var DatepickerDemoCtrl = function ($scope) {
+  $scope.today = function() {
+    $scope.dt = new Date();
+  };
+  $scope.today();
+
+  $scope.clear = function () {
+    $scope.dt = null;
+  };
+
+  // Disable weekend selection
+  $scope.disabled = function(date, mode) {
+    return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+  };
+
+  $scope.toggleMin = function() {
+    $scope.minDate = $scope.minDate ? null : new Date();
+  };
+  $scope.toggleMin();
+
+  $scope.open = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    $scope.opened = true;
+  };
+
+  $scope.dateOptions = {
+    formatYear: 'yy',
+    startingDay: 1
+  };
+
+  $scope.initDate = new Date('2016-15-20');
+  $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+  $scope.format = $scope.formats[0];
+};
+    </script>
+</body>
+</html>

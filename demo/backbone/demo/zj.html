@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>view</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="http://underscorejs.org/underscore.js"></script>
+    <script src="http://documentcloud.github.io/backbone/backbone.js"></script>
+</head>
+<body>
+    <div id="main"></div>
+
+    <script>
+    //Generic code starting our view when document is ready http://api.jquery.com/ready/
+    $(function(){
+        var Item = Backbone.Model.extend({
+            initialize: function () {
+                console.log('model init function')
+            },
+            defaults: function () {
+                return {
+                    'id': 11,
+                    'name': 'jack',
+                    'color': '#fff'
+                }
+            }
+        })
+        // set get �ֶ�
+        var it = new Item({ spe: 'spe attr' })
+        it.set('sex', 'male')
+        it.set({ title: 'aaa', age: 25 })
+        console.log(it.get('sex'))
+        console.log(it.get('spe'))
+        it.on('change:name', function (model, name) {
+            alert("Changed name from " + it.previous("name") + " to " + name);
+        })
+        it.on("change", function() {
+            if (it.hasChanged("title")) {
+                alert(it.get('title'))
+            }
+        })
+        it.set('name', 'lucy', { silent: true })
+        it.set('name', 'lucy1')
+        it.set('title', 'tttitle')
+
+
+        var List = Backbone.Collection.extend({
+            model: Item,
+            url: './data.json',
+            initialize: function () {
+                console.log('collection init function')
+            },
+            custom:function () {
+                console.log('this is the custom funs')
+            },
+            //fetch: function () {
+            //    console.log('fecth data...')
+            //},
+            reset: function () {
+                this.custom()
+            },
+            parse: function () {
+                console.log('this is parse function,it will exec when finish fetching data')
+            }
+        })
+        var list = new List()
+        // add remove ģ��
+        var it1 = new Item({ id: 'it1' })
+        var it2 = new Item({ id: 'it2' })
+        var it3 = new Item({ id: 'it3' })
+        list.add(it1)
+        list.add(it2)
+        list.add(it3)
+        console.log(list)
+        console.log(list.get('it1'))
+        console.log(list.at(1))
+        console.log(list.models)
+        list.remove(it3)
+        console.log(list.models)
+        list.each(function (item) {
+            console.log(item.get('id'))
+        })
+        // fetch data
+        var resetfn = function () {
+            console.log('resetfn will exec...')
+        }
+        list.on('reset', resetfn, list)
+        list.fetch()
+        list.reset()
+        console.log(list.models)
+       
+      })
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>test</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <script src="./hogan-template.js"></script> 
+    <!--<script src="./hogan-2.0.0.js"></script>--> 
+    
+    <script src="./tpls/tpls.js"></script>
+
+</head>
+<body>
+    <div id="output"></div>
+    
+    
+    <script>
+    var data = {
+        list: [
+                {
+                    title: '标题',
+                    inlist: [
+                        {
+                            txt: '内容',
+                            url: 'http://m.taobao.com'
+                        },
+                        {
+                            txt: '内容',
+                            url: 'http://m.taobao.com'
+                        }
+                    ]
+                },
+                {
+                    title: '标题',
+                    inlist: [
+                        {
+                            txt: '内容',
+                            url: 'http://m.taobao.com'
+                        },
+                        {
+                            txt: '内容',
+                            url: 'http://m.taobao.com'
+                        }
+                    ]
+                }
+            ]
+    };
+    
+    //document.getElementById('output').innerHTML = templates.tpl.render(data, { partial: partial });
+    
+    //var tpl = document.getElementById('tpl').innerHTML;
+    //var partial = document.getElementById('partial').innerHTML;
+    //var compile = Hogan.compile(tpl);
+    //document.getElementById('output').innerHTML = compile.render(data, { partial: partial });
+
+
+    document.getElementById('output').innerHTML = templates.tpl.render(data, { partial_tpl: templates.partial_tpl });
+    
+
+    </script>
+</body>
+</html>

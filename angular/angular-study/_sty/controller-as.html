@@ -1,0 +1,30 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+</head>
+<body ng-controller="Ctrl as main">
+    {{ main.title }}
+    <div class="container" ng-controller="another as an">
+        {{ an.title }}
+        <div class="row" ng-controller="yetAnother as yet">
+            {{ yet.title }}
+        </div>
+    </div>
+    <!--  -->
+    <script>
+        var app = angular.module('app', []);
+        app.controller('Ctrl', ['$scope', function ($scope) {
+            this.title = 'Some title';
+        }]);
+        app.controller('another', function () {
+            this.title = 'another title'
+        });
+        app.controller('yetAnother', function () {
+            this.title = 'yet another title'
+        })
+
+
+    </script>
+</body>
+</html>

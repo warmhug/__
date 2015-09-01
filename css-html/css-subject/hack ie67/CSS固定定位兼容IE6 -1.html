@@ -1,0 +1,60 @@
+<!DOCTYPE >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>IE6 position:fixed bug</title>
+<style>
+* {
+	padding:0;
+	margin:0;
+}
+#rightform {
+	text-align:center;
+	padding:50px;
+	font:14px/22px Georgia, "Times New Roman", Times, serif;
+	height:1200px;
+	background:#ffc;
+}
+#rightform h1 {
+	font-family:arial;
+	background:#e8edef;
+	height:300px;
+	line-height:300px;
+	margin-bottom:200px;
+}
+#rightform p {
+	line-height:1.5em;
+	background:#ffdfff;
+	padding:90px 0;
+}
+#rightform form {
+	background-color:#ddd;
+	padding:10px 20px;
+	border:1px solid #aaa;
+	position:fixed;
+	right:30px;
+	top:120px;
+}
+</style>
+<!--[if IE 6]>
+<style type="text/css">
+	html{overflow:hidden;}
+	body{height:100%;overflow:auto;}
+	#rightform form{position:absolute;}
+</style>
+<![endif]-->
+</head>
+<body>
+<div id="rightform">
+  <h1>
+  <a href="" title="IE6 position:fixed bug" rel="bookmark">IE6 position:fixed bug</a>
+  </h2>
+  <p>position:fixed; vs position:absolute;<br />
+    Created by <a href="http://blog.happinesz.cn/" title="sofish">sofish</a> from <a href="http://www.happinesz.cn/" title="blog">–“∏£ ’≤ÿº–</a></p>
+  <form id="g_search" method="get" action="#">
+    <input id="g_s" name="g_s" type="text" value=""  />
+    <input id="g_submit" name="g_submit" type="button" value="search" />
+  </form>
+</div>
+</body>
+</html>

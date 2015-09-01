@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ng-app="views-directive">
+<head>
+    <script src="//cdn.jsdelivr.net/underscorejs/1.5.1/underscore-min.js"></script>
+    <script src="http://cdn.staticfile.org/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.9/angular.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.9/angular-animate.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+</head>
+<body>
+    <h1>AngularJS Directives Example</h1>
+    <views>
+        <view name="show" initial>
+            <p>Hi, {{ user.name }}</p>
+            <button view-target="edit">
+                Edit
+            </button>
+        </view>
+        <view name="edit">
+            <p>
+                <input ng-model="user.name" />
+            </p>
+            <button view-target="show">
+                Done
+            </button>
+        </view>
+    </views>
+</body>
+</html>

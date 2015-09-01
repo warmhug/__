@@ -1,0 +1,27 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+</head>
+<body>
+    <div ng-controller="Ctrl">
+        普通method函数-执行两次，{{ method() }}
+        {{ count }} -- {{ xxx() }}抛错
+        <!-- {{ xxx() }} -- {{ count }} 抛错 -->
+    </div>
+
+    <script>
+        var app = angular.module('app', []);
+        app.controller('Ctrl', ['$scope', function ($scope) {
+            $scope.method = function () {
+                console.log('跑两次')
+            };
+            $scope.count = 0;
+            $scope.xxx = function () {
+                console.log('如果xxx()和count同时放到view中，会一直触发digest，报错');
+                $scope.count++;
+            }
+        }]);
+    </script>
+</body>
+</html>

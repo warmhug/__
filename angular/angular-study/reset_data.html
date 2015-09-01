@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+</head>
+<body ng-app="app" ng-controller="main">
+<p>{{ obj.key }} -- watch运行了：{{ count }} 次</p>
+
+<com opt="options"></com>
+<button ng-click="resetObj()">重置后，watch的变化</button>
+
+<script type="text/ng-template" id="component">
+    <button ng-click="modifyObj()">改变obj对象</button>
+</script>
+
+<script>alert(11)
+    angular.module('component', []).directive('com', ['$compile', '$templateCache', function ($compile, $templateCache) {
+        return {
+            restrict: 'EA',
+            scope: true,
+            templateUrl: 'component',
+            replace: true,
+            link: function(scope, element, attrs) {
+                console.log( $templateCache.get('component') );
+
+                var opt = scope.$eval(attrs.opt);
+
+                scope.obj = opt.obj;
+                scope.modifyObj = function () {
+                    scope.obj.key = Math.random()
+                };
+            }
+        }
+    }]);
+    
+
+    var app = angular.module('app', ['component']);
+    app.controller('main', [
+        '$scope', function ($scope) {
+            $scope.obj = {
+                key: 'val',
+                key1: 'val1'
+            }
+
+            $scope.options = {
+                obj: $scope.obj
+            }
+
+            function reset() {
+                // 要这样做
+                $scope.obj.key = 'val'
+                $scope.obj.key1 = 'val1'
+
+                // 不能这样，因为会重置 $watch 的对象指向，导致watch不起作用
+                $scope.obj = {
+                    key: 'val',
+                    key1: 'val1'
+                }
+            }
+
+            //当对 obj 有 $watch 监听时
+            $scope.count = 0;
+            $scope.$watch('obj', function (newVal, oldVal) {
+                console.log('x');
+                $scope.count++;
+            }, true);
+
+            $scope.$watch('options.obj', function (newVal, oldVal) {
+                console.log( newVal );
+            }, true);
+
+            $scope.resetObj = function () {
+                reset()
+            }
+        }
+    ])
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+/**
+ *
+ */
+.container {
+  margin: 20px auto;
+}
+.setWidth {
+  max-width: 100px;
+}
+.ellipsis div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: inherit;
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <!-- 覆盖了bootstrap.css -->
+  <link href="./css/fc.css" rel="stylesheet" />
+  <link href="./css/main.css" rel="stylesheet" />
+  <!-- assets -->
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.js"></script>
+  <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular-animate.min.js"></script>
+  <script src="http://cdn.staticfile.org/angular-ui-router/0.2.11/angular-ui-router.js"></script>
+
+  <script src="./js/router.js"></script>
+  <script src="./js/main.js"></script>
+</head>
+<body ng-app="app">
+
+<header class="navbar navbar-default navbar-static-top fc-header" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">
+        <!--<span class="logo-icon"></span>-->
+        <span class="logo-name" style="margin-left: 50px">col</span>
+      </a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li ng-class="{active: $state.includes('demo')}">
+          <a ui-sref="demo">demo</a>
+        </li>
+        <li ng-class="{active: $state.includes('components')}">
+          <a ui-sref="components">components</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<div id="container" class="container">
+  <div ui-view class="am-fade"></div>
+
+</div>
+
+<footer>
+<p class="text-center text-muted">© Copyright 2014 The Awesome People</p>
+</footer>
+</body>
+</html>

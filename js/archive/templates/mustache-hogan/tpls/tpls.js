@@ -1,0 +1,3 @@
+var templates = {};
+templates.partial_tpl = new Hogan.Template(function(c,p,i){var _=this;_.b(i=i||"");if(_.s(_.f("inlist",c,p,1),c,p,0,11,58,"{{ }}")){_.rs(c,p,function(c,p,_){_.b("        <a href=\"");_.b(_.v(_.f("url",c,p,0)));_.b("\">");_.b(_.v(_.f("txt",c,p,0)));_.b("</a>");_.b("\n");});c.pop();}return _.fl();;});
+templates.tpl = new Hogan.Template(function(c,p,i){var _=this;_.b(i=i||"");if(_.s(_.f("list",c,p,1),c,p,0,9,75,"{{ }}")){_.rs(c,p,function(c,p,_){_.b("        <p>");_.b(_.v(_.f("title",c,p,0)));_.b("</p>");_.b("\n" + i);_.b("        <div>");_.b(_.rp("partial_tpl",c,p,""));_.b("</div>");_.b("\n");});c.pop();}return _.fl();;});

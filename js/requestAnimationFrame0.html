@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title></title>
+</head>
+<body>
+
+<div id="SomeElementYouWantToAnimate" style="position: relative; width:30px; height: 50px; background-color: #ccc;"></div>
+
+<script>
+var start = null;
+var element = document.getElementById("SomeElementYouWantToAnimate");
+var lastTime = 0;
+
+function step(timestamp) {
+
+  if (!start) start = timestamp;
+
+  var timeout = timestamp - lastTime;
+  lastTime = timestamp;
+
+  console.log( timestamp, start, timeout );
+
+  var progress = timestamp - start;
+  element.style.left = Math.min(progress/10, 200) + "px";
+  if (progress < 2000) {
+    window.requestAnimationFrame(step);
+  }
+}
+
+window.requestAnimationFrame(step);
+</script>
+</body>
+</html>

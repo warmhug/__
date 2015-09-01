@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+</head>
+<body>
+
+	<script>
+		/**
+       JavaScript中的函数运行在它们被定义的作用域里,而不是它们被执行(调用)的作用域里。
+        js引擎不是一行行执行，而是一段段（不同Script标签为不同段落）的分析执行，不同scrip里的相同函数定义互不影响。
+
+			函数作用域链：
+			函数每次调用时都会产生一个子作用域，退出函数时，这个子作用域消失，下次调用相同函数时，又是另一个子作用域了。
+			在运行的函数内再调用另外的函数时，又产生另一个作用域，随着函数调用的深入，就形成“作用域链”，
+			递归调用时，作用域链会变得很长。
+    */
+	</script>
+
+	<script>
+		/*
+		 *   匿名函数
+		 *   http://www.cnblogs.com/TomXu/archive/2011/12/31/2289423.html
+		 *   http://dmitrysoshnikov.com/ecmascript/chapter-5-functions/#question-about-surrounding-parentheses
+		 */
+		var foo = function() {
+			alert(1)
+		}();
+
+		// ()里边语句为函数表达式
+		(function() {
+			alert(11)
+		}());
+
+		(function() {
+			alert(888)
+		})();
+
+		//！后边语句也要为表达式
+		! function() {
+			alert(112)
+		}();
+	</script>
+
+	<script>
+		/* function bind */
+		var F = (function() { // arrayObj.slice(start, [end]) 返回一个数组的一段,参数开始索引和结束索引，结束索引可以省略.
+			var slice = Array.prototype.slice; // 这种调用slice方法，非常高效。
+			return {
+				bind: function(fun, thisp) {
+					var args = slice.call(arguments, 2); // 将arguments转换为数组对象
+					return function() { //在JS/Dom编程中，最常见的“类数组对象”就是function的arguments对象和dom集合。
+						return fun.apply(thisp, args.concat(slice.call(arguments))); // 此处arguments指代本函数内实参！！！
+					} // Array.prototype.slice.call只能将arguments转换为数组，但是对dom集合却不可以
+				}
+			};
+		})();
+		var x = F.bind(function(x, y) {
+			return x + y
+		}, null, 3)
+		alert(x(4));
+		alert(x(-4));
+
+
+		/**
+		    function的 call与bind
+		*/
+		// call是Function的实例方法还是静态方法？
+		console.log(Function.call === Function.prototype.call);
+		console.log(typeof Function.prototype); //function
+		console.log(Function.prototype === Function.__proto__);
+
+		var slice = Function.prototype.call.bind(Array.prototype.slice);
+		console.log(slice([1, 2, 3], 1)); //注意，不用call调用
+
+		slice = Array.prototype.slice;
+		console.log(slice.call([1, 2, 3], 1)); //需要call
+
+		slice = [].slice;
+		console.log(slice.call([1, 2, 3], 1));
+
+		slice = Array.prototype.slice.call;
+		console.log(slice([1, 2, 3], 1)); //TypeError: object is not a function.
+		//这里抛出异常，指出slice是个对象？不是函数方法。call方法不能再用其他变量引用？？
+		//call需要this参数指向需要调用的函数?这里是参数是空的，所以this引用了window对象而抛错？？
+	</script>
+
+	<script>
+		/**
+      闭包及应用
+      闭包利用的是“高阶函数”的特性：函数可以作为参数或者返回值。
+	  */
+		var fn = function(i) {
+			return function() {
+				console.log(i++);
+			}
+		};
+		var fun = fn(2);
+		fun();
+		fun();
+
+		var bar = function() {
+			var local = "locar var";
+			return function() {
+				return local;
+			}
+		};
+		var baz = bar();
+		console.log(baz());
+		//一般说，在bar函数执行完毕后，局部变量local会随着作用于销毁而被垃圾回收，但这里返回了一个匿名函数，且里边有访问local变量
+		//所有local变量不会被销毁，因为被变量baz引用，返回的匿名函数不会被垃圾回收，那local变量所在的bar函数是否被垃圾回收了呢？
+
+
+		function test1() { //通过闭包，每次能传入不同的j值。
+			for (var j = 0; j < 3; j++) {
+				(function(j) {
+					setTimeout(function() {
+						alert(j)
+					}, 3000);
+				})(j);
+			}
+		}
+		test1();
+		(function() {
+			for (var i = 1; i < 4; i++) {
+				document.getElementById("b" + i).attachEvent("onclick",
+					new Function('alert("This is button' + i + '");')); // 只可在IE中测试
+			}
+		})();
+		/* 这个问题出现在论坛里，有很多争议
+		有说是new Function动态生成个闭包结构的函数，所以能保存外部变量。
+		有说是跟闭包无关，new Function，就是新定义了一个function，i的值也作为这个新的function的参数固化在其内部了。
+		*/
+	</script>
+</body>
+
+</html>

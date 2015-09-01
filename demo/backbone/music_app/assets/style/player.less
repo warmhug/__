@@ -1,0 +1,119 @@
+
+.player{
+	position: relative;
+    margin: 50px 20px;
+
+	width: 300px;
+	height: 60px;
+	border: 1px solid #999;
+	-webkit-border-radius: 3px;
+	font-size: 14px;
+    background: #ddd;
+
+    .lrc{
+        position: relative;
+        height: 75px;
+        overflow: hidden;
+        text-align: center;
+        background: #cccc99;
+        color: rgba(0,0,0,.5);
+        .lrc-text{
+            position: absolute;
+            left: 0;
+            top: 30px;
+            width: 100%;
+            -webkit-transition:top 0.5s ease-out;
+            p{
+                height: 25px;
+                line-height: 25px;
+                &.cur{
+                    color: rgba(0,0,0,1);
+                }
+            }
+        }
+    }
+
+	.info{
+		height: 25px;
+		line-height: 25px;
+		.name{
+			padding-left:10px;
+			color: blue;
+		}
+		.lrc-btn{
+            border: 1px solid #ccc;
+            padding: 1px 6px;
+            margin-left: 50px;
+            font-size: 12px;
+		}
+	}
+	.ctrl{
+		height: 32px;
+		background: #eee;
+		padding-top: 3px;
+
+		>span{
+			vertical-align: top;
+			display: inline-block;
+			padding-top: 5px;
+		}
+
+		.play::before, .play::after, .pause::before, .pause::after{
+			content: " ";
+			position: absolute;
+			left: 5px;
+			top: 5px;
+			
+		}
+		.play::before, .pause::before{
+			width: 16px;
+			height: 16px;
+			-webkit-border-radius: 16px;	
+			background: #C55500;	
+		}
+		.play{
+			&:after{
+				left: 12px;
+				top: 9px;
+				border: 4px solid transparent;
+				border-left-color: white;
+				background: transparent;
+			}
+		}
+		.pause{
+			&:after{
+				left: 10px;
+				top: 9px;
+				width: 2px;
+				height: 8px;
+				border: 2px solid white;
+				border-width: 0 2px;
+				background: transparent;
+			}
+		}
+		.c-btn{
+			position: relative;
+			width: 28px;
+			height: 26px;
+		}
+		.proBar{
+			position: relative;
+			margin: 3px 0;
+			width: 218px;
+			height: 16px;
+			border: 1px solid #ccc;
+			b{
+				display: inline-block;
+				position: absolute;
+				top: -3px;
+				left: 0;
+				width: 3px;
+				height: 28px;
+				background: #333;
+			}
+		}
+        .time{
+            padding-left: 2px;
+        }
+	}
+}

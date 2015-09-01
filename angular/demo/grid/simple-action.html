@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css" />
+    <link href="grid.css" rel="stylesheet" />
+</head>
+<body ng-app="app" ng-controller="main">
+<div class="container">
+    <table class="table table-bordered table-striped table-hover">
+        <col width="10%" />
+        <col width="20%" />
+        <col width="50%" />
+        <col width="20%" />
+        <thead>
+            <tr>
+                <th colspan="4">
+                    <a class="btn btn-default btn-sm" ng-click="addRow()" role="button">+添加行</a>
+                    <a class="btn btn-default btn-xs" href="#" role="button">添加列</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>排序</td>
+                <td>碎片id</td>
+                <td>碎片内容</td>
+                <td>操作</td>
+            </tr>
+            <tr ng-repeat="item in appData.list">
+                <td>{{ item.order }}</td>
+                <td><a href="">{{ item.id }}</a></td>
+                <td>{{ item.content }}</td>
+                <td>
+                    <a ng-click="edit($index)">编辑</a>
+                    <a ng-click="del($index)">删除</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+var app = angular.module('app', []);
+app.controller('main', ['$scope', function($scope){
+    $scope.appData = {
+        list: [
+            {order:1, id: 1, content: 'xxxx'},
+            {order:1, id: 1, content: 'xxxx'},
+            {order:1, id: 1, content: 'xxxx'}
+        ]
+    };
+    $scope.addRow = function () {
+        $scope.appData.list.push({order:1, id: 1, content: 'xxxx'});
+    };
+
+    $scope.edit = function (index) {
+        alert('编辑第：' + index + '行');
+    };
+    $scope.del = function (index) {
+        $scope.appData.list.splice(index, 1);
+    };
+
+}]);
+</script>
+</body>
+</html>

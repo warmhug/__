@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>nest-directives</title>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+</head>
+<body ng-app="myApp">
+
+	<div ng-controller="MyCtrl">Selected: {{itemselected}}
+		<navtree items="organizations.children" itemselected="itemselected"></navtree>
+	</div>
+    
+    <script>
+        var app = angular.module('myApp', []);
+
+        app.factory('dataService', function () {
+            return {
+                "_id": "SEC Power Generation",
+                "descendants": ["Eastern Conf Business Unit", "Sewanee"],
+                children: [
+                    {
+                        "_id": "Eastern Conf Business Unit",
+                        "parent": "SEC Power Generation",
+                        "descendants": ["Nashville"],
+                        children: [
+                            {
+                                "_id": "Nashville",
+                                "parent": "Eastern Conf Business Unit"
+                            }
+                        ]
+                    },
+                    {
+                        "_id": "Sewanee",
+                        "parent": "SEC Power Generation"
+                    }
+                ]
+            }
+        });
+        app.controller('MyCtrl', function ($scope, dataService) {
+            $scope.itemselected = "Nonen";
+            $scope.organizations = dataService;
+            this.setSelected = function (ID) {
+                $scope.itemselected = ID;
+            }
+        })
+
+        app.directive('navtree', function () {
+            return {
+                template: '<ul><navtree-node ng-repeat="item in items" item="item" itemselected="itemselected"></navtree-node></ul>',
+                restrict: 'E',
+                replace: true,
+                scope: {
+                    items: '=',
+                    itemselected: "="
+                }
+            };
+        });
+
+
+        app.directive('navtreeNode', function ($compile) {
+            return {
+                restrict: 'E',
+                template: '<li><a ng-click="itemSelect(item._id)">{{item._id}} - {{itemselected}}</a></li>',
+                require: "^ngController",
+                scope: {
+                    item: "=",
+                    itemselected: "="
+                },
+                link: function (scope, elm, attrs, myGreatParentControler) {
+                    if ((angular.isDefined(scope.item.children)) && (scope.item.children.length > 0)) {
+                        var children = $compile('<navtree items="item.children"></navtree>')(scope);
+                        elm.append(children);
+                    }
+                    scope.itemSelect = function (id) {
+                        myGreatParentControler.setSelected(id)
+                    }
+                }
+            };
+        });
+    </script>
+
+    <!-- from http://stackoverflow.com/questions/15388922/how-to-properly-bind-scope-between-directive-and-controller-with-angularjs -->
+</body>
+</html>

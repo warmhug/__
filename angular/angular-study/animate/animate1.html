@@ -1,0 +1,123 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <title>myApp</title>
+    <!--  -->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" />
+    <script src="http://cdn.staticfile.org/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular-animate.js"></script>
+    <style>
+        .animate-repeat{
+            width: 100px;
+            border: 1px solid #ddd;
+        }
+
+        .animate-repeat.ng-move,
+        .animate-repeat.ng-enter,
+        .animate-repeat.ng-leave {
+            -webkit-transition: all linear 2s;
+            transition: all linear 2s;
+        }
+
+        .animate-repeat.ng-leave.ng-leave-active,
+        .animate-repeat.ng-move,
+        .animate-repeat.ng-enter {
+            opacity: 0;
+            max-height: 0;
+        }
+
+        .animate-repeat.ng-leave,
+        .animate-repeat.ng-move.ng-move-active,
+        .animate-repeat.ng-enter.ng-enter-active {
+            opacity: 1;
+            max-height: 40px;
+        }
+    </style>
+</head>
+<body ng-controller="Ctrl">
+    <div class="container">
+        <div class="control">
+            <button ng-click="add()">增加</button>
+            <button ng-click="remove()">删除</button>
+        </div>
+        <div class="row" xx-yy>
+            <p ng-repeat="item in items track by $index" class="animate-repeat custom-animation">{{ $index }}</p>
+        </div>
+    </div>
+    <!--  -->
+    <script>
+        var app = angular.module('app', ['ngAnimate']);
+        app.controller('Ctrl', ['$scope', function ($scope) {
+            $scope.items = [1,2,'dd'];
+            $scope.add = function () {
+                $scope.items.push('xx')
+            };
+            $scope.remove = function () {
+                $scope.items.shift();
+            }
+        }]);
+        app.directive('xxYy', ['$animate', '$timeout', function ($animate, $timeout) {
+            return function (scope, element, attrs) {
+                var ele = angular.element('<p>animation</p>');
+                ele.addClass('animate-repeat');
+                $timeout(function () {
+                    //使用 $animate 对象
+                    $animate.enter(ele, null, element, function () {
+                        console.log('animate done')
+                    });
+                }, 1000)
+            }
+        }]);
+        //自定义animation，当不支持css3动画 需要自定义动画
+        app.animation('.custom-animation', function () {
+            var startCss = {
+                    'font-size': '12px',
+                    'width': '20px'
+                },
+                endCss = {
+                    'font-size': '24px',
+                    'width': '200px'
+                };
+            return {
+                enter: function (element, done) {
+                    element.css(startCss);
+                    $(element).animate(endCss, done);
+                    //run the animation here and call done when the animation is complete
+                    return function (cancelled) {
+                        //this (optional) function will be called when the animation
+                        //completes or when the animation is cancelled (the cancelled
+                        //flag will be set to true if cancelled).
+                        if(cancelled){
+                            $(element).stop();
+                        }
+                    };
+                },
+                leave: function (element, done) {
+                    element.css(endCss);
+                    $(element).animate(startCss, done);
+                    return function (isCancelled) {
+                        if (isCancelled) {
+                            $(element).stop();
+                        }
+                    }
+                },
+                move: function (element, done) { },
+
+                //animation that can be triggered before the class is added
+                beforeAddClass: function (element, className, done) { },
+
+                //animation that can be triggered after the class is added
+                addClass: function (element, className, done) { },
+
+                //animation that can be triggered before the class is removed
+                beforeRemoveClass: function (element, className, done) { },
+
+                //animation that can be triggered after the class is removed
+                removeClass: function (element, className, done) { }
+            }
+        })
+
+    </script>
+</body>
+</html>

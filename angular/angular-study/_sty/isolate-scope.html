@@ -1,0 +1,48 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <title>myApp</title> 
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+    <style>
+.ng-scope {
+  border: 1px solid red;
+  margin: 4px;
+}
+    </style>
+</head>
+<body>
+    <div ng-controller="ctrl">
+        <p> 
+            <input type="text" ng-model="foo">
+        </p>
+        <p> 
+            <directive baz="{{foo}}">
+                {{foo}} -- this is transclude
+            </directive>
+        </p>
+    </div>
+    <script>
+        var app = angular.module('app', []);
+        app.controller('ctrl', function ($scope, $rootScope) {
+            $scope.foo = 'lorem';
+            $rootScope.showScope = function(e) {
+               console.log(angular.element(e.srcElement).scope());
+            }
+        });
+        app.directive('directive', function () {
+            return {
+                restrict: 'E',
+                //scope: true,
+                scope: {  baz: '@' }, //scope是否封闭，不影响transclude
+                replace: true,
+                transclude: true,
+                template: '<div><input type="text" ng-model="baz"><button ng-click="$parent.showScope($event)">show scope</button> <p ng-transclude style="color:red;"></p></div>',
+                link: function (scope) {
+                    scope.foo = 'lorem1';
+                    console.log(scope, scope.foo);
+                }
+            };
+        });
+    </script>
+</body>
+</html>

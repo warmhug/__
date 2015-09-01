@@ -1,0 +1,74 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+    <!--<script src="http://zeptojs.com/zepto.js" type="text/javascript"></script>-->
+    <script src="http://code.jquery.com/jquery.js" type="text/javascript"></script> 
+
+</head>
+<body>
+    <p>html特殊字符：Webdings、Wingdings；另外如 → 对应 `&rarr;` `&#8594;`</p>
+    
+    <p>引号：</p>
+    <span>"" 在标签内，双引号直接能显示</span> <br>
+    <textarea id="area" cols="20" rows="6">
+        "" 在textarea，双引号直接能显示，
+        \n表示换行
+    </textarea> <br>
+    <input id="a" type="text" value="input的value里，双引号&quot;用实体&amp;quot;表示，/\n 单引号直接写'" /> <br>
+    
+    <script>
+        alert($('#a').val());
+        alert($('#area').val());
+        alert("js变量中的双引号用\\\"表示，即'需要用\\转义'")
+    </script>
+
+        
+
+    <p id="test">&amp;lt;&amp;quot;<span>&amp;&nbsp;(\u00a0) &amp;&lt;(\u003c) &gt;(\u003e) &amp;(\u0026)</span></p>
+    "name":"&amp;lt;script&amp;gt;alert(&amp;quot;dfd&amp;quot;);&amp;lt;/script&amp;gt;" 
+    <h2>json中有html标签情况：
+    <pre>{"name":"&amp;lt;script&amp;gt;alert(&amp;quot;dfd&amp;quot;);&amp;lt;/script&amp;gt;" }</pre>
+    </h2>
+
+    <textarea id="inp"></textarea>
+    <input type="button" id="btn" value="{&#34;<'xx'dd>提交中文“双引号”key&#34;:&#34;&#60;val&#62;&#34;}" />
+    <input type="text" value='tttt' />
+    <div id="out"></div>
+    <script type="text/javascript">
+        var bval = document.getElementById('btn').value;
+        console.log(bval);
+        console.log(JSON.parse(bval));
+
+        // escape方法一
+        function escapeHtml(html) {
+            var doc = document, div = doc.createElement('div'), txtnode = doc.createTextNode(html);
+            div.appendChild(txtnode);
+            return div.innerHTML;
+        }
+        // escape方法二，正则表达式
+        function escapeReg(html) {
+            var txt = String(html).replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+            return txt;
+        }
+
+        // node.textContent && node.textContent = str;  
+        // node.innerText && node.innerText = str;  
+
+        $('#btn').click(function () {
+            var inp = $('#inp');
+            var val = inp.val() || inp[0].value;     //texearea同input，取值都用value
+            //val = inp[0].textContent;
+            //val = inp[0].innerText;
+            console.log(val);
+            var escape = escapeHtml(val);
+            console.log(escape);
+            $('#out').html(escape);
+            console.log($('#out').html());
+            console.log($('#out').text());
+        });
+
+    </script>
+</body>
+</html>

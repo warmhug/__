@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>w2h</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <style type="text/css">
+		#container {
+		    display: inline-block;
+		    position: relative;
+		    width: 50%;
+		}
+		#dummy {
+		    margin-top: 75%;
+		}
+		#element {
+		    position: absolute;
+		    top: 0;
+		    bottom: 0;
+		    left: 0;
+		    right: 0;
+		    background-color: silver;
+            overflow: hidden;
+            text-align: center;
+		}
+        #element img{
+            max-height: 100%;
+            max-width: 100%;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="container">
+    <div id="dummy"></div>
+    <div id="element">
+        <!--some text-->
+        <img src="http://dummyimage.com/600x900/000/fff" />
+    </div>
+</div>
+
+    <script>
+
+    </script>
+</body>
+</html>

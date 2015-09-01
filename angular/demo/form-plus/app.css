@@ -1,0 +1,60 @@
+/**
+ *  bs覆盖样式
+ */
+a[ng-click] {
+  cursor: pointer;
+}
+/**
+ *   组件样式  -- 新增或覆盖
+ */
+.nav,
+.pagination,
+.carousel,
+.panel-title a {
+  cursor: pointer;
+}
+.pagination {
+  margin: 0 auto;
+}
+.alert {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  z-index: 1000;
+  width: 200px;
+  margin-left: -100px;
+}
+.modal-backdrop.am-fade {
+  opacity: .5;
+  transition: opacity .15s linear;
+}
+.modal-backdrop.am-fade.ng-enter {
+  opacity: 0;
+}
+.modal-backdrop.am-fade.ng-enter.ng-enter-active {
+  opacity: .5;
+}
+.modal-backdrop.am-fade.ng-leave {
+  opacity: .5;
+}
+.modal-backdrop.am-fade.ng-leave.ng-leave-active {
+  opacity: 0;
+}
+.setWidth {
+  max-width: 100px;
+}
+.ellipsis div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: inherit;
+}
+canvas {
+  background-color: #f3f3f3;
+  -webkit-box-shadow: 3px 3px 3px 0 #e3e3e3;
+  -moz-box-shadow: 3px 3px 3px 0 #e3e3e3;
+  box-shadow: 3px 3px 3px 0 #e3e3e3;
+  border: 1px solid #c3c3c3;
+  height: 100px;
+  margin: 6px 0 0 6px;
+}

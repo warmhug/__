@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//mgcrea.github.io/angular-strap/styles/angular-motion.min.css">
+    <link rel="stylesheet" href="//mgcrea.github.io/angular-strap/styles/bootstrap-additions.min.css">
+    <!--  -->
+    <script src="http://cdn.staticfile.org/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular-sanitize.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular-animate.min.js"></script>
+    <!--  -->
+    <script src="../angular-strap.js"></script>
+    <script src="../angular-strap.tpl.js"></script>
+</head>
+<body ng-controller="MainCtrl">
+    <div ng-controller="TooltipDemoCtrl" style="margin:100px 50px;">
+        <!-- Markup for a default tooltip with a scope passed as an object {title:''} -->
+        <p>Tight pants next level keffiyeh
+            <a href="" data-animation="am-flip-x" data-trigger="click" bs-tooltip="tooltip">you probably</a>
+           haven't heard of them. Photo booth beard raw denim letterpress vegan messenger bag stumptown.
+        </p>
+        <div class="input-group col-xs-5">
+          <span class="input-group-btn">
+            <!-- You can also use data-attrs to assign scope variables -->
+            <button class="btn btn-primary" type="button" data-trigger="click" data-type="success" data-title="{{tooltip.title}}" bs-tooltip>
+                Click me
+            </button>
+          </span>
+            <input type="text" class="form-control" data-placement="right" data-type="info" data-container="body" placeholder="Focus to toggle tooltip" data-trigger="focus" bs-tooltip="tooltip">
+        </div>
+        <div class="checkbox">
+            <label data-placement="bottom-left" data-type="info" data-animation="am-fade-and-scale" bs-tooltip="tooltip">
+                <input type="checkbox" ng-model="tooltip.checked">
+                Remember me
+            </label>
+        </div>
+    </div>
+    <script>
+        var app = angular.module('app', ['ngAnimate', 'ngSanitize', 'mgcrea.ngStrap']);
+        app.controller('MainCtrl', [
+            '$scope', function ($scope) {
+
+            }
+        ]);
+        app.config(function ($tooltipProvider) {
+            angular.extend($tooltipProvider.defaults, {
+                html: true
+            });
+        });
+        app.controller('TooltipDemoCtrl', function ($scope, $q, $sce, $tooltip) {
+
+            $scope.tooltip = {
+                title: 'Hello <span style="color:red;">Tooltip</span><br />This is a multiline message!',
+                checked: false
+            };
+
+            // Controller usage example
+            /*
+            var myTooltip = $tooltip(angular.element(document.querySelector('#test')), {title: 'Hello tooltip', placement: 'right'});
+            $scope.showTooltip = function() {
+              myTooltip.$promise.then(myTooltip.show);
+            };
+            $scope.hideTooltip = function() {
+              myTooltip.$promise.then(myTooltip.hide);
+            };
+            */
+
+        });
+    </script>
+</body>
+</html>

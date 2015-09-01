@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html ng-app="my">
+
+  <head>
+    <meta charset="utf-8" />
+    <title>AngularJS Plunker</title>
+    <script>document.write('<base href="' + document.location + '" />');</script>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//mgcrea.github.io/angular-strap/styles/angular-motion.min.css">
+    <link rel="stylesheet" href="//mgcrea.github.io/angular-strap/styles/bootstrap-additions.min.css">
+    <link rel="stylesheet" href="//mgcrea.github.io/angular-strap/styles/libraries.min.css">
+    <link rel="stylesheet" href="//mgcrea.github.io/angular-strap/styles/main.min.css">
+
+      <script src="//code.jquery.com/jquery-1.11.0.js"></script>
+    <script src="//code.angularjs.org/1.2.16/angular.js" data-semver="1.2.16"></script>
+    <script src="//code.angularjs.org/1.2.16/angular-animate.js" data-semver="1.2.16"></script>
+    <script src="//code.angularjs.org/1.2.16/angular-sanitize.js" data-semver="1.2.16"></script>
+    <!--<script src="//mgcrea.github.io/angular-strap/dist/angular-strap.js" data-semver="v2.0.2"></script>-->
+    <script src="../angular-strap-2.0.1/dist/angular-strap.js"></script>
+      <script src="//mgcrea.github.io/angular-strap/dist/angular-strap.tpl.js" data-semver="v2.0.2"></script>
+  </head>
+
+  <body ng-controller="MainCtrl">
+
+      <button data-ng-click="showModal()">show</button>
+      <button id="c">普通click事件显示</button>
+
+      <script>
+          angular.module('my', ['ngAnimate', 'ngSanitize', 'mgcrea.ngStrap'])
+          .controller('MainCtrl', function($scope, $modal) {
+              // Show a basic modal from a controller
+              var myModal = $modal({title: 'My Title', content: 'My Content', show: true});
+
+              // Pre-fetch an external template populated with a custom scope
+              var myOtherModal = $modal({scope: $scope, template: 'modal/docs/modal.tpl.demo.html', show: false});
+              // Show when some event occurs (use $promise property to ensure the template has been loaded)
+              $scope.showModal = function() {
+                  myOtherModal.$promise.then(myOtherModal.show);
+              };
+              $scope.hideModal = function () {
+                  myOtherModal.$promise.then(myOtherModal.hide);
+              };
+
+              $('#c').on('click', function () {
+                  myOtherModal.$promise.then(myOtherModal.show);
+              })
+
+              $scope.show = function () {
+                  alert('xx')
+              }
+          });
+      </script>
+
+  </body>
+
+</html>

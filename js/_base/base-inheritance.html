@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+</head>
+<body>
+
+		<script>
+			function People(name){
+				this.name = name
+			}
+			People.prototype.getName = function (){
+				console.log('name:', this.name)
+			}
+			function Male(name, sex) {
+				//这里的call，只是调用父类的构造器，而父类构造器的prototype上的东西并没被处理
+				People.call(this, name)
+				this.sex = sex
+			}
+
+			//错误做法，使得对子类Male原型的修改，都直接会改变父类People的原型
+			// Male.prototype = People.prototype
+
+			// 方法一：正确做法，但是父类People上属性可能比较多，使得占用内存大
+			Male.prototype = new People()
+
+			// 方法二：优化，利用一个空函数对象，减小内存占用
+			var F = function(){}
+			F.prototype = People.prototype
+			Male.prototype = new F()
+
+			// 方法三：优化，使用Object.create
+			Male.prototype = Object.create(People.prototype);
+
+			Male.prototype.constructor = Male
+			Male.prototype.getSex = function (){
+				console.log('sex:', this.sex)
+			}
+			var male = new Male('jim', 'male')
+			male.getName()
+			male.getSex()
+
+			//父类修改，会影响所有子类
+			People.prototype.getName = function (){
+				console.log('parent，xxx');
+			}
+			//子类修改，不应该影响父类
+			Male.prototype.getName = function (){
+				console.log('sub，xxx');
+			}
+			male.getName()
+
+			var male1 = new Male('jim', 'male')
+			male1.getName()
+			male1.getSex()
+		</script>
+</body>
+</html>

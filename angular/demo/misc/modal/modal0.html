@@ -1,0 +1,51 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="modal.css" rel="stylesheet" />
+</head>
+<body>
+    <div ng-controller="Ctrl">
+        <button class="btn btn-success" ng-click="showModal()">Show Modal</button>
+    </div>
+    <script>
+        angular.module('app', []).controller('Ctrl',['$scope', 'modal', function ($scope, modal) {
+            var myModal = new modal();
+            $scope.showModal = function() {
+                myModal.open();
+            };
+        }]).factory('modal', ['$compile', '$rootScope', function ($compile, $rootScope) {
+                return function () {
+                    var elm;
+                    var modal = {
+                        open: function () {
+                            var html = '<div class="modal">' +
+                                '<a class="modal-close" href ng-click="close()">X</a>' +
+                                '<div ui-grid="gridOptions" class="grid"></div></div>';
+
+                            elm = angular.element(html);
+                            elm.show();
+
+                            angular.element(document.body).prepend(elm);
+
+                            $rootScope.close = function () {
+                                modal.close();
+                            };
+
+                            $compile(elm)($rootScope);
+                        },
+                        close: function () {
+                            if (elm) {
+                                elm.remove();
+                            }
+                        }
+                    };
+                    return modal;
+                };
+            }
+        ]);
+    </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+</head>
+<body>
+
+	<script>
+		(function() {
+			"use strict";
+			console.log(this); // undefined
+		})()
+	</script>
+
+	<script>
+		var length = 10
+		function fn() {
+			console.log(this.length)
+		}
+		var obj = {
+			length: 5,
+			method: function(fn) {
+				fn() // ?
+				arguments[0]() // ?
+				fn.call(this)
+			}
+		}
+		obj.method(fn)
+	</script>
+
+	<script>
+		function OuterFoo() {
+			this.Name = 'Outer Name';
+			return function() {
+				var Name = 'Inner Name';
+				console.log(Name + ', ' + this.Name);
+			}
+		}
+		OuterFoo()();
+	</script>
+</body>
+
+</html>

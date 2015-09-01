@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+<script>
+    // 创建iframe
+    function createIframe() {
+        var ifr = document.createElement("iframe");
+        ifr.style.display = "none";
+        if (ifr.attachEvent) {
+            ifr.attachEvent("onload", function () { //IE中创建iframe时，需要用attachEvent绑定
+                var doc = ifr.contentWindow.document;
+                alert(doc.getElementById("iframe").innerHTML);
+            });
+        } else {
+            ifr.onload = function () {
+                var doc = ifr.contentWindow.document;
+                alert(doc.getElementById("iframe").innerHTML);
+            };
+        }
+        ifr.src = "blank.html";
+        document.body.appendChild(ifr);
+    }
+    // IFRAME透明是一个常见的问题，有时候我们需要其透明，这时需要为IFRAME元素添加属性allowtransparency="true" 
+    
+</script>
+</body>
+</html>

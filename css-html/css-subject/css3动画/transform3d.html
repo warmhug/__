@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+	/*
+	
+（1）、	transform: 
+				translate(x,y)  
+				translate3d(x,y,z)  
+				translateX(x)   
+				translateY(y)  
+				translateZ(z)  
+
+				scale(x,y)  
+				scale3d(x,y,z)
+				scaleX(x)
+				scaleY(y)
+				scaleZ(z)
+
+				rotate(angle)
+				rotate3d(x,y,z,angle)
+				rotateX(angle)
+				rotateY(angle)
+				rotateZ(angle)
+					
+				skew(x-angle,y-angle)
+				skewX(angle)
+				skewY(angle)
+					
+				perspective(n)  定义一个3D转换效果和透视图
+				perspective 变换函数对于 3D 变换来说至关重要。
+				该函数会设置查看者的位置，并将可视内容映射到一个视锥上，继而投影到一个 2D 视平面上。如果不指定透视，
+				则 Z 空间中的所有点将平铺到同一个 2D 视平面中，并且变换结果中将不存在景深概念。
+				
+				可以通过在父元素中使用 perspective 属性来便捷地向多个元素添加透视变换。perspective 属性会将透视变换应用于其所有子元素：
+				perspective-origin 属性也可以与 perspective 结合使用，以便将视点移至元素的中心以外：
+				#parent {
+					perspective: 500px; 
+					perspective-origin: -300px 0px;
+				}
+				或者 transform: perspective(500px) rotateY(30deg);
+	
+（2）、transform-origin: x-axis y-axis z-axis;
+
+（3）、transform-style: flat|preserve-3d;
+
+flat子元素不参与3D转换
+preserve-3d子元素将显示在3D环境中
+
+（4）、backface-visibility  （maybe only in IE10）
+backface-visibility 属性可用于隐藏内容的背面。默认情况下，背面可见，这意味着即使在翻转后，变换的内容仍然可见。
+但当 backface-visibility 设置为 hidden 时，旋转后内容将隐藏，因为旋转后正面将不再可见。
+
+	*/
+	
+	</style>
+	
+	<script>
+	// 检测浏览器是否支持transform3d
+		function checksupport() {
+		  var props = ['perspectiveProperty', 'WebkitPerspective',
+					   'MozPerspective', 'OPerspective', 'msPerspective'],
+			  i = 0,
+			  support = false;
+		  while (props[i]) {
+			if (props[i] in form.style) {
+			  support = true;
+			  pfx = props[i].replace('Perspective','');
+			  pfx = pfx.toLowerCase();
+			  break;
+			}
+			i++;
+		  } 
+		  return support;
+		}
+		if (checksupport()) {
+		  var s = '';
+		  styles = document.createElement('style');
+		  s += '#stage{-'+ pfx +'-perspective: 300px;}'+
+			   '#logo{-'+ pfx +'-transform-style: preserve-3d;position:relative;}'+  
+			   '#logo.spin{-'+ pfx +'-animation: spin 3s infinite linear;}'+
+			   '@-'+ pfx +'-keyframes spin {'+  
+			   '0% {'+ 
+			   '-'+ pfx +'-transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);'+   
+			   '}'+
+			   '100% {'+   
+			   '-'+ pfx +'-transform: rotateX(0deg) rotateY(360deg)'+
+			   ' rotateZ(360deg);'+ 
+			   '}}';
+		  styles.innerHTML = s;
+		  document.querySelector('head').appendChild(styles);
+		}
+	</script>
+</head>
+<body>
+
+</body>
+</html>

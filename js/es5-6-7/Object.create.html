@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Object.create</title>
+</head>
+<body>
+  Object.create(proto [, propertiesObject ])
+      - proto ：null或object
+      - propertiesObject ：附加的属性（配置属性描述符）
+  Creates a new object with the specified prototype object and properties.
+
+    <script>
+        var options = {
+            'a':'aa',
+            'b':'bb'
+        },
+        defaults={
+            'b':'dbdb',
+            'c':'cc'
+        },
+        attr = Object.create(options);
+        for (var key in defaults) {
+          if (!options.hasOwnProperty(key)) {
+            attr[key] = defaults[key];
+          }
+        }
+        console.log(attr)
+    </script>
+
+    <script>
+        var o;
+
+        // 创建一个原型为null的空对象
+        o = Object.create(null);
+
+        o = {};
+        // 以字面量方式创建的空对象就相当于:
+        o = Object.create(Object.prototype);
+
+        o = Object.create(Object.prototype, {
+          // foo会成为所创建对象的数据属性
+          foo: { writable:true, configurable:true, value: "hello" },
+          // bar会成为所创建对象的访问器属性
+          bar: {
+            writable: true,
+            enumerable: true,
+            configurable: false,
+            get: function() { return 10 },
+            set: function(value) { console.log("Setting `o.bar` to", value) }
+        }})
+
+        o.foo = 2;
+        for (var prop in o) {
+           console.log(prop)
+        }
+
+    </script>
+
+    使用Object.create实现原型继承
+</body>
+</html>

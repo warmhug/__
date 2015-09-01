@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<meta name="robots" content="noindex">
+<html ng-app="app">
+<head>
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
+    <meta charset=utf-8 />
+    <title>JS Bin</title>
+</head>
+<body ng-controller="MainCtrl">
+<table class="table">
+    <tr ng-repeat="d in data | startFrom:currentPage*pageSize | limitTo:pageSize">
+        <td>{{d}}</td>
+    </tr>
+</table>
+<button class="btn" ng-disabled="currentPage <= 0" ng-click="currentPage=currentPage-1"><<</button>
+<button class="btn" ng-disabled="currentPage >= numberOfPages()"
+        ng-click="currentPage=currentPage+1">>></button>
+Page {{currentPage+1}} of {{numberOfPages()}}
+<script id="jsbin-javascript">
+    var app = angular.module('app', []);
+    app.controller('MainCtrl', function ($scope) {
+        //fake data
+        count = 2000;
+        var data = [];
+        while (count) {
+            data[count] = count--;
+        }
+        $scope.data = data;
+
+        $scope.currentPage = 0;
+        $scope.pageSize = 20;
+
+        $scope.numberOfPages = function () {
+            return Math.floor($scope.data.length / $scope.pageSize);
+        };
+
+    });
+
+    app.filter('startFrom', function () {
+        return function (input, start) {
+            start = +start;
+            return input.slice(start);
+        };
+    });
+</script>
+</body>
+</html>

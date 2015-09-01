@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.js"></script>
+</head>
+<body ng-app="app" ng-controller="main">
+
+<input type="text" ng-model="user.name" />
+<p>{{ user.name }}</p>
+
+<script>
+    var app = angular.module('app', []);
+    app.controller('main', ['$scope', function($scope){
+        $scope.user = {
+            name: ''
+        }
+    }]);
+
+    ;(function () {
+        var root = $(document.getElementsByTagName('body'));
+        var watchers = [];
+        var f = function (element) {
+            console.log( element, 'ele', element.data() );
+            if (element.data().hasOwnProperty('$scope')) {
+                console.log( element.data().$scope, 'scope...');
+                angular.forEach(element.data().$scope.$$watchers, function (watcher) {
+                    watchers.push(watcher);
+                });
+            }
+            angular.forEach(element.children(), function (childElement) {
+                f($(childElement));
+            });
+        };
+        $(function () {
+            f(root);
+            console.log(watchers.length);
+        });
+    })();
+</script>
+</body>
+</html>

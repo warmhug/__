@@ -1,0 +1,32 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+    <style type="text/css">
+        /*  transition和transform  */
+        #aa{
+            width:200px;
+            height:200px;
+            margin:100px auto;
+            background-color:#ccc;
+             -webkit-transition:transform .5s ease; 
+            /*-webkit-transition-property: left,top;
+            -webkit-transition-duration: 0.5s,1s;
+		    -webkit-transition-timing-function: linear,linear;*/
+        }
+        #aa:hover{
+            background-color: #ff0;
+            -webkit-transform: scale(1.5) rotate(90deg) translate(-30px, 30px) skew(0deg, 0deg);
+            /*  */
+            -webkit-transform-origin: left bottom;     /* for Chrome || Safari */
+            
+        }
+        
+    </style>
+</head>
+<body>
+	<div id="aa"></div>
+
+</body>
+</html>

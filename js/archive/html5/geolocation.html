@@ -1,0 +1,66 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+    <style type="text/css">
+    #msg{width:300px;height:400px;border:1px solid aquamarine;margin:20px auto;}
+    </style>
+</head>
+<body>
+	<!--  -->
+    <div id="msg"></div>
+    <script type="text/javascript">
+        var dom = {
+            msg:document.getElementById('msg')
+        };
+        var geo = {
+            support: (function () {
+                //if (navigator.geolocation) {
+                //    alert("support geolocation!");
+                //    return true;
+                //} else {
+                //    alert("sorry,your browser not support geo...");
+                //    return false;
+                //}
+                return !!navigator.geolocation;
+            })(),
+            success: function (position) {
+                //var msg = document.getElementById('msg');
+                dom.msg.innerHTML = '经度：' + position.coords.latitude +
+                    '<br />纬度：' + position.coords.longitude;
+                if (typeof position.address !== undefined && position.address !== 'null') {
+                    dom.msg.innerHTML += '<br />国家：' + position.address.country +
+                        '<br />省份：' + position.address.province +
+                            '<br />城市：' + position.address.city;
+                }
+            },
+            handle_error: function (error) {
+                switch (error.code) {
+                    case error.TIMEOUT:
+                        alert('链接超时，请重试');
+                        break;
+                    case error.PERMISSION_DENIED:
+                        alert('您拒绝共享地理位置');
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        alert('地理位置不可知');
+                        break;
+                    case error.UNKNOW_ERROR:
+                        alert('未知错误');
+                        break;
+                    default:
+                        alert('未知错误');
+                }
+            },
+            init: function () {
+                alert(geo.support);
+                if (geo.support) {
+                    navigator.geolocation.getCurrentPosition(geo.success, geo.handle_error);
+                }
+            }
+        };
+        geo.init();
+    </script>
+</body>
+</html>

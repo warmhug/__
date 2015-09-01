@@ -1,0 +1,47 @@
+views {
+  position: relative;
+}
+
+view {
+  position: absolute;
+  top: 0;
+  width: 500px;
+}
+  
+view.view-hide-remove,
+view.view-hide-add {
+  display: block!important;
+}
+
+view.view-hide-add {
+  -webkit-animation: .3s hide;
+  animation: .3s hide;
+}
+view.view-hide-remove {
+  -webkit-animation: .3s show;
+  animation: .3s show;
+}
+
+view.view-hide {
+  display: none;
+}
+
+@keyframes hide {
+  from { opacity:1; }
+  to { opacity:0; }
+}
+
+@-webkit-keyframes hide {
+  from { opacity:1; }
+  to { opacity:0; }
+}
+
+@keyframes show {
+  from { opacity:0; }
+  to { opacity:1; }
+}
+
+@-webkit-keyframes show {
+  from { opacity:0; }
+  to { opacity:1; }
+}

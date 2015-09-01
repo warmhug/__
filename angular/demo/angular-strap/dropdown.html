@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./css/angular-motion.css">
+    <link rel="stylesheet" href="./css/bootstrap-additions.css">
+    <!--  -->
+    <script src="http://cdn.staticfile.org/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular-sanitize.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular-animate.min.js"></script>
+    <!--  -->
+    <script src="angular-strap.js"></script>
+    <script src="angular-strap.tpl.js"></script>
+</head>
+<body ng-controller="MainCtrl">
+    <div ng-controller="demo" style="margin:100px 50px;">
+
+<button type="button" class="btn btn-lg btn-primary" data-animation="am-flip-x"
+        data-trigger="hover"   bs-dropdown="dropdown">
+    Click to toggle dropdown<br>
+  <small>(using an object)</small>
+</button>
+
+    </div>
+    <script>
+        var app = angular.module('app', ['ngAnimate', 'ngSanitize', 'mgcrea.ngStrap']);
+        app.controller('MainCtrl', [
+            '$scope', function ($scope) {
+
+            }
+        ]);
+        app.config(function ($tooltipProvider) {
+        });
+        app.controller('demo', function ($scope, $q, $sce, $tooltip) {
+
+            $scope.dropdown = [
+              {
+                "text": "<i class=\"fa fa-download\"></i>&nbsp;Another action",
+                "href": "#anotherAction"
+              },
+              {
+                "text": "<i class=\"fa fa-globe\"></i>&nbsp;Display an alert",
+                "click": "$alert(\"Holy guacamole!\")"
+              },
+              {
+                "text": "<i class=\"fa fa-external-link\"></i>&nbsp;External link",
+                "href": "/auth/facebook",
+                "target": "_self"
+              },
+              {
+                "divider": true
+              },
+              {
+                "text": "Separated link",
+                "href": "#separatedLink"
+              }
+            ];
+
+        });
+    </script>
+</body>
+</html>

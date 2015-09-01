@@ -1,0 +1,28 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title></title>
+    <style type="text/css">
+    body { font-family:Verdana; font-size:14px; margin:0;}
+
+	#container {margin:0 auto; width:100%;}
+	#mainContent {margin-bottom:5px;}
+	#sidebar { float:left; width:200px;background:#cf9;}
+	#content { margin-left:205px !important; margin-left:202px; height:auto !important; height:100px; background:#ffa;}
+
+	.clearfloat { clear:both; height:0; font-size: 1px; line-height: 0px;}
+    </style>
+</head>
+<body>
+<div id="container">
+  <br class="clearfloat" />
+  <div id="mainContent">
+    <div id="sidebar">This is the sidebar</div>
+    <div id="content">
+    　　此例中需要说明一点的是：当content设定高度后，3像素会跑到content外侧，反之，在content内部。这样，我们用!important修正在ie下向左多浮动2像素，加上3像素的bug正好是5像素，所以在火狐和IE下显示是一样的，这是大家必须注意的一点。而当content设定高度后，如100px，那么在IE6下，当高度超过100px时，它会自动把conent撑高，而火狐去不会。所以用!important修正在IE下设定高度值使它的3像素跑到外侧，火狐下因不存在3像素问题，所以高度自动。<br />
+    </div>
+  </div>
+</div>
+</body>
+</html>

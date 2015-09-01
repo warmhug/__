@@ -1,0 +1,53 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular-sanitize.min.js"></script>
+</head>
+<body>
+    <div ng-controller="Ctrl">
+        <double>
+            <h1>Hello World - 2</h1>
+        </double>
+        <ntimes repeat=10>
+            <h1>Hello World - 10</h1>
+            <h4>More text</h4>
+        </ntimes>
+        <ntimes repeat=3>
+            <h1>Another Test - 3</h1>
+            <h4>h4</h4>
+        </ntimes>
+    </div>
+
+    <script>
+        var app = angular.module('app', ['ngSanitize']);
+        app.controller('Ctrl', ['$scope', function ($scope) {
+
+        }]);
+        app.directive('double', function () {
+            return {
+                restrict: 'E',
+                compile: function (tElement, attrs) {
+                    var content = tElement.children();
+                    tElement.append(content.clone());
+                    tElement.replaceWith(tElement.children());
+                }
+            }
+        });
+        app.directive('ntimes', function () {
+            return {
+                restrict: 'E',
+                compile: function (tElement, attrs) {
+                    var content = tElement.children();
+                    for (var i = 0; i < attrs.repeat - 1; i++) {
+                        tElement.append(content.clone());
+                    }
+                    tElement.replaceWith(tElement.children());
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>

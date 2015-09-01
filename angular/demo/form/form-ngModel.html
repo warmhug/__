@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+</head>
+<body>
+<div ng-app="myApp">
+    <div ng-form="myForm">
+        <my-input name='Email' type='email' label='Email Address' placeholder="Enter email" ng-model='model.email' required='false'></my-input>
+    </div>
+</div>
+<script>
+    var app = angular.module('myApp', []);
+
+    app.directive('myInput', function() {
+        return {
+            restrict: 'E',
+            require: ['^form','ngModel'],
+            replace: true,
+            template: '<input>',
+            link: function(scope, element, attrs, ctrls) {
+                console.log(ctrls);
+            }
+        };
+    });
+</script>
+</body>
+</html>

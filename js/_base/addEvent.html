@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript">
+
+	    /*
+	    使用prototype原生方法构造了一个按顺序加载的事件的方法.
+	    原地址为: http://www.cnblogs.com/rainman/archive/2009/02/11/1387955.html
+	    */
+	    Array.prototype.indexOf = function (obj) {
+	        var result = -1, length = this.length, i = length - 1;
+	        for (; i >= 0; i--) {
+	            if (this[i] == obj) {
+	                result = i;
+	                break;
+	            }
+	        }
+	        return result;
+	    }
+	    Array.prototype.contains = function (obj) {
+	        return (this.indexOf(obj) >= 0)
+	    }
+	    Array.prototype.append = function (obj, nodup) {
+	        if (!(nodup && this.contains(obj))) {
+	            this[this.length] = obj;
+	        }
+	    }
+	    Array.prototype.remove = function (obj) {
+	        var index = this.indexOf(obj);
+	        if (!index) return;
+	        return this.splice(index, 1);
+	    };
+	    function addEvent(element, type, fun) {
+	        if (!element.events) element.events = {};
+	        var handlers = element.events[type];
+	        if (!handlers) {
+	            handlers = element.events[type] = [];
+	            if (element['on' + type]) {
+	                handlers[0] = element['on' + type];
+	            }
+	        }
+	        handlers.append(fun, true)
+	        element['on' + type] = handleEvent;
+	    }
+	    function removeEvent(element, type, fun) {
+	        if (element.events && element.events[type]) {
+	            element.events[type].remove(fun);
+	        }
+	    }
+	    function handleEvent(event) {
+	        var returnValue = true, i = 0;
+	        event = event || fixEvent(window.event);
+	        var handlers = this.events[event.type], length = handlers.length;
+	        for (; i < length; i++) {
+	            if (handlers[i].call(this, event) === false) {
+	                returnValue = false;
+	            }
+	        }
+	        return returnValue;
+	    }
+	    function fixEvent(event) {
+	        event.preventDefault = fixEvent.preventDefault;
+	        event.stopPropagation = fixEvent.stopPropagation;
+	        return event;
+	    }
+	    fixEvent.preventDefault = function () {
+	        this.returnValue = false;
+	    };
+	    fixEvent.stopPropagation = function () {
+	        this.cancelBubble = true;
+	    };
+
+	</script>
+</body>
+</html>

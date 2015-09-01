@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title></title>
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+</head>
+<body>
+
+<script>
+  function Component(config) {
+    this.init(config);
+  }
+  $.extend(Component.prototype, {
+    init: function (config) {
+      var def = {};
+      this.options = $.extend(config, def, true);
+    },
+    render: function () {
+      var $ele = '<span></span>';
+      return $ele;
+    },
+    set: function () {
+      
+    },
+    get: function () {
+      return this.options['xx'];
+    }
+  });
+
+  var c = new Component();
+</script>
+</body>
+</html>

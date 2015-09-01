@@ -1,0 +1,58 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <title>myApp</title>
+    <!--  -->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" />
+    <script src="http://cdn.staticfile.org/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular-animate.js"></script>
+    <style>
+        .animate-repeat{
+            width: 100px;
+            border: 1px solid #ddd;
+        }
+        .animate-repeat.ng-move,
+        .animate-repeat.ng-enter,
+        .animate-repeat.ng-leave {
+            -webkit-transition: all linear 5s;
+            transition: all linear 5s;
+        }
+
+        .animate-repeat.ng-leave.ng-leave-active,
+        .animate-repeat.ng-move,
+        .animate-repeat.ng-enter {
+            opacity: 0;
+            max-height: 0;
+        }
+
+        .animate-repeat.ng-leave,
+        .animate-repeat.ng-move.ng-move-active,
+        .animate-repeat.ng-enter.ng-enter-active {
+            opacity: 1;
+            max-height: 40px;
+        }
+    </style>
+</head>
+<body ng-controller="Ctrl">
+    <div class="container">
+        <div class="control">
+            <button ng-click="add()">增加</button>
+        </div>
+        <div class="row" xxYy>
+            <p ng-repeat="item in items track by $index" class="animate-repeat">{{ $index }}</p>
+        </div>
+    </div>
+    <!--  -->
+    <script>
+        var app = angular.module('app', ['ngAnimate']);
+        app.controller('Ctrl', ['$scope', function ($scope) {
+            $scope.items = [1,2,'dd'];
+            $scope.add = function () {
+                $scope.items.push('xx')
+            }
+        }]);
+
+    </script>
+</body>
+</html>

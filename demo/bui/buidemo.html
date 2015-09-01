@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="http://a.tbcdn.cn/s/bui/css/dpl.css" rel="stylesheet">
+    <link href="http://a.tbcdn.cn/s/bui/css/bui.css" rel="stylesheet">
+    <style>
+        body{
+            width: 980px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<!-- 搜索页 ================================================== -->
+<div class="row">
+    <div class="span24">
+        <h2>示例</h2>
+        <form id="searchForm" class="form-horizontal bui-form-horizontal bui-form bui-form-field-container" style="outline: none;" aria-disabled="false" method="get" action="">
+            <div class="row">
+                <div class="control-group span8">
+                    <label class="control-label">供应商编码：</label>
+                    <div class="controls">
+                        <input type="text" name="a" class="control-text bui-form-field" aria-disabled="false">
+                    </div>
+                </div>
+                <div class="control-group span8">
+                    <label class="control-label">供应商编码：</label>
+                    <div class="controls">
+                        <input type="text" name="b" class="control-text bui-form-field" aria-disabled="false">
+                    </div>
+                </div>
+                <div class="control-group span8">
+                    <label class="control-label">供应商编码：</label>
+                    <div class="controls">
+                        <input type="text" name="c" class="control-text bui-form-field" aria-disabled="false">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="control-group span10">
+                    <label class="control-label">起始日期：</label>
+                    <div class="controls bui-form-group bui-form-field-container" data-rules="{dateRange : true}" aria-disabled="false">
+                        <input name="start" data-tip="{text : '起始日期'}" data-rules="{required:true}" data-messages="{required:'起始日期不能为空'}" class="input-small calendar bui-form-field-date bui-form-field" type="text" aria-disabled="false">
+                        <label>&nbsp;-&nbsp;</label>
+                        <input name="end" data-rules="{required:true}" data-messages="{required:'结束日期不能为空'}" class="input-small calendar bui-form-field-date bui-form-field" type="text" aria-disabled="false">
+                        <div class="bui-form-tip bui-overlay bui-ext-position x-align-cl-cl" aria-disabled="false" style="visibility: visible; left: 120px; top: 63px;">
+                            <span class=""></span>
+                            <span class="tip-text">起始日期</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions span5">
+                    <button id="btnSearch" type="submit" class="button button-primary">搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="search-grid-container">
+    <div id="grid">
+        <div class="bui-grid bui-simple-list bui-grid-width bui-grid-border bui-grid-strip" aria-disabled="false" style="width: 926px;">
+            <div class="bui-grid-tbar" style="">
+                <div class="bui-bar" role="toolbar" id="bar5" aria-disabled="false">
+                    <ul class="bui-bar bui-grid-button-bar" role="toolbar" id="bar7" aria-disabled="false">
+                        <li class="bui-bar-item-button bui-bar-item bui-inline-block" aria-disabled="false" id="bar-item-button1">
+                            <button type="button" class="button button-primary button-small">命令一</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bui-grid-header-container">
+                <div class="bui-grid-header" aria-disabled="false" style="width: 924px;">
+                    <table cellspacing="0" class="bui-grid-table" cellpadding="0">
+                        <thead>
+                            <tr>
+                                <th class="bui-grid-hd" aria-disabled="false" style="width: 40px;">
+                                    <div class="bui-grid-hd-inner">
+                                        <div class="bui-grid-checkBox-container">
+                                            <span class="x-grid-checkbox"></span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="bui-grid-hd" aria-disabled="false" style="width: 92px;">
+                                    <div class="bui-grid-hd-inner">
+                                        <span class="bui-grid-hd-title">供货商编码</span>
+                                    </div>
+                                </th>
+                                <th class="bui-grid-hd" aria-disabled="false" style="width: 92px;">
+                                    <div class="bui-grid-hd-inner">
+                                        <span class="bui-grid-hd-title">供货商姓名</span>
+                                        <span class="bui-grid-sort-icon">&nbsp;</span>
+                                    </div>
+                                </th>
+                                <th class="bui-grid-hd" aria-disabled="false" style="width: 139px;">
+                                    <div class="bui-grid-hd-inner">
+                                        <span class="bui-grid-hd-title">供货商来源</span>
+                                    </div>
+                                </th>
+                                <th class="bui-grid-hd" aria-disabled="false" style="width: 92px;">
+                                    <div class="bui-grid-hd-inner">
+                                        <span class="bui-grid-hd-title">渠道ID</span>
+                                        <span class="bui-grid-sort-icon">&nbsp;</span>
+                                    </div>
+                                </th>
+                                <th class="bui-grid-hd" aria-disabled="false" style="width: 92px;">
+                                    <div class="bui-grid-hd-inner">
+                                        <span class="bui-grid-hd-title">供货商地址</span>
+                                        <span class="bui-grid-sort-icon">&nbsp;</span>
+                                    </div>
+                                </th>
+                                <th class="bui-grid-hd" aria-disabled="false" style="width: 92px;">
+                                    <div class="bui-grid-hd-inner">
+                                        <span class="bui-grid-hd-title">联系方式</span>
+                                        <span class="bui-grid-sort-icon">&nbsp;</span>
+                                    </div>
+                                </th>
+                                <th class="bui-grid-hd" aria-disabled="false" style="width: 278px;">
+                                    <div class="bui-grid-hd-inner">
+                                        <span class="bui-grid-hd-title">操作</span>
+                                        <span class="bui-grid-sort-icon">&nbsp;</span>
+                                    </div>
+                                </th>
+                                <th class="bui-grid-hd-empty bui-grid-hd" aria-disabled="false">
+                                    <div class="bui-grid-hd-inner"></div>
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="bui-grid-body" style="width: 924px;">
+                <table cellspacing="0" cellpadding="0" class="bui-grid-table" style="width: 924px;">
+                    <tbody>
+                        <tr class="bui-grid-header-row">
+                            <td class=" grid-td-grid-hd1" width="40" style="height:0"></td>
+                            <td class=" grid-td-col1" width="92" style="height:0"></td>
+                            <td class=" grid-td-col2" width="92" style="height:0"></td>
+                            <td class=" grid-td-col3" width="139" style="height:0"></td>
+                            <td class=" grid-td-col4" width="92" style="height:0"></td>
+                            <td class=" grid-td-col5" width="92" style="height:0"></td>
+                            <td class=" grid-td-col6" width="92" style="height:0"></td>
+                            <td class=" grid-td-col7" width="278" style="height:0"></td>
+                            <td class="bui-grid-cell bui-grid-cell-empty">&nbsp;</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="" class="bui-grid-bbar">
+                <div class="bui-bar" role="toolbar" id="bar2" aria-disabled="false">
+                    <ul class="bui-pagingbar bui-bar" role="toolbar" id="bar3" aria-disabled="false">
+                        <li class="bui-bar-item-button bui-bar-item bui-pb-first bui-bar-item-button-disabled bui-bar-item-disabled bui-inline-block" aria-disabled="true" id="first">
+                            <button type="button" class="bui-button-disabled" disabled="disabled">首 页</button>
+                        </li>
+                        <li class="bui-bar-item-button bui-bar-item bui-pb-prev bui-bar-item-button-disabled bui-bar-item-disabled bui-inline-block" aria-disabled="true" id="prev">
+                            <button type="button" class="bui-button-disabled" disabled="disabled">上一页</button>
+                        </li>
+                        <li class="bui-bar-item-separator bui-bar-item bui-inline-block" aria-disabled="false" id="bar-item-separator1" role="separator"></li>
+                        <li class="bui-bar-item-text bui-bar-item bui-inline-block" aria-disabled="false" id="totalPage">
+                            共 页
+                        </li>
+                        <li class="bui-bar-item-text bui-bar-item bui-inline-block" aria-disabled="false" id="curPage">
+                            第
+                            <input type="text" autocomplete="off" class="bui-pb-page" size="20" value="" name="inputItem">
+                            页
+                        </li>
+                        <li class="bui-bar-item-button bui-bar-item bui-pb-skip bui-bar-item-button-disabled bui-bar-item-disabled bui-inline-block" aria-disabled="true" id="skip">
+                            <button type="button" class="bui-button-disabled" disabled="disabled">确定</button>
+                        </li>
+                        <li class="bui-bar-item-separator bui-bar-item bui-inline-block" aria-disabled="false" id="bar-item-separator2" role="separator"></li>
+                        <li class="bui-bar-item-button bui-bar-item bui-pb-next bui-bar-item-button-disabled bui-bar-item-disabled bui-inline-block" aria-disabled="true" id="next">
+                            <button type="button" class="bui-button-disabled" disabled="disabled">下一页</button>
+                        </li>
+                        <li class="bui-bar-item-button bui-bar-item bui-pb-last bui-bar-item-button-disabled bui-bar-item-disabled bui-inline-block" aria-disabled="true" id="last">
+                            <button type="button" class="bui-button-disabled" disabled="disabled">末 页</button>
+                        </li>
+                        <li class="bui-bar-item-separator bui-bar-item bui-inline-block" aria-disabled="false" id="bar-item-separator3" role="separator"></li>
+                        <li class="bui-bar-item-text bui-bar-item bui-inline-block" aria-disabled="false" id="totalCount">
+                            共条记录
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="http://a.tbcdn.cn/s/bui/jquery-1.8.1.min.js"></script>
+    <script src="http://g.tbcdn.cn/fi/bui/bui.js?t=201309041336"></script>
+    <script type="text/javascript">
+        var Grid = BUI.Grid,
+                Store = BUI.Data.Store,
+                columns = [
+                    { title: '供货商编码', width: 100, sortable: false, dataIndex: 'a'},
+                    { title: '供货商姓名', width: 100, sortable: true, dataIndex: 'b', selectable: true },
+                    { title: '供货商来源', width: 150, sortable: false, dataIndex: 'c', selectable: true, renderer: function (value, obj) {
+                        return value + ':' + obj.d;
+                    }},
+                    { title: '渠道ID', width: 100, sortable: true, dataIndex: 'd', showTip: true },
+                    { title: '供货商地址', width: 100, sortable: true, dataIndex: 'e'},
+                    { title: '联系方式', width: 100, sortable: true, dataIndex: 'f'},
+                    { title: '操作', width: 300, dataIndex: 'g', renderer: function (value, obj) {
+
+                        return '<span class="grid-command">删除</span>';
+                    }}
+                ];
+
+        var store = new Store({
+                    url: 'data.php',
+                    //url: 'http://builive.com/business/search/data.php',
+                    autoLoad: true,
+                    pageSize: 10
+                }),
+                grid = new Grid.Grid({
+                    render: '#grid',
+                    loadMask: true,
+                    forceFit: true,
+                    columns: columns,
+                    store: store,
+                    plugins: [Grid.Plugins.CheckSelection, Grid.Plugins.AutoFit], //勾选插件、自适应宽度插件
+                    // 底部工具栏
+                    tbar: {
+                        items: [
+                            {
+                                btnCls: 'button button-primary button-small',
+                                text: '命令一',
+                                handler: function () {
+                                    alert('命令一')
+                                }
+                            }
+                        ]
+                    },
+                    // 顶部工具栏
+                    bbar: {
+                        //items 也可以在此配置
+                        // pagingBar:表明包含分页栏
+                        pagingBar: true
+                    }
+                });
+
+        grid.render();
+
+        //创建表单，表单中的日历，不需要单独初始化
+        var form = new BUI.Form.HForm({
+            srcNode: '#searchForm'
+        }).render();
+
+        form.on('beforesubmit', function (ev) {
+            //序列化成对象
+            var obj = form.serializeToObject();
+            obj.start = 0; //返回第一页
+            store.load(obj);
+            return false;
+        });
+    </script>
+    <!-- script end -->
+</div>
+</body>
+</html>

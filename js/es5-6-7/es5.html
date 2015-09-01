@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <!--  -->
+    <script>
+        /*  */
+        var _toString = Object.prototype.toString;
+        var _isArray = Array.isArray;
+        var _forEach = Array.prototype.forEach;
+        var _trim = String.prototype.trim;
+
+        var isArray;
+        if (_isArray) {
+            isArray = _isArray;
+        } else {
+            isArray = function (obj) {
+                return _toString.call(obj) === "[object Array]";
+            };
+        }
+
+        var forEach;
+        if (_forEach) {
+            forEach = function (obj, callback, scope) {
+                return _forEach.call(obj, callback, scope);
+            };
+        } else {
+            forEach = function (obj, callback, scope) {
+                for (var i = 0, len = obj.length; i < len; ++i) {
+                    callback.call(scope, obj[i], i, obj);
+                }
+            };
+        }
+
+        var spaceRe = /^\s*$/;
+
+        function isWhitespace(string) {
+            return spaceRe.test(string);
+        }
+
+        var trim;
+        if (_trim) {
+            trim = function (string) {
+                return string == null ? "" : _trim.call(string);
+            };
+        } else {
+            var trimLeft, trimRight;
+
+            if (isWhitespace("\xA0")) {
+                trimLeft = /^\s+/;
+                trimRight = /\s+$/;
+            } else {
+                // IE doesn't match non-breaking spaces with \s, thanks jQuery.
+                trimLeft = /^[\s\xA0]+/;
+                trimRight = /[\s\xA0]+$/;
+            }
+
+            trim = function (string) {
+                return string == null ? "" :
+                    String(string).replace(trimLeft, "").replace(trimRight, "");
+            };
+        }
+
+
+    </script> 
+</body>
+</html>

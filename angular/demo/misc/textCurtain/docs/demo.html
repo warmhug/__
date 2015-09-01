@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+    <title>lpm demo</title>
+    <meta charset="utf-8" />
+    <!--lpm需要依赖的文件 start -->
+    <script src="https://a.alipayobjects.com/laputa/jquery/1.11.1/jquery.js"></script>
+    <script src="https://a.alipayobjects.com/laputa/angularjs/1.2.16/angular.js"></script>
+    <link href="https://a.alipayobjects.com/??knight/bizdev/2.0.3/bizdev.css" rel="stylesheet">
+    <!--lpm 需要依赖的文件 end -->
+    <!-- 实际使用时候替换src为生成的cdn地址 -->
+    <script src="../dist/index-merge.js"></script>
+    <script>
+        angular.module("lpm-demo", [
+            /*LPM_NAME_VERSION*/"textCurtain-0.1.0"/*LPM_NAME_VERSION*/
+        ]).controller("ctrl", function ($scope) {
+
+            });
+    </script>
+</head>
+<body ng-app="lpm-demo" ng-controller="ctrl" style="margin:20px;">
+<h1>Demo展示</h1>
+<h4><!--LPM_NAME_VERSION-->textCurtain-0.1.0<!--LPM_NAME_VERSION--></h4>
+<hr>
+<div>
+    <fieldset>
+        <legend>Example</legend>
+        <h3>
+            Default implementation
+        </h3>
+	<pre>
+&lt;div text-curtain&gt;
+...
+&lt;/div&gt;
+	</pre>
+        <div text-curtain>
+            <p>
+                a<br>b<br>c<br>a<br>b<br>c<br>a<br>b<br>c<br>a<br>b
+            </p>
+        </div>
+        <h3>
+            Localization
+        </h3>
+		<pre>
+&lt;div text-curtain
+     curtain-min-height="200"
+     curtain-text="显示"
+     curtain-text-hide="隐藏"&gt;
+	...
+&lt;/div&gt;
+		</pre>
+        <div text-curtain curtain-min-height="200" curtain-text="显示" curtain-text-hide="隐藏">
+            <p>
+                xxxxsdfsdfsd <br> xxxxsdfsdfsd <br> xxxxsdfsdfsd <br> xxxxsdfsdfsd <br>
+                xxxxsdfsdfsd <br> xxxxsdfsdfsd <br> xxxxsdfsdfsd <br> xxxxsdfsdfsd <br>
+                xxxxsdfsdfsd <br> xxxxsdfsdfsd <br> xxxxsdfsdfsd <br> xxxxsdfsdfsd <br>
+            </p>
+        </div>
+        <h3>
+            Localization with hide end
+        </h3>
+		<pre>
+&lt;div text-curtain
+     curtain-min-height="200"
+     curtain-hide-false
+     curtain-text="显示"
+     curtain-text-hide="隐藏"&gt;
+	...
+&lt;/div&gt;
+		</pre>
+        <div text-curtain curtain-min-height="200" curtain-text="显示" curtain-text-hide="隐藏"
+             curtain-hide-false>
+            <p>
+                xxxxsdfsdfsd <br> xxxxsdfsdfsd <br> xxxxsdfsdfsd <br> xxxxsdfsdfsd <br>
+                xxxxsdfsdfsd <br> xxxxsdfsdfsd <br> xxxxsdfsdfsd <br> xxxxsdfsdfsd <br>
+            </p>
+        </div>
+    </fieldset>
+</div>
+</body>
+</html>

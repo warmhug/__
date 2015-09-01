@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+    <script src="lib/ng-tags-input.js"></script>
+    <link href="lib/ng-tags-input.css" rel="stylesheet" />
+    <script>
+        angular.module('myApp', ['ngTagsInput'])
+            .controller('MyCtrl', function($scope, $http) {
+                $scope.tags = [
+                    { text: 'just' },
+                    { text: 'some' },
+                    { text: 'cool' },
+                    { text: 'tags' }
+                ];
+                $scope.loadTags = function(query) {
+                     return $http.get('/tags?query=' + query);
+                };
+            });
+    </script>
+</head>
+<body ng-app="myApp" ng-controller="MyCtrl">
+    <tags-input ng-model="tags">
+        <auto-complete source="loadTags($query)"></auto-complete>
+    </tags-input>
+</body>
+</html>

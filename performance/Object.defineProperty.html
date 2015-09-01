@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <div id="results">Computing...</div>
+    <script>
+        var results = document.getElementById("results");
+        var sampleSize = 1000000;
+        var opCounts = 1000000;
+
+        var entities = [];
+
+        setTimeout(function () {
+            // Creating entities
+            for (var index = 0; index < sampleSize; index++) {
+                entities.push({
+                    property: "hello world (" + index + ")"
+                });
+            }
+
+            // Random reads
+            var start = new Date().getTime();
+            for (index = 0; index < opCounts; index++) {
+                var position = Math.floor(Math.random() * entities.length);
+                var temp = entities[position].property;
+            }
+            var end = new Date().getTime();
+
+            results.innerHTML = "<strong>Results:</strong><br>Using member access: <strong>" + (end - start) + "</strong> ms";
+        }, 0);
+
+        setTimeout(function () {
+            // Closure space =======================================
+            var createProperty = function (obj, prop, currentValue) {
+                Object.defineProperty(obj, prop, {
+                    get: function () { return currentValue; },
+                    set: function (value) {
+                        currentValue = value;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+            }
+            // Adding property and using closure space to save private value
+            for (var index = 0; index < sampleSize; index++) {
+                var entity = entities[index];
+
+                var currentValue = entity.property;
+                createProperty(entity, "property", currentValue);
+            }
+
+            // Random reads
+            var start = new Date().getTime();
+            for (index = 0; index < opCounts; index++) {
+                var position = Math.floor(Math.random() * entities.length);
+                var temp = entities[position].property;
+            }
+            var end = new Date().getTime();
+
+            results.innerHTML += "<br>Using closure space: <strong>" + (end - start) + "</strong> ms";
+        }, 0);
+
+        setTimeout(function () {
+            // Using local member =======================================
+            // Adding property and using local member to save private value
+            for (var index = 0; index < sampleSize; index++) {
+                var entity = entities[index];
+
+                entity._property = entity.property;
+                Object.defineProperty(entity, "property", {
+                    get: function () { return this._property; },
+                    set: function (value) {
+                        this._property = value;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+            }
+
+            // Random reads
+            var start = new Date().getTime();
+            for (index = 0; index < opCounts; index++) {
+                var position = Math.floor(Math.random() * entities.length);
+                var temp = entities[position].property;
+            }
+            var end = new Date().getTime();
+
+            results.innerHTML += "<br>Using local member: <strong>" + (end - start) + "</strong> ms";
+        }, 0);
+
+    </script>
+</body>
+</html>

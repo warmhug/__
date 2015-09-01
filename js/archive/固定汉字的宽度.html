@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <script>
+        //固定label汉字的宽度
+        function fixedFontWidth(txt, width) {
+            //使得txt有相同的宽度，中文双字节宽度
+            var width = width || 6;
+            var getStrSize = function(str){
+                var size = 0;
+                for(var i = 0, len = str.length; i < len; i++){
+                    if (str.charCodeAt(i) > 255){
+                        size += 2;
+                    }else{
+                        size++;
+                    }
+                }
+                return size;
+            };
+            var makeBlank = function (num) {
+                var blank = '　'; //全角空格
+                var final = '';
+                for (var i = 0; i < num; i++) {
+                    final += blank;
+                }
+                return final;
+            };
+            var blankNum = 2 * width - getStrSize(txt); //单字节
+            if(blankNum <= 0) {
+                return txt;
+            }
+            while(blankNum % 4 !== 0){
+                blankNum++;
+            }
+            var fullBlank = makeBlank(blankNum / 4); //全角空格2字节、再平均分别txt放到前后，所以除4
+            return fullBlank + txt + fullBlank;
+        }
+        console.log(fixedFontWidth('你'));
+        console.log(fixedFontWidth('你好'));
+        console.log(fixedFontWidth('你好啊'));
+        console.log(fixedFontWidth('你好啊啊'));
+        console.log(fixedFontWidth('你好啊啊啊'));
+        console.log(fixedFontWidth('你好啊啊啊啊啊啊啊', 10));
+    </script>
+</body>
+</html>

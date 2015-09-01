@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <script>
+        function execFn(fn) {
+            fn();
+        }
+        execFn(function () {
+            console.log( 1 );
+        })
+
+        /**
+         *
+         */
+
+        function timeout() {
+            setTimeout(function () {
+                alert('1')
+            }, 1000);
+            return 'xx'
+        }
+
+        function * foo( input ) {
+            //var res = yield input;
+            yield timeout();
+
+            var x = yield 2;
+            yield x*x;
+
+            alert( 'now exec' );
+            var res = yield ++input;
+            console.log('res is ', res);
+        }
+        var g = foo(10);
+        console.log( Object.prototype.toString.call(g) );
+        console.log( g.next() ); //
+        console.log( g.next() ); //
+        console.log( g.next() ); //
+        console.log( g.next() ); //
+        console.log( g.next(20) ); //
+
+    </script>
+</body>
+</html>

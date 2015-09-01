@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<meta name="robots" content="noindex">
+<html ng-app="app">
+<head>
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
+    <meta charset=utf-8 />
+    <title>JS Bin</title>
+</head>
+<body ng-controller="MainCtrl">
+<table class="table">
+    <tr ng-repeat="d in data | limitTo:totalDisplayed">
+        <td>{{d}}</td>
+    </tr>
+</table>
+<btn class="btn" ng-click="loadMore()">Load more</btn>
+<script id="jsbin-javascript">
+    var app = angular.module('app', []);
+    app.controller('MainCtrl', function ($scope) {
+        //fake data
+        count = 2000;
+        var data = [];
+        while (count) {
+            data[count] = count--;
+        }
+        $scope.totalDisplayed = 20;
+
+        $scope.loadMore = function () {
+            $scope.totalDisplayed += 20;
+        };
+
+        $scope.data = data;
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+.cell {
+  line-height:100px;
+  width:100px;
+  font-size:1.5em;
+  text-align:center;
+  border:1px solid #ddd;
+  float:left;
+}
+
+.repeat-animation {
+  position:relative;
+}

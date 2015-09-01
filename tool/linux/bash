@@ -1,0 +1,21 @@
+#! /bin/sh
+
+node -v
+npm -v
+ping -c 5 taobao.com
+
+echo "进行 xx 操作 \n\r" \
+&& cd ~/my/work/project/xx \
+&& spm build && spm deploy \
+
+echo "进行 xx 操作 \n\r" \
+&& cd ~/my/work/daily/project \
+&& svn st  \
+
+echo "登陆服务器，进行 ccupdate 操作" \
+# 对引号进行转义
+expect -c "spawn ssh admin@partnerprod.d4366aqcn.xx.net
+expect \"password:\"
+send \"password22\r\"
+send \"cd ccbin && ./ccupdate.sh \n\"
+interact "

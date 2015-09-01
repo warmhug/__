@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- assets -->
+    <script src="http://cdn.staticfile.org/jquery/1.11.0/jquery.js"></script>
+</head>
+<body>
+    <div class="container">
+        演示向iframe中写入内容的几种方法。 jQuery的promise使用。
+        <iframe id="demoIfa" class="demo-ifa" frameborder="0"></iframe>
+        <p><button id="change">修改iframe文档</button></p>
+    </div>
+    <script>
+        //jquery promise
+        var demoIfa = $('#demoIfa');
+        var defHtml, finalHtml;
+        var chained = $.ajax({
+            type: "get",
+            url: './docs/layout.html',
+            dataType: "text"
+        }).then(function (data) {
+            defHtml = data;
+            return $.ajax({
+                type: "get",
+                url: './docs/partial.html',
+                dataType: "text"
+            })
+        });
+        chained.done(function (data) {
+            var match = defHtml.match(/^([\s\S]*<body.*>)([\s\S]*)(<\/body>[\s\S]*)$/m);
+            //console.log(match[1])
+            //console.log(match[2])
+            //console.log(match[3])
+            finalHtml = match[1] + data + match[3];
+            //向iframe里写入html的方式
+            //setSrc(finalHtml);
+            //setHtml(finalHtml);
+            writeIra(finalHtml);
+        });
+
+        $('#change').on('click', function () {
+            writeIra(finalHtml)
+        });
+
+        //方法一：设置iframe的src 为data文本
+        function setSrc(finalHtml){
+            //中文会乱码
+            demoIfa[0].src = 'data:text/html,' + escape(finalHtml);
+            demoIfa.load(function () {
+                console.log(demoIfa[0].contentWindow.document.body.innerHTML)
+            });
+        }
+        //方法二：直接设置iframe元素的文档
+        function setHtml(finalHtml) {
+            //layout.html里的外链资源未加载，便直接执行partial.html里的script，导致未定义错误
+            demoIfa.contents().find('html').html(finalHtml);
+        }
+        //方法三：正确方法！
+        function writeIra(finalHtml) {
+            //angular不允许重复加载，当必须要重复时，先设置其为undefined
+            //demoIfa[0].contentWindow.angular = undefined;
+
+            var ifaDom = demoIfa[0].contentDocument || demoIfa[0].contentWindow.document;
+            ifaDom.open();
+            ifaDom.write(finalHtml);
+            ifaDom.close();
+        }
+    </script>
+</body>
+</html>

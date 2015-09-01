@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style type="text/css">
+        .useless{
+            background-image: url(http://dummyimage.com/300x200&text=00);
+        }
+        .hidden{
+            background-image: url(http://dummyimage.com/300x200&text=11);
+        }
+        .none{
+            background-image: url(http://dummyimage.com/300x200&text=22);
+        }
+        .parentHidden{
+            background-image: url(http://dummyimage.com/300x200&text=33);
+        }
+        .parentNone{
+            background-image: url(http://dummyimage.com/300x200&text=44);
+        }
+    </style>
+</head>
+<body>
+    <pre>
+    从网络请求中看出：
+    图片0和4没有被下载，0是没有用到的CSS，4是父容器的display被设为none的情况，
+    这两种情况下的CSS引用的图片是不会被加载的，而父容器设置visibility属性为hidden仍然会加载图片
+    </pre>
+    <div class="hidden"></div>
+    <div class="none"></div>
+    <div style="visibility:hidden;">
+        <div class="parentHidden"></div>
+    </div>
+    <div style="display:none;">
+        <div class="parentNone"></div>
+    </div>
+    <div style="display:none">
+        <img src="http://dummyimage.com/300x200&text=55"></div>
+</body>
+</html>

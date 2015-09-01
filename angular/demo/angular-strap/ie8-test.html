@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:ng="http://angularjs.org">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ie8测试</title>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" />
+    <!--<link href="lib/bootstrap-additions.css" rel="stylesheet" />-->
+
+    <!--[if lte IE 8]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.js"></script>
+
+    <script src="angular-strap.js"></script>
+    <script src="angular-strap.tpl.js"></script>
+</head>
+<body id="ng-app" ng-app="app" ng-controller="main">
+
+<script type="text/ng-template" id="tpl">
+<ul ng-mousedown="down($event)">
+    <li ng-repeat="i in [1,2,3]"><a ng-click="cc($index, $event)">
+        <span>xxxx</span>
+    </a></li>
+</ul>
+</script>
+
+<div>
+  <button type="button" class="btn btn-default"
+        ng-model="selectedIcon" ng-options="icon.value as icon.label for icon in icons" bs-select>
+    Action <span class="caret"></span>
+  </button>
+</div>
+
+<script>
+    var app = angular.module('app', [
+        'mgcrea.ngStrap'
+    ]);
+    app.controller('main', ['$scope','$compile', function($scope, $compile){
+        $scope.cc = function (index, evt) {
+            console.log( index, evt.target );
+        }
+        $scope.down = function (evt) {
+            console.log( evt );
+            evt.preventDefault();
+          evt.stopPropagation();
+        };
+
+        var htm = $compile($('#tpl').html())($scope, function(clonedElement, scope) {})
+        $('body').append(htm);
+
+    }])
+</script>
+</body>
+</html>

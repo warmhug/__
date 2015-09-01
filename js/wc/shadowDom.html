@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8" />
+   <title></title>
+</head>
+<body>
+    <h3>shadow dom示例</h3>
+    <!-- demo1 -->
+    <div id="d1"><h3>Light DOM</h3></div>
+    <script>
+    /*
+        ele.createShadowRoot() 方法，需要在Chrome中，开启 about:flags 页面中的
+            "Enable experimental Web Platform features"
+    */
+    var root = document.querySelector('#d1').webkitCreateShadowRoot();
+    root.innerHTML = '<style>h3{ color: red; }</style>' +
+                     '<h3>Shadow DOM</h3><content></content>';
+    </script>
+
+    <!-- demo2 -->
+    <div id="nameTag">Bob</div>
+    <template id="nameTagTemplate">
+        <style>
+            .outer {
+              border: 2px solid brown;
+              border-radius: 1em;
+              background: red;
+              font-size: 20pt;
+              width: 12em;
+              height: 7em;
+              text-align: center;
+            }
+            .boilerplate {
+              color: white;
+              font-family: sans-serif;
+              padding: 0.5em;
+            }
+            .name {
+              color: black;
+              background: white;
+              font-family: "Marker Felt", cursive;
+              font-size: 45pt;
+              padding-top: 0.2em;
+            }
+        </style>
+        <div class="outer">
+          <div class="boilerplate">
+            Hi! My name is
+          </div>
+          <div class="name">
+            <content></content>
+          </div>
+        </div>
+    </template>
+    <script>
+        var shadow = document.querySelector('#nameTag').webkitCreateShadowRoot();
+        var template = document.querySelector('#nameTagTemplate');
+        shadow.appendChild(template.content);
+        template.remove();
+        /*
+            参见“html template” http://www.html5rocks.com/zh/tutorials/webcomponents/template/
+        *   template.content是什么？
+        *   document.importNode(node) 方法
+        * */
+    </script>
+</body>
+</html>

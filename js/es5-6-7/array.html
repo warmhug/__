@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <script>
+        var nums = [0,1,2,3,4].reduce(function(previousValue, currentValue, index, array){
+          return previousValue + currentValue;
+        }, 10);
+        console.log( nums );
+
+
+        var obj = {
+            a: 1,
+            b: 2,
+            c: 3,
+            d: 4
+        }
+        console.log( without(obj, ['a', 'b']) )
+        function without(obj, keys) {
+          return Object.keys(obj).filter(function (key) {
+            return keys.indexOf(key) === -1;
+          }).reduce(function (result, key) {
+            result[key] = obj[key];
+            return result;
+          }, {});
+        }
+    </script>
+</body>
+</html>

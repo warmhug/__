@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Avoiding Excess Watches using ECMAScript 6</title>
+  <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+</head>
+<body>
+<div ng-app="myApp">
+    <div ng-controller="badCtrl">
+        <select ng-options="g as g for g in genders"
+                ng-model="selectedGender">
+        </select>
+        It's a {{genderText}}!
+    </div>
+        <div ng-controller="goodCtrl as ctrl">
+        <select ng-options="g as g for g in ctrl.genders"
+                ng-model="ctrl.selectedGender">
+        </select>
+        It's a {{ctrl.genderText}}!
+    </div>
+
+</div>
+
+<script>
+(function (app) {
+
+    var genders = ['Male', 'Female'],
+        labels = ['boy', 'girl'];
+
+    function BadController($scope) {
+        $scope.genders = genders;
+        $scope.selectedGender = genders[0];
+        $scope.$watch('selectedGender', function () {
+            $scope.genderText =
+                $scope.selectedGender === genders[0] ? labels[0] : labels[1];
+        });
+    }
+
+    function GoodController () {
+        this.genders = genders;
+        this._selectedGender = genders[0];
+        this.genderText = labels[0];
+    }
+
+    Object.defineProperty(GoodController.prototype, "selectedGender", {
+        enumerable: true,
+        configurable: false,
+        get: function () {
+            return this._selectedGender;
+        },
+        set: function (val) {
+            if (val !== this._selectedGender) {
+                this._selectedGender = val;
+                this.genderText =
+                    val === this.genders[0] ? labels[0] : labels[1];
+            }
+        }
+    });
+
+    app.controller('badCtrl', BadController);
+    app.controller('goodCtrl', GoodController);
+
+})(angular.module('myApp', []));
+</script>
+</body>
+</html>

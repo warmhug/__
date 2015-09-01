@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2014 by willh (http://jsbin.com/OVAHiRI/1/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<html>
+<head>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.1/angular.min.js"></script>
+    <meta charset=utf-8 />
+    <title>JS Bin</title>
+    <style id="jsbin-css">
+        .ng-pristine {
+            border: 1px solid Green;
+        }
+        .ng-dirty {
+            border: 1px solid Red;
+        }
+    </style>
+</head>
+<body ng-app="app">
+<form name="myForm" ng-controller="ctrl">
+    <br>
+    <input name="name" ng-model="name" required />
+    <br><br>
+    <input type="button" ng-click="setInputDirty()"
+           value="Set Input Dirty" />
+    <br>
+    <input type="button" ng-click="setInputPristine()"
+           value="Set Input Pristine" />
+    <br> <br>
+    <input type="button" ng-click="setFormDirty()"
+           value="Set Form Dirty" />
+    <br>
+    <input type="button" ng-click="setFormPristine()"
+           value="Set Form Pristine" />
+    <br> <br>
+</form>
+<script id="jsbin-javascript">
+    var app = angular.module('app', []);
+
+    app.controller('ctrl', function ($scope, $timeout) {
+
+        $scope.setInputPristine = function () {
+            $scope.myForm.name.$setPristine();
+        };
+
+        $scope.setInputDirty = function () {
+            $scope.myForm.name.$setViewValue($scope.myForm.name.$viewValue);
+        };
+
+        $scope.setFormDirty = function () {
+            $scope.myForm.$setDirty();
+        };
+
+        $scope.setFormPristine = function () {
+            $scope.myForm.$setPristine();
+        };
+    });
+</script>
+</body>
+</html>

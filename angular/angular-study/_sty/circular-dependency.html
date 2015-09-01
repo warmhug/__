@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>circular-dependency</title>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.js"></script>
+</head>
+<body ng-app="app" ng-controller="main">
+    {{ log }}
+    <script>
+        angular.module('module1',[]).factory('log', [function () {
+            return { show: false, msg: "m1" };
+        }]);
+
+        angular.module('module2', ['module1']).factory('log', ['log', function (log) {
+            return { show: false, msg: log.msg + " + m2" };
+        }]);
+
+        angular.module('app', ['module2']).controller('main', ['$scope', 'log', function($scope, log){
+            $scope.log = log.msg;
+        }])
+    </script>
+</body>
+</html>

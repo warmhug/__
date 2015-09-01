@@ -1,0 +1,71 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+	<style type="text/css">
+	/*  */
+	</style>
+</head>
+<body>
+	<!-- 本地存储待解决问题：
+        1、浏览器“清空缓存或数据”仍不能清除本地存储的内容，尤其移动平台。
+        2、用removeItem()或clear()方法清除数据，但受到“同源策略”限制。
+     -->
+	<script type="text/javascript">
+	    /* 判断是否支持本地存储（对比异同以及写法原因）(sessionStorage同localStorage) */
+	    var support1 = function() {
+	        try {
+	            return 'localStorage' in window && window['localStorage'] !== null;
+	        } catch(e) {
+	            return false;
+	        }
+	    };
+	    var support2 = function() {
+	        try {
+	            if (!!window.localStorage) return window.localStorage;
+	        } catch (e) {
+	            return undefined;
+	        }  
+	    };
+	    var support3 = function() {
+	        if (window.localStorage) {
+	            alert('This browser supports localStorage');
+	        } else {
+	            alert('This browser does NOT support localStorage');
+	        }
+	    };
+
+	    /* 数据操作方法 */
+	    localStorage.a = 3; //设置a为"3"
+	    localStorage["a"] = "sfsf"; //设置a为"sfsf"，覆盖上面的值
+	    localStorage.setItem("b", "isaac"); //设置b为"isaac"
+	    var a1 = localStorage["a"]; //获取a的值
+	    var a2 = localStorage.a; //获取a的值
+	    var b = localStorage.getItem("b"); //获取b的值
+	    localStorage.removeItem("c"); //清除c的值
+	    localStorage.clear(); // 清除所有
+	    //最推荐使用的自然是getItem()和setItem()，清除键值对使用removeItem()。
+	    
+	    var storage = window.localStorage;
+	    function showStorage() {
+	        for (var i = 0; i < storage.length; i++) {
+	            //key(i)获得相应的键，再用getItem()方法获得对应的值
+	            document.write(storage.key(i) + " : " + storage.getItem(storage.key(i)) + "<br>");
+	        }
+	    }
+
+	    /* storage事件 */
+	    if (window.addEventListener) {
+	        window.addEventListener("storage", handle_storage, false);
+	    } else if (window.attachEvent) {
+	        window.attachEvent("onstorage", handle_storage);
+	    }
+	    function handle_storage(e) {
+	        if (!e) { e = window.event; }
+	        //showStorage();
+	    }
+	    
+    </script> 
+</body>
+</html>

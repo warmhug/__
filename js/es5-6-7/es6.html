@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+  <script>
+    /**
+     *  Destructured assignment
+     */
+    var options = {
+     repeat: true,
+     save: false,
+     rules: {
+       custom: 10,
+     }
+    };
+    var { repeat, rules: { custom }} = options;    
+
+    /**
+     *  Block–scoped variables
+     *  let 使用
+     */
+    var es = [];
+    for (var i = 0; i < 10; i++) {
+      let c = i;
+      es[i] = function () {
+        console.log("ES" + c);
+      };
+    }
+    es[6]();    
+
+
+    /**
+     *  set map
+     */
+    var s = new Set();
+    s.add("a").add("b").add("a");
+    s.size === 2;
+    s.has("a") === true;    
+
+    var m = new Map();
+    m.set("hello", 42);
+    m.set(s, 34);
+    m.get(s) == 34;    
+
+
+    /**
+     *  Iterables & for … of loops
+     */
+    let values = [1, 2, 3];
+    for (let i of values) {
+     console.log(i);
+    }
+
+  </script>
+</body>
+</html>

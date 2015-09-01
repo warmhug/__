@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    数组中根据条件 删除元素，有两种方法：
+        1、正向查找，删除后index减一
+        2、倒序查找删除！副作用是，删除的元素添加进新的数组里，会是倒序的
+    <script>
+        var arr = [
+            {done: false, val:1},
+            {done: true, val:2},
+            {done: true, val:3},
+            {done: false, val:4}
+        ];
+        //错误方法
+        for (var i = 0; i < arr.length; i++) {
+            var o = arr[i];
+            if(o.done){
+                arr.splice(i, 1);  //删除后，数组元素少了一个，而i仍递增，导致跨过一个元素
+            }
+        }
+        console.log(arr);
+    </script>
+    <script>
+        var arr = [
+            {done: false, val:1},
+            {done: true, val:2},
+            {done: true, val:3},
+            {done: false, val:4}
+        ];
+        //正向查找，删除后index减一
+        //注意：由于数组长度会变化，不能用 len = arr.length 存下最初数组长度 ！！
+        for (var i = 0; i < arr.length; i++) {
+            var o = arr[i];
+            if(o.done){
+                arr.splice(i--, 1); //删除一个元素，i减一，正确
+            }
+        }
+        console.log(arr);
+    </script>
+    <script>
+        var arr = [
+            {done: false, val:1},
+            {done: true, val:2},
+            {done: true, val:3},
+            {done: false, val:4}
+        ];
+        //倒序查找删除
+        var i = arr.length;
+        while (i--) {
+            if (arr[i].done) {
+                arr.splice(i, 1);
+            }
+        }
+        console.log(arr);
+    </script>
+</body>
+</html>

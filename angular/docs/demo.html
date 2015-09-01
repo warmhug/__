@@ -1,0 +1,30 @@
+
+
+<!--<div class="row" ng-controller="demo">-->
+<div class="row">
+  <div class="col-md-2 hidden-sm hidden-xs">
+    <div class="bs-sidebar hidden-print" role="complementary">
+      <ul class="nav bs-sidenav">
+        <li ng-repeat="item in list" ng-class="{ 'active': item.sel }">
+          <a href="javascript:;"
+             ng-click="selItem($index)"
+             ng-bind="item.name"></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-10">
+    <div class="am-fade">
+      <h4 class="text-danger">demo示例为iframe内嵌页面，直接查看源代码拷贝即可</h4>
+      <h5>请修改jquery、angular库地址为内网CDN地址</h5>
+      <div class="fc-docs-section">
+        <div class="fc-docs-example">
+          <iframe auto-height-iframe class="ifr" frameborder="0" ng-src="{{src}}"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

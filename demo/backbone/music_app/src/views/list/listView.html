@@ -1,0 +1,14 @@
+    
+    <div class="lists">
+        <ul>
+            <% for (var i = 0; i < data.length; i++) { %>
+                    <% var item = data[i]; %>
+                    <li>
+                    <a href="#detail/<%=item.name%>/<%= item.id%>"><%= item.name %></a>
+                    </li>
+            <% } %>
+        </ul>
+        <p>
+            <a href="#other1">其他视图1 &gt;</a>
+        </p>
+    </div>

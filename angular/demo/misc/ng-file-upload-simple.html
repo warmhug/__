@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+    <title>myApp</title> 
+    <script src="http://cdn.staticfile.org/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+</head>
+<body ng-app="app" ng-controller="main">
+    <form id="myForm" ng-submit="submit()">
+        <input type="text" ng-model="user.name" />
+        <input type="file" name="file"
+               input-file="user.files"
+               multiple />
+    </form>
+    <!--  -->
+    <script>
+        var app = angular.module('app', []);
+        app.directive("inputFile", [function () {
+            return {
+                scope: {
+                    inputFile: "="
+                },
+                link: function (scope, element, attributes) {
+                    element.bind("change", function (changeEvent) {
+                        scope.$apply(function () {
+                            //scope.inputFile = changeEvent.target.files[0];
+                            // or all selected files:
+                            scope.inputFile = changeEvent.target.files;
+                        });
+                    });
+                }
+            }
+        }]);
+        app.controller('main', ['$scope', '$http', function($scope, $http) {
+            $scope.user = {
+                name: 'xx'
+            };
+
+            $scope.submit = function () {
+                var user = $scope.user;
+                console.log( user );
+
+                var file = user.files[0];
+                console.log( file.name, file.type, file.size );
+
+                //var fd = new FormData();
+                fd.append("file", files[0]);
+
+                $http.post('uploadUrl', fd, {
+                    withCredentials: true,
+                    headers: {'Content-Type': undefined },
+                    transformRequest: angular.identity
+                }).success(function (data) {
+
+                });
+            };
+            
+        }]);
+    </script>
+</body>
+</html>

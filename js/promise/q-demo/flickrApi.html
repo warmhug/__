@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="q.js"></script>
+</head>
+<body>
+    <script>
+        "use strict";
+
+        // Uses jQuery and Q.
+
+        var API_KEY = "whatever";
+
+        function getFlickrResponseAsync(method, responseProperty, params) {
+            var deferred = Q.defer();
+
+            $.ajax("http://www.flickr.com/services/rest/", {
+                data: $.extend({
+                    method: method,
+                    format: "json",
+                    api_key: API_KEY
+                }, params),
+                dataType: "jsonp",
+                jsonp: "jsoncallback"
+            })
+            .done(function (result) {
+                if (result.stat === "ok") {
+                    deferred.resolve(result[responseProperty]);
+                } else {
+                    deferred.reject(new Error("Flickr API failure: " + result.message + "(" + result.code + ")."));
+                }
+            })
+            .fail(function (xhr, textStatus, errorThrown) {
+                var error = new Error("Ajax request to the Flickr API failed.");
+                error.textStatus = textStatus;
+                error.errorThrown = errorThrown;
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
+        }
+
+        function getPhotosetsAsync(userId) {
+            return getFlickrResponseAsync("flickr.photosets.getList", "photosets", { user_id: userId }).get("photoset");
+        }
+
+        function getPhotosetPhotosAsync(photosetId) {
+            var params = { photoset_id: photosetId, extras: "description" };
+            return getFlickrResponseAsync("flickr.photosets.getPhotos", "photoset", params).get("photo");
+        }
+
+        function makePhotoUri(dto, size, idProperty) {
+            idProperty = idProperty || "id";
+            return "http://farm" + dto.farm + ".staticflickr.com/" + dto.server + "/" +
+            dto[idProperty] + "_" + dto.secret + (size ? "_" + size : "") + ".jpg";
+        }
+
+
+
+        var USER_ID = "whatever";
+
+        function photosetViewModel(photosetDto) {
+            return {
+                id: photosetDto.id,
+                title: photosetDto.title._content,
+                description: photosetDto.description._content,
+                primaryImageUri: makePhotoUri(photosetDto, "m", "primary")
+            };
+        }
+
+        function photoViewModel(photoDto, index) {
+            return {
+                index: index,
+                title: photoDto.title,
+                description: photoDto.description._content,
+                thumbnailUri: makePhotoUri(photoDto, "s"),
+                uri: makePhotoUri(photoDto)
+            };
+        }
+
+        getPhotosetsAsync(USER_ID).then(function (photosetDtos) {
+            var photosetViewModels = photosetDtos.map(photosetViewModel);
+            // do stuff with the photoset view models.
+
+            return Q.all(photosetDtos.map(function (photosetDto) {
+                return getPhotosetPhotosAsync(photosetDto.id).then(function (photosDto) {
+                    var photoViewModels = photosDto.map(photoViewModel);
+                    // do stuff with the photo view models.
+                });
+            })).then(function () {
+                // good to go; load the page.
+            });
+        }).done();
+    </script>
+</body>
+</html>

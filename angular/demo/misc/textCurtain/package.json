@@ -1,0 +1,11 @@
+{
+  "name": "textCurtain",
+  "version": "0.1.0",
+  "description": "",
+  "author": "",
+  "homepage": "",
+  "lpm": {
+    "dependencies": {
+    }
+  }
+}

@@ -1,0 +1,25 @@
+#! /bin/sh
+
+## echo ${0} 
+## echo $0
+## echo $(pwd)
+echo "--------- 分割线 ----------"
+
+BASEDIR=$(dirname $0)
+## echo $BASEDIR
+
+cd $BASEDIR
+
+echo "\033[32m git status \033[0m"
+git st  
+
+echo "\033[32m git add -A \033[0m"
+git add -A
+
+echo "\033[32m git ci \033[0m"
+git ci -a -m 'autocommit'
+
+echo "\033[32m git push \033[0m"
+git push
+
+read -p "Press Return to Close..."

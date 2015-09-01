@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title></title>
+</head>
+<body>
+  <script>
+    var pro = new Promise(function (resolve, reject) {
+      setTimeout(function () {
+        resolve(true)
+      }, 500)    
+    })
+    pro.then(function (data){
+        console.log(data);
+        throw new Error('oh noes');
+    }, function (err) {
+      // handle error
+      console.log('second', err)
+    }).catch(function (err) {
+      // I caught your error! :)
+      console.log('catch', err)
+    });
+  </script>
+</body>
+</html>

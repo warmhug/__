@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="http://cdn.staticfile.org/angular.js/1.3.0/angular.min.js"></script>
+    <script data-require="lodash.js@*" data-semver="2.4.1" src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js"></script>
+    <script src="script.js"></script>
+  </head>
+
+  <body ng-app="repeatPerformanceDemo">
+    <div ng-controller="parentController">
+      <input type="button" ng-click="showSlow()" value="Show Slow" />
+      <input type="button" ng-click="showFast()" value="Show Fast" />
+      <input type="button" ng-click="showTrackBy()" value="Show Track By" />
+      <slow-repeat ng-if="slow"></slow-repeat>
+      <fast-repeat ng-if="fast"></fast-repeat>
+      <track-by-repeat ng-if="trackBy"></track-by-repeat>
+    </div>
+  </body>
+
+</html>

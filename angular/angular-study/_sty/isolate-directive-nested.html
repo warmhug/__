@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:ng="http://angularjs.org" id="ng-app" ng-app="app">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        .wraper{
+            border: 1px solid #ccc;
+            padding: 30px 0;
+        }
+    </style>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+
+</head>
+<body ng-controller="MainCtrl">
+
+    <div wraper things="things" get-name="getName(name)" my-data="myData">
+        <isolate-scope things="things"></isolate-scope>
+        <proto-scope>
+            <child></child>
+        </proto-scope>
+    </div>
+	
+    <script>
+        /*
+            $scope.$on(name, listener)  监听name事件，触发时调用listener
+
+            $scope.$broadcast(name, args)  触发name事件，向“子scope”传播（向下）
+            $scope.$emit(name, args)  触发name事件，向“父scope”传播（向上）
+
+            
+            问题：
+                isolate scope 可以$emit事件向上传播，不能$broadcast事件向下传播，为什么？？？
+            解决：
+                方法一：通过scope:{} 对外暴露信息。缺点：要在view上写标记 (eg. getName myData)
+                方法二：注入$rootScope，用$rootScope.$broadcast广播消息
+        */
+
+        angular.module('app', []).directive('wraper', ['$timeout', function ($timeout) {
+            return {
+                restrict: 'A',
+                scope: {
+                    myData: '=',
+                    getName: '&',
+                    things: '='
+                },
+                transclude: true,
+                replace: true,
+                template: '<div class="wraper" ng-click="trigger(); getName({ name: \'ttttt\' })" ng-transclude><span>ssss</span></div>',
+                controller: ['$scope', '$element', '$attrs', '$transclude', function ($scope, $element, $attrs, $transclude) {
+                    $scope.myData = 'my data...';
+
+                    $scope.trigger = function () {
+                        //$scope.$broadcast('tran', 'wraper isolate event data');  // isolate scope不能$broadcast向下传播
+                    }
+
+                    $scope.$on('tran', function (event, data) {
+                        console.log(event, data);
+                    })
+                    
+                }]
+            }
+        }]).directive('isolateScope', ['$timeout', function ($timeout) {
+            return {
+                restrict: 'E',
+                scope: {
+                    things: '='
+                },
+                transclude: true,
+                replace: true,
+                template: '<ul><li ng-repeat="thing in things" ng-click="add(\'test\')">{{thing}} - {{testData}}</li></ul>',
+                controller: ['$scope', '$element', '$attrs', '$transclude', '$rootScope', function ($scope, $element, $attrs, $transclude, $rootScope) {
+
+                    $scope.testData = 'isolateScope';
+                    $scope.add = function (t) {
+                        $scope.testData = t + Math.random();
+
+                        //$scope.$emit('tran', $scope.testData);   // isolate scope 可以$emit向上传播
+                        //$scope.$broadcast('tran', $scope.testData);   // isolate scope 不能$broadcast向下传播
+
+                        //$rootScope.$emit('tran', $scope.testData);  //$rootScope为最顶层scope，不能再用$emit向上传播
+                        $rootScope.$broadcast('tran', $scope.testData); //所有子scope上绑定tran事件，都会触发
+                    }
+                    $scope.$on('tran', function (event, data) {
+                        console.log(event, data);
+                    })
+                }]
+            }
+        }]).directive('protoScope', ['$timeout', function ($timeout) {
+            return {
+                restrict: 'E',
+                //scope: true,  //原型继承，创建了新的scope
+                scope: false,  //默认值，可不设，不创建新的scope
+                transclude: true,
+                replace: true,
+                template: '<div><ul><li ng-repeat="thing in things" ng-click="trigger()">{{thing}} - {{myData}}</li></ul><p class="child" ng-transclude></p></div>',
+                controller: ['$scope', '$element', '$attrs', '$transclude', function ($scope, $element, $attrs, $transclude) {
+
+                    $scope.trigger = function () {
+                        $scope.$broadcast('tran', 'normal scope event data');  // normal scope能$broadcast向下传播
+                    }
+                    $scope.$on('tran', function (event, data) {
+                        console.log(event, data);
+                    })
+
+                }]
+            }
+        }]).directive('child', ['$timeout', function ($timeout) {
+            return {
+                restrict: 'E',
+                transclude: true,
+                replace: true,
+                template: '<span>my... - {{myData}}</span>',
+                controller: ['$scope', '$element', '$attrs', '$transclude', function ($scope, $element, $attrs, $transclude) {
+
+                    $scope.$on('tran', function (event, data) {
+                        console.log(event, data);
+                    })
+
+                }]
+            }
+        }]).controller('MainCtrl', function ($scope, $log) {
+
+            $scope.things = ['one', 'two', 'three'];
+            $scope.$watch('things', function (value, old) {
+                //console.log(value, old);
+            }, true);
+            
+            $scope.$on('tran', function (event, data) {
+                console.log(event, data);
+            })
+
+            $scope.getName = function (name) {
+                console.log(name);
+            }
+
+        })
+    </script>
+</body>
+</html>

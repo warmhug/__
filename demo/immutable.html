@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/immutable/3.7.4/immutable.js"></script>
+</head>
+<body>
+  <script>
+    var map1 = Immutable.Map({a:1, b:2, c:3});
+    var clone = map1
+    console.log(clone === map1);
+    var map2 = map1.set('b', 50);
+    map1.get('b')
+    map2.get('b')
+
+    var deep = Immutable.Map({ a: 1, b: 2, c: Immutable.List.of(3, 4, 5) });
+    console.log(deep.toObject()); // { a: 1, b: 2, c: List [ 3, 4, 5 ] }
+    console.log(deep.toArray()); // [ 1, 2, List [ 3, 4, 5 ] ]
+    console.log(deep.toJS()); // { a: 1, b: 2, c: [ 3, 4, 5 ] }
+    console.log(JSON.stringify(deep)); // '{"a":1,"b":2,"c":[3,4,5]}'
+  </script>
+</body>
+</html>

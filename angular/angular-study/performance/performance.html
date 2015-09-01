@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="http://cdn.staticfile.org/angular.js/1.3.0/angular.js"></script>
+</head>
+<body ng-app="app" ng-controller="main">
+
+    <button ng-click="change()">update-{{ specialN }}</button>
+    <span ng-repeat="item in list">{{ item.text }}</span>
+    <script>
+        var app = angular.module('app', []);
+        app.controller('main', ['$scope', function($scope){
+            var index = 0;
+            $scope.specialN = 'this';
+            $scope.change = function () {
+                var list = [];
+                index++;
+                for (var i = 0; i < 3000; i++) {
+                    list.push({ text: 'text_' + i + index });
+                }
+                console.log( list );
+                $scope.list = list;
+            };
+        }])
+    </script>
+
+</body>
+</html>

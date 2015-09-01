@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>run totoro</title>
+
+    <!--lpm需要依赖的文件 start -->
+    <script src="https://a.alipayobjects.com/laputa/jquery/1.11.1/jquery.js"></script>
+    <script src="https://a.alipayobjects.com/laputa/angularjs/1.2.16/angular.js"></script>
+    <link href="https://a.alipayobjects.com/??knight/bizdev/2.0.3/bizdev.css" rel="stylesheet">
+    <!--lpm 需要依赖的文件 end -->
+
+    <link href="https://a.alipayobjects.com/lib/jasmine/1.3.1/jasmine.css" type="text/css" rel="stylesheet" charset="utf-8" />
+    <script src="https://a.alipayobjects.com/lib/jasmine/1.3.1/jasmine.js"></script>
+    <script src="https://a.alipayobjects.com/lib/jasmine/1.3.1/jasmine-html.js"></script>
+
+    <script src="../dist/index-merge.js"></script>
+    <script src="index.spec.js"></script>
+  </head>
+  <body>
+    <script>
+        var jasmineEnv = jasmine.getEnv();
+        jasmineEnv.updateInterval = 1000;
+        var htmlReporter = new jasmine.HtmlReporter();
+        jasmineEnv.addReporter(htmlReporter);
+        jasmineEnv.execute();
+    </script>
+  </body>
+</html>

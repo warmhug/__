@@ -1,0 +1,67 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+</head>
+<body>
+    <div ng-controller="TreeCtrl">
+        <tree family="treeFamily">
+            <p>{{ family.name }}</p>
+        </tree>
+    </div>
+    <script>
+        angular.module('app', []).controller("TreeCtrl",function ($scope) {
+            $scope.treeFamily = {
+                name: "Parent",
+                children: [
+                    {
+                        name: "Child1",
+                        children: [
+                            {
+                                name: "Grandchild1",
+                                children: []
+                            },
+                            {
+                                name: "Grandchild2",
+                                children: []
+                            },
+                            {
+                                name: "Grandchild3",
+                                children: []
+                            }
+                        ]
+                    },
+                    {
+                        name: "Child2",
+                        children: []
+                    }
+                ]
+            };
+        }).directive("tree", function ($compile) {
+                    return {
+                        restrict: "E",
+                        transclude: true,
+                        scope: {family: '='},
+                        template: '<ul>' +
+                                '<li ng-transclude></li>' +
+                                '<li ng-repeat="child in family.children">' +
+                                '<tree family="child">{{family.name}}</tree>' +
+                                '</li>' +
+                                '</ul>',
+                        compile: function (tElement, tAttr, transclude) {
+                            var contents = tElement.contents().remove();
+                            var compiledContents;
+                            return function (scope, iElement, iAttr) {
+                                if (!compiledContents) {
+                                    compiledContents = $compile(contents, transclude);
+                                }
+                                compiledContents(scope, function (clone, scope) {
+                                    iElement.append(clone);
+                                });
+                            };
+                        }
+                    };
+                });
+    </script>
+</body>
+</html>

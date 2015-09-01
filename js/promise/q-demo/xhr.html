@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="q.js"></script>
+</head>
+<body>
+    <pre>
+        官方文档中的demo，不完善。
+        完善演示见mr/browser.js
+        https://github.com/montagejs/mr/blob/71e8df99bb4f0584985accd6f2801ef3015b9763/browser.js#L29-L73
+    </pre>
+
+    <script>
+        function requestOkText(url) {
+            var request = new XMLHttpRequest();
+            var deferred = Q.defer();
+
+            request.open("GET", url, true);
+            request.onload = onload;
+            request.onerror = onerror;
+            request.onprogress = onprogress;
+            request.send();
+
+            function onload() {
+                if (request.status === 200) {
+                    deferred.resolve(request.responseText);
+                } else {
+                    deferred.reject(new Error("Status code was " + request.status));
+                }
+            }
+
+            function onerror() {
+                deferred.reject(new Error("Can't XHR " + JSON.stringify(url)));
+            }
+
+            function onprogress(event) {
+                deferred.notify(event.loaded / event.total);
+            }
+
+            return deferred.promise;
+        }
+
+
+        requestOkText("./data1.json")
+        .then(function (responseText) {
+            // If the HTTP response returns 200 OK, log the response text.
+            console.log(responseText);
+        }, function (error) {
+            // If there's an error or a non-200 status code, log the error.
+            console.error(error);
+        }, function (progress) {
+            // Log the progress as it comes in.
+            console.log("Request progress: " + Math.round(progress * 100) + "%");
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+	<style type="text/css">
+	/*  */
+	</style>
+    <script type="text/javascript">
+        onload = function () {
+            var worker = new Worker('dedicated.js');
+            worker.onmessage = function (e) {
+                var timer2 = (new Date()).valueOf();
+                console.log('result: ' + e.data + '\n 结束时间：' + timer2 + '\n 执行时间：' + (timer2 - timer));
+            };
+            worker.onerror = function (e) {
+                console.log(e.message); // 错误信息
+                console.log(e.lineno); // 行号
+                console.log(e.filename); //返回完整的错误文件的url .
+            };
+            //worker.terminate();
+            var timer = (new Date()).valueOf();
+            console.log('开始计算时间' + timer);
+            worker.postMessage(20);
+
+        }
+        /*
+        注意点：
+        1、chrome中 ,调用close()后. self对象被赋值为null .
+        但你仍然可以和其他浏览器一样 直接调用 WorkerGlobalScope对象的方法.
+        所以,应避免使用self.postMessage, self.onmessage=function(){} ,self.close()；而采用直接调用的方式.(如onmessage=function(){};)
+
+        2、postMessage()参数：chrome/safari下，只能用字符串通信，（最新浏览器测试也能用对象）
+          无法传递其他数据，无论是数组，object，布尔值，数值，全都会被转成字符串，
+          而在firefox下则支持所有数据类型的传递。
+
+          */
+    </script>
+</head>
+<body>
+</body>
+</html>

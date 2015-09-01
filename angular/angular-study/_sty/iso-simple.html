@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"> 
+  <script src="http://cdn.staticfile.org/angular.js/1.3.0/angular.js"></script>
+</head>
+<body ng-app="docsIsolateScopeDirective">
+  <div ng-controller="Controller as vm">    
+    <h2>controller as</h2>
+    <input ng-model="vm.input" /> <br>
+    <my-customer customer-info="vm.naomi" fun="vm.fun(1)"></my-customer> 
+  </div>
+
+  <script> 
+      angular.module('docsIsolateScopeDirective', [])
+      .controller('Controller', ['$scope', '$timeout', function($scope, $timeout) {
+        //$scope.naomi = { name: 'Naomi', address: '1600 Amphitheatre' }; 
+
+        var vm = this 
+        vm.fun = fun
+
+        function fun(arg){
+          return arg + Math.random()
+        }
+
+        // $timeout(function() {
+        //   vm.fun = 'xxx'
+        // }, 1000);  
+
+        $scope.$watch('vm.input', function(n, o){
+          vm.naomi = { name: 'Naomi' + n }; 
+        });
+
+      }])
+      .directive('myCustomer', function() {
+        return {
+          restrict: 'E',
+          scope: {
+            fun: '=',
+            customerInfo: '=?'  
+          },
+          template: 'Name: {{vm.customerInfo.name}} fun: {{vm.fun}}',
+          controllerAs: 'vm',
+          bindToController: true, 
+          controller: ['$scope', function (scope){
+            var vm = this;             
+
+          }]
+        };
+      }); 
+  </script>
+</body>
+</html>

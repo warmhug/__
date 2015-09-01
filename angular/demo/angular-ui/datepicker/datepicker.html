@@ -1,0 +1,89 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://code.angularjs.org/1.0.8/angular.js"></script>
+    <script src="datepicker-tpls.js"></script>
+</head>
+<body>
+<div ng-controller="DatepickerDemoCtrl">
+    <pre>Selected date is: <em>{{dt | date:'fullDate' }}</em></pre>
+
+    <h4>Inline</h4>
+    <div style="display:inline-block; min-height:290px;">
+      <div class="well well-sm" ng-model="dt">
+          <datepicker min="minDate" show-weeks="showWeeks"></datepicker>
+      </div>
+    </div>
+
+    <h4>Popup</h4>
+    <div class="row">
+        <div class="col-md-6">
+            <p class="input-group">
+              <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened" min="minDate" max="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+              <span class="input-group-btn">
+                <button class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label>Format:</label> <select class="form-control" ng-model="format" ng-options="f for f in formats"><option></option></select>
+        </div>
+    </div>
+
+    <hr />
+    <button class="btn btn-sm btn-info" ng-click="today()">Today</button>
+    <button class="btn btn-sm btn-default" ng-click="dt = '2009-08-24'">2009-08-24</button>
+    <button class="btn btn-sm btn-success" ng-click="toggleWeeks()" tooltip="For inline datepicker">Toggle Weeks</button>
+    <button class="btn btn-sm btn-danger" ng-click="clear()">Clear</button>
+    <button class="btn btn-sm btn-default" ng-click="toggleMin()" tooltip="After today restriction">Min date</button>
+</div>
+    
+    <script>
+        angular.module('app', ['ui.bootstrap']);
+
+var DatepickerDemoCtrl = function ($scope) {
+  $scope.today = function() {
+    $scope.dt = new Date();
+  };
+  $scope.today();
+
+  $scope.showWeeks = true;
+  $scope.toggleWeeks = function () {
+    $scope.showWeeks = ! $scope.showWeeks;
+  };
+
+  $scope.clear = function () {
+    $scope.dt = null;
+  };
+
+  // Disable weekend selection
+  $scope.disabled = function(date, mode) {
+    return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+  };
+
+  $scope.toggleMin = function() {
+    $scope.minDate = ( $scope.minDate ) ? null : new Date();
+  };
+  $scope.toggleMin();
+
+  $scope.open = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    $scope.opened = true;
+  };
+
+  $scope.dateOptions = {
+    'year-format': "'yy'",
+    'starting-day': 1
+  };
+
+  $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'shortDate'];
+  $scope.format = $scope.formats[0];
+};
+    </script>
+</body>
+</html>

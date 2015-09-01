@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>display-box</title>
+    <style>
+        .box{
+            display:-webkit-box;
+        }
+        .item{
+            -webkit-box-flex: 1;
+            width: 100%;    /* 不设置，子元素宽度不等分 */
+            margin: 8px;
+            overflow:hidden;
+        }
+    </style>
+</head>
+<body>
+    参考：http://stackoverflow.com/questions/6673555/something-about-display-webkit-box-webkit-box-flex1
+    <div class="box">
+        <div class="item">
+            <p class="txt">的身份上大夫撒旦盛大富翁范围</p>
+        </div>
+        <div class="item">
+            <p class="txt">dfdfd</p>
+        </div>
+        <div class="item">
+            <p class="txt">64565444444444444444444444565656565656565</p>
+        </div>
+    </div>
+</body>
+</html>

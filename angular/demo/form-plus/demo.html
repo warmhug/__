@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html xmlns:ng="http://angularjs.org">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>form + validity + grid</title>
+
+    <link href="../../docs/css/fc.css" rel="stylesheet" />
+    <link href="./bootstrap-additions.css" rel="stylesheet" />
+    <link href="./app.css" rel="stylesheet" />
+
+    <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.js"></script>
+
+    <script src="./angular-file-upload/angular-file-upload.js"></script>
+    <script src="./angular-file-upload/ngThumb.js"></script>
+    <script src="./angular-locale_zh-cn.js"></script>
+
+    <script src="http://cdn.staticfile.org/angular-strap/2.1.3/angular-strap.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular-strap/2.1.3/angular-strap.tpl.min.js"></script>
+
+    <script src="./ui-bootstrap-tpls-0.11.2.js"></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</head>
+<body id="ng-app" ng-app="app" ng-controller="main">
+<div class="container">
+
+    <h4>表单查询demo</h4>
+    <hr />
+    <form name="myForm" class="form-horizontal" role="form"
+          novalidate ng-submit="formSubmit()">
+
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">名字</label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <input id="name" type="text" class="form-control" placeholder="请输入要查找的人"
+                           name="name"
+                           ng-model="pInfo.name"  />
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default"
+                                data-html="0"
+                                animation="false"
+                                ng-model="pInfo.selectedCompany"
+                                ng-options="i.id as i.name for i in pInfo.company"
+                                bs-select>
+                             <span class="caret"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group"
+             ng-class="{ 'has-error' : myForm.txt.$invalid && !myForm.txt.$pristine }">
+            <label for="txt" class="col-sm-2 control-label">文本</label>
+            <div class="col-sm-6">
+                <input id="txt" class="form-control" type="text" placeholder="Enter txt"
+                       name="txt" required
+                       ng-model="pInfo.txt"
+                       ng-minlength="3"
+                       ng-maxlength="6"
+                       ng-pattern="/^[a-z]+$/"
+                       ng-blur="myForm.txt.$setViewValue(myForm.txt.$viewValue)" />
+
+                <div> 错误对象： {{ myForm.txt.$error | json }} </div>
+            </div>
+            <div ng-show="myForm.txt.$invalid && !myForm.txt.$pristine">
+                <span ng-show="myForm.txt.$error.required" class="help-block pull-left">必填</span>
+                <span ng-show="myForm.txt.$error.pattern" class="help-block pull-left">需要为字母</span>
+                <span ng-show="myForm.txt.$error.minlength" class="help-block pull-left">short</span>
+                <span ng-show="myForm.txt.$error.maxlength" class="help-block pull-left">long</span>
+            </div>
+        </div>
+
+        <div class="form-group"
+             ng-class="{ 'has-error' : myForm.email.$invalid && !myForm.email.$pristine }">
+            <label for="email" class="col-sm-2 control-label">
+                email地址(ie9及以下不支持type为email等类型)</label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <div class="input-group-addon">@</div>
+                    <input id="email" class="form-control" type="email" placeholder="Enter email"
+                           name="email" required
+                           ng-model="pInfo.email"
+                           ng-blur="myForm.email.$setViewValue(myForm.email.$viewValue)" />
+                </div>
+                <div> 错误对象： {{ myForm.email.$error | json }} </div>
+            </div>
+            <div ng-show="myForm.email.$invalid && !myForm.email.$pristine">
+                <span ng-show="myForm.email.$error.required" class="help-block pull-left">必填</span>
+                <span ng-show="myForm.email.$error.email" class="help-block pull-left">请输入正确的email</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">性别</label>
+            <div class="col-sm-6">
+                <label class="radio-inline mr10" ng-repeat="item in pInfo.sex">
+                    <input type="radio" name="sex" ng-value="item.id"
+                           ng-model="pInfo.selectedSex" /> {{ item.name }}
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">标签</label>
+            <div class="col-sm-6">
+                <label class="checkbox-inline mr10" ng-repeat="item in pInfo.tags">
+                    <input type="checkbox"
+                           ng-model="item.flag" /> {{ item.name }}
+                </label>
+            </div>
+        </div>
+
+        <div class="advanced-sch" collapse="isCollapsed">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">angular-ui 日期时间，支持ie8</label>
+                <div class="col-sm-3 ">
+                    <p class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="{{format}}"
+                               ng-model="dt"
+                               is-open="opened" min-date="minDate" max-date="'2015-06-22'"
+                               datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
+                               ng-required="true"
+                               close-text="Close" />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="open($event)"><i
+                        class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+                    </p>
+                </div>
+                <div class="col-sm-2">
+                    <p timepicker ng-model="mytime" ng-change="changed()"
+                       hour-step="1" minute-step="10" show-meridian="true"></p>
+                </div>
+            </div>
+            <!-- divide -->
+            <div class="form-group">
+                <div class="col-sm-3 col-sm-offset-2">
+                    <a ng-click="queryByDateRange('1d')">今天</a>
+                    <a ng-click="queryByDateRange('7d')">最近7天</a>
+                    <a ng-click="queryByDateRange('1m')">最近1个月</a>
+                    <a ng-click="queryByDateRange('3m')">最近3个月</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">文件上传</label>
+                <div class="col-sm-6">
+                    <input type="file" nv-file-select uploader="uploader" multiple />
+                    <p>上传文件数: {{ uploader.queue.length }}</p>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th width="50%">Name</th>
+                                <th ng-show="uploader.isHTML5">Size</th>
+                                <th ng-show="uploader.isHTML5">Progress</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in uploader.queue">
+                                <td>
+                                    <strong>{{ item.file.name }}</strong>
+                                    <!-- Image preview -->
+                                    <div ng-show="uploader.isHTML5"
+                                         ng-thumb="{ file: item._file, height: 100 }"></div>
+                                </td>
+                                <td ng-show="uploader.isHTML5" nowrap>
+                                    {{ item.file.size/1024/1024|number:2 }} MB</td>
+                                <td ng-show="uploader.isHTML5">
+                                    <div class="progress" style="margin-bottom: 0;">
+                                        <div class="progress-bar" role="progressbar"
+                                             ng-style="{ 'width': item.progress + '%' }"></div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span ng-show="item.isSuccess"><i
+                                        class="glyphicon glyphicon-ok"></i></span>
+                                    <span ng-show="item.isCancel"><i
+                                        class="glyphicon glyphicon-ban-circle"></i></span>
+                                    <span ng-show="item.isError"><i
+                                        class="glyphicon glyphicon-remove"></i></span>
+                                </td>
+                                <td nowrap>
+                                    <button type="button" class="btn btn-success btn-xs"
+                                            ng-click="item.upload()"
+                                            ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                        <span class="glyphicon glyphicon-upload"></span> Upload
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-xs"
+                                            ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                        <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-xs"
+                                            ng-click="item.remove()">
+                                        <span class="glyphicon glyphicon-trash"></span> Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div>
+                        <div>
+                            Queue progress:
+                            <div class="progress" style="">
+                                <div class="progress-bar" role="progressbar"
+                                     ng-style="{ 'width': uploader.progress + '%' }"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-success btn-s"
+                                ng-click="uploader.uploadAll()"
+                                ng-disabled="!uploader.getNotUploadedItems().length">
+                            <span class="glyphicon glyphicon-upload"></span> Upload all
+                        </button>
+                        <button type="button" class="btn btn-warning btn-s"
+                                ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
+                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+                        </button>
+                        <button type="button" class="btn btn-danger btn-s"
+                                ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
+                            <span class="glyphicon glyphicon-trash"></span> Remove all
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row col-sm-offset-2">
+            <button type="button" class="btn btn-default btn-xs" ng-click="isCollapsed = !isCollapsed">
+                切换显示高级搜索
+            </button>
+            <button type="button" class="btn btn-default btn-xs"
+                    ng-show="isCollapsed"
+                    ng-click="isCollapsed=false">展开</button>
+            <button type="button" class="btn btn-default btn-xs"
+                    ng-show="!isCollapsed"
+                    ng-click="isCollapsed=true">收起</button>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-6 col-sm-offset-2">
+                <div class="btn-group pull-right">
+                    <button class="btn btn-default" type="reset" ng-click="reset()">重置</button>
+                </div>
+                <div class="btn-group pull-right mr10">
+                    <button class="btn btn-primary" type="submit" ng-disabled="myForm.$invalid">
+                        查询
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <hr />
+
+    <div class="result" ng-show="schResult.totalItems">
+        <h4>查询结果</h4>
+
+        <table class="table table-condensed table-striped table-bordered">
+            <col width="30" />
+            <thead>
+                <tr>
+                    <th class=""><input type="checkbox" checkbox-all="schResult.lists.sel" /></th>
+                    <th class="col-sm-1">名字</th>
+                    <th class="col-sm-2">性别</th>
+                    <th class="col-sm-2">email</th>
+                    <th class="col-sm-3">描述</th>
+                    <th class="col-sm-2">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="!schResult.lists.length"><td colspan="6">无数据</td></tr>
+                <tr ng-repeat="item in schResult.lists">
+                    <td><input type="checkbox" ng-model="item.sel" /></td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.selectedSex }}</td>
+                    <td>{{ item.email }}</td>
+                    <td class="setWidth ellipsis"><div>{{ item.desc }}</div></td>
+                    <td>
+                        <a ng-click="edit(this, $index)"
+                           data-placement="center"
+                           data-template="modal-tpl"
+                           data-title="编辑人员"
+                           data-html="1"
+                           data-content-template="modal-content"
+                           bs-modal>编辑</a> &nbsp;
+                        <a ng-click="del($index)">删除</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- modal content -->
+        <script type="text/ng-template" id="modal-content">
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">名字</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" ng-model="editItem.name" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">性别</label>
+                    <div class="col-sm-6">
+                        <label class="radio-inline mr10" ng-repeat="item in editItem.sex">
+                            <input type="radio" name="sex" ng-value="item.id"
+                                   ng-model="editItem.selectedSex" /> {{ item.name }}
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">email</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" ng-model="editItem.email" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">描述</label>
+                    <div class="col-sm-6">
+                        <textarea rows="3" class="form-control" ng-model="editItem.desc" /></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6 col-sm-offset-2">
+                        <div class="btn-group pull-right">
+                            <button class="btn btn-default" type="reset"
+                                    ng-click="editCancel();$hide()">取消</button>
+                        </div>
+                        <div class="btn-group pull-right mr10">
+                            <button class="btn btn-primary" type="submit"
+                                    ng-click="editSave();$hide()">保存</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </script>
+        <!-- modal template -->
+        <script type="text/ng-template" id="modal-tpl">
+            <div class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" ng-show="title">
+                            <button type="button" class="close" ng-click="$hide()">&times;</button>
+                            <h4 class="modal-title" ng-bind="title"></h4>
+                        </div>
+                        <div class="modal-body" ng-bind="content"></div>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <!-- 分页 -->
+        <div class="row mr0 mt10">
+            <pagination class="pull-right pagination-sm"
+                        total-items="schResult.totalItems"
+                        ng-model="schResult.currentPage"
+                        max-size="10"
+                        boundary-links="true"
+                        first-text="首页"
+                        last-text="尾页"
+                        previous-text="上一页"
+                        next-text="下一页"
+                        items-per-page="20"
+                        ng-change="formSubmit()"
+                    ></pagination>
+            <span class="pull-right mr10 mt10">总条目数：{{schResult.totalItems}}</span>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

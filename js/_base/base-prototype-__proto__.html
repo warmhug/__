@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title></title>
+</head>
+<body>
+    <script>
+        /**
+            对象的创建过程详解：
+            用 var anObject = new aFunction() 形式创建对象的过程实际上可以分为三步：
+            第一步是建立一个新对象（anObject）；
+            第二步将该对象（anObject）的__proto__设置为构造函数（aFunction）prototype引用的那个原型对象；
+            第三步将该对象（anObject）作为this参数调用构造函数，完成成员设置等初始化工作。
+
+            对象建立之后，对象上的任何访问和操作都只与对象自身及其原型链上的那串对象有关，与构造函数再扯不上关系了。
+            换句话说，构造函数只是在创建对象时起到介绍原型对象和初始化对象两个作用。
+
+            原型链：
+                每个对象（此处对象应该仅指大括号括起来的object，不包括function、array。待验证？）
+                都会在其内部初始化一个属性，就是__proto__，当我们访问一个对象的属性时，
+                如果这个对象内部不存在这个属性，那么就会去它的 __proto__ 里找这个属性，
+                这个__proto__又会有自己的__proto__，于是就这样 一直找下去，也就是我们平时所说的原型链的概念。
+
+            函数对象与原型：
+                每个对象都有一个原型对象，但并不意味着每个对象都有一个prototype属性，实际上只有函数对象才有这个属性。
+                在创建一个对象时，JS会自动将其原型对象设置为其构造函数的prototype属性所指的对象。
+                但是，构造函数本身也是个对象，它也有自己的原型对象但并不是它的prototype属性所指向的那个对象。
+                函数作为一个对象，其构造函数是Function。因此，构造函数的原型对象实际上是Function.prototype所指的对象。
+        */
+        function MyFunc() { }; //定义一个空函数
+        var anObj = new MyFunc(); //使用new操作符，借助MyFun函数，就创建了一个对象
+        // 等价于：
+        function MyFunc() { };
+        var anObj = {};     //创建一个对象
+        anObj.__proto__ = MyFunc.prototype;
+        MyFunc.call(anObj); //将anObj对象作为this指针调用MyFunc函数
+
+
+        /**
+            实现 new 操作符
+            http://blog.vjeux.com/2011/javascript/how-prototypal-inheritance-really-works.html
+        */
+        function New (f) {
+            var n = { '__proto__': f.prototype };
+            return function () {
+                f.apply(n, arguments);
+                return n;
+            };
+        }
+    </script>
+
+		<script>
+        /*
+        *   内置对象（Array、Number、Object等）的prototype 能被改变吗？ 不能！
+        * */
+        Array.prototype = {
+            splice:function(){console.log(11)}
+        };
+        var arr = [];
+        console.log(arr instanceof Array);//弹出true,说明与Array的内置原型对象的引用还是保存着的
+        console.log(arr.splice)//弹出function splice(){ [native code]}; 说明上面的改变Array原型指向的代码失效，浏览器静默失败。
+    </script>
+
+    <script>
+        /**
+             原型链的更改、回溯
+        */
+        function f(){
+            this.constructor = arguments.callee;  //注释掉效果不同
+        }
+        console.log(f instanceof Function); //true instanceof检查f内部的__proto__与Function.prototype有共同的结点
+        var obj = new f;
+        console.log(obj instanceof Function); //false obj的_proto_是f.prototype，但与Function.prototype没有共同的结点
+
+        f.prototype = new Function();  //修改原型对象
+        //f.prototype.constructor = f;
+        var obj1 = new f;
+        console.log("找到子类了---"+obj1.constructor+"\n找到父类了---"+obj1.constructor.prototype.constructor)
+        console.log(obj1 instanceof Function);
+    </script>
+
+    <script>
+        /* 构造函数创建对象--http://www.planabc.net/2008/02/20/javascript_new_function/ */
+        var yx01 = new function() {return "圆心"}; //用匿名函数创建了对象yx01
+        alert(yx01); // [object Object]
+        var yx02 = new function() {return new String("圆心")}; //用匿名函数创建了对象yx02
+        alert(yx02); // “圆心”
+        /* 解释：
+        "圆心"是基本的字符串类型，new String("圆心")则创建了一个string对象。
+        只要 new 表达式之后的 constructor 返回（return）一个引用对象（数组，对象，函数等），都将覆盖new创建的匿名对象，如果返回（return）一个原始类型（无 return 时其实为 return 原始类型 undefined），那么就返回 new 创建的匿名对象。
+        参考：http://www.planabc.net/2008/02/20/javascript_new_function/
+        */
+    </script>
+
+    <script>
+        /**
+            __proto__简介：
+            __proto__ 属性已经被添加在了ES6草案
+            一个对象的__proto__ 属性和自己的内部属性[[Prototype]]指向一个相同的值
+        */
+        console.log(Function.prototype === Function.__proto__); //true  function Empty() {}
+        console.log(Function.prototype === Object.__proto__); //true  function Empty() {}
+        console.log(Function.prototype.__proto__ == Object.prototype); //true
+        console.log(Object.prototype.__proto__);  // null
+        console.log(Object.__proto__.__proto__);  // [object Object]
+
+
+        function Employee() { }
+        var fred = new Employee();
+        console.log(fred.__proto__ === Employee.prototype); // true
+
+        //借助__proto__，实现数组的子类型
+        var MyArrayProto = Object.create(Array.prototype);
+        //var MyArrayProto = {__proto__:Array.prototype};
+        MyArrayProto.foo = function () { };
+        function createMyArray() {
+            var arr = Array.prototype.slice.call(arguments);
+            arr.__proto__ = MyArrayProto;
+            return arr;
+        }
+        var myarr = createMyArray(1,2,3);    //myarr会有foo方法,也会有其他的数组方法
+        console.log(Object.getPrototypeOf(MyArrayProto) === Array.prototype);
+    </script>
+
+</body>
+</html>

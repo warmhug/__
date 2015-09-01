@@ -1,0 +1,31 @@
+﻿<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body onpopstate="set(event.state)">
+
+	<span>测试表单数据会不会丢失:</span>
+	<p><input type="text" name="" id="" /></p> 
+	<!-- 测试表单数据会不会丢失 -->
+
+    <script>
+        setInterval(function () { document.title = 'Line - ' + new Date(); }, 1000);
+        var i = 1;
+        function inc() {
+            set(i + 1);
+            history.pushState(i, 'Line - ' + i);
+        }
+        function set(newI) {
+            i = newI;
+            document.forms.F.I.value = newI;
+        }
+    </script>
+    <form name="F">
+    State:
+    <output name="I">1</output>
+    <input value="Increment" type="button" onclick="inc()">
+    </form>
+</body>
+</html>

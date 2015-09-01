@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="http://cdn.staticfile.org/angular.js/1.3.0/angular.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.12.1/react.js"></script>
+    <script src="MYCOMPONENT.js"></script>
+    <script src="script.js"></script>
+  </head>
+
+  <body ng-app="fasterAngular">
+    <h1>Faster Rendering With ReactJs</h1>
+    <div ng-controller="mycontroller">
+        <button ng-click="refresh()">Refresh Data</button>
+        <table>
+          <tr ng-repeat="line in data">
+            <td>{{line[0]}}</td>
+            <td>{{line[1]}}</td>
+            <td>{{line[2]}}</td>
+            <td>{{line[3]}}</td>
+            <td>{{line[4]}}</td>
+          </tr>
+        </table>
+    </div>
+  </body>
+
+</html>

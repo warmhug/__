@@ -1,0 +1,243 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <title>myApp</title>
+    <!--  -->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" />
+    <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular-sanitize.min.js"></script>
+</head>
+<body ng-controller="Ctrl">
+<div class="container">
+    <div class="row">
+        此demo基本为
+        <a href="http://angular-ui.github.io/ui-utils/">原文档</a>
+        的优良部分的翻译。
+    </div>
+    <!--  -->
+    <div class="row">
+        <h3>Event Binder：绑定一些angular内置不支持的事件，如自定义事件。（大多事件angular都已支持）</h3>
+        <p class="well">
+            <input value="Focus and then Blur this input" ui-event="{ blur : 'blurCallback($event)' } ">
+        </p>
+        <hr />
+    </div>
+    <!--  -->
+    <div class="row">
+        <h3>Format：用作字符串替换，国际化支持等</h3>
+        <div class="well">
+            <label>
+                <input ng-model="sentence" class="span5" type="text">
+            </label>
+            <label>
+                <input type="radio" ng-model="mode" value="string">
+                Token (string):
+                <input ng-model="tokens.string" class="span3" type="text" placeholder="$0">
+            </label>
+            <label>
+                <input type="radio" ng-model="mode" value="array">
+                Token (array):
+                <input ng-model="tokens.array[0]" class="span1" type="text" placeholder="$0">
+                <input ng-model="tokens.array[1]" class="span1" type="text" placeholder="$1">
+                <input ng-model="tokens.array[2]" class="span1" type="text" placeholder="$2">
+            </label>
+            <label>
+                <input type="radio" ng-model="mode" value="object">
+                Token (object):
+                <input ng-model="tokens.object.name" class="span2" type="text" placeholder=":name">
+                <input ng-model="tokens.object.subject" class="span2" type="text" placeholder=":subject">
+            </label>
+            <p>{{ sentence | format : tokens[mode] }}</p>
+            <pre>Tokens: {{ tokens[mode] | json }}</pre>
+        </div>
+        <hr />
+    </div>
+    <!--  -->
+    <div class="row">
+        <h3>Highlight：高亮显示搜索到的文本内容</h3>
+        <style>
+            .ui-match {
+                background: yellow;
+            }
+        </style>
+        <div class="well">
+            <p>
+                <label>
+                    <input type="checkbox" ng-model="caseSensitive">
+                    Case Sensitive?
+                </label>
+            </p>
+            <p>
+                <input placeholder="Enter some text to highlight" ng-model="highlightText">
+            </p>
+            <p ng-bind-html="'Hello there, how are you today? I\'m fine thank you.' | highlight:highlightText:caseSensitive"></p>
+        </div>
+        <hr />
+    </div>
+    <!--  -->
+    <div class="row">
+        <h3>Include Fragment：是ngInclude的增强版，能选择一个template文件中的指定代码片段</h3>
+        <h5>ui-include里src值要用单引号。Don't forget to include jQuery if you need full selector support!</h5>
+        Choose fragment to load:
+        <select ng-model="uiIncludeFragment">
+            <option value="fragment-1">fragment-1</option>
+            <option value="fragment-2">fragment-2</option>
+            <option value="fragment-3">fragment-3</option>
+        </select>
+        <br /> Fragment content
+        <span ng-show="uiIncludeFragment">(<code>fragment="'{{uiIncludeFragment}}'"</code>)</span>
+        :
+        <div class="well">
+            <ui-include src="'partial/fragments.html'" fragment="uiIncludeFragment" ng-show="uiIncludeFragment"></ui-include>
+        </div>
+        <hr />
+    </div>
+    <!--  -->
+    <div class="row">
+        <h3>Indeterminate checkbox：不确定的checkbox，demo省略</h3>
+        <hr />
+    </div>
+    <div class="row">
+        <h3>Inflector：Converts a string to an alternative format，demo省略</h3>
+        <hr />
+    </div>
+    <div class="row">
+        <h3>jQuery Passthrough：不是所有的jQuery plugin在angular中使用时都需要生成一个新的directive。。。 demo省略</h3>
+        <hr />
+    </div>
+    <div class="row">
+        <h3>Keypress：在任何元素上注册键盘事件，注册方式较简单</h3>
+        <div class="well">
+            <textarea
+                    ui-keypress="{13:'keypressCallback($event)'}">
+                按回车键
+            </textarea>
+            <textarea
+                    ui-keydown="{'enter alt-space':'keypressCallback($event)'}">
+            </textarea>
+            <textarea
+                    ui-keyup="{'enter':'keypressCallback($event)'}">
+            </textarea>
+            <div tabindex="0"
+                 ui-keyup="{'enter':'keypressCallback($event)'}">
+                在这个div上按回车键
+            </div>
+        </div>
+        <hr />
+    </div>
+    <div class="row">
+        <h3>Mask：类似格式化的操作，demo省略</h3>
+        <hr />
+    </div>
+    <div class="row">
+        <h3>Reset：重置，demo省略</h3>
+        <hr />
+    </div>
+    <div class="row">
+        <h3>Route Checking：route检查，demo省略</h3>
+        <hr />
+    </div>
+    <!--  -->
+    <div class="row">
+        <h3>Scroll till you drop：无尽列表</h3>
+        <style>
+            .my-viewport {
+                height: 200px;
+                border: solid 1px;
+            }
+        </style>
+        <div class="my-viewport" ng-scroll-viewport>
+            <div ng-scroll="item in datasource">{{$index + ' ' + item}}</div>
+        </div>
+        <p>If all you want to use the entire window as the viewport, all you need is this:</p>
+        <pre>
+        &lt;div ng-scroll=&quot;item in datasource&quot;&gt;{{item}}&lt;/div&gt;
+        </pre>
+        <hr />
+    </div>
+    <div class="row">
+        <h3>Scrollfix：Add a 'ui-fixed' class to elements when the page scrolls past them。demo省略</h3>
+        <hr />
+    </div>
+    <div class="row">
+        <h3>Show, Hide and Toggle Alternatives：简单的显隐切换。demo省略</h3>
+        <hr />
+    </div>
+    <div class="row">
+        <h3>Unique：Filters out all duplicate objects items from an array by checking the specified key。demo省略</h3>
+        <hr />
+    </div>
+    <!--  -->
+    <div class="row">
+        <h3>Validate：ui-validate 使得很容易生成自定义validator expressions</h3>
+        <form name="form">
+            <h3>e-mail</h3>
+            <input name="email" placeholder="email" type="email" required ng-model="email" ui-validate="{blacklist : 'notBlackListed($value)'}">
+            <span ng-show='form.email.$error.blacklist'>This e-mail is black-listed!</span>
+            <br>is form valid: {{form.$valid}} <br>email errors: {{form.email.$error | json}}
+            <h3>password</h3>
+            <input name="password" type="text" required ng-model="password" placeholder="password">
+            <input name="confirm_password" type="text" required ng-model="confirm_password" ui-validate=" '$value==password' " ui-validate-watch=" 'password' " placeholder="confirm password">
+            <span ng-show='form.confirm_password.$error.validator'>Passwords do not match!</span>
+            <br>is form valid: {{form.$valid}} <br>password errors: {{form.confirm_password.$error | json}}
+        </form>
+        <hr />
+    </div>
+</div>
+<!--  -->
+<script src="lib/ui-utils.js"></script>
+<script>
+    var app = angular.module('app', ['ngSanitize', 'ui.utils']);
+    app.controller('Ctrl', [
+        '$scope', function ($scope) {
+            //ui.event
+            $scope.blurCallback = function (evt) {
+                alert('Goodbye. Input content is: ' + evt.target.value);
+            };
+            //ui.format
+            $scope.sentence = 'Hello :name, how is the :subject? Are you on the $0, $1 or $2?';
+            $scope.mode = 'string';
+            $scope.tokens = {
+                'string': 'Single',
+                'array': ['first', 'second', 'third'],
+                'object': {
+                    'name': 'Bob',
+                    'subject': 'wife'
+                }
+            };
+            //ui.keypress
+            $scope.keypressCallback = function ($event) {
+                alert('Voila!');
+                $event.preventDefault();
+            };
+            //ui.validate
+            $scope.notBlackListed = function (value) {
+                var blacklist = ['bad@domain.com', 'verybad@domain.com'];
+                return blacklist.indexOf(value) === -1;
+            }
+        }
+    ]);
+    // ui.scroll在ui-utils文件里
+    angular.module('ui.scroll')
+            .factory('datasource', [
+                '$log', '$timeout', function (console, $timeout) {
+                    var get = function (index, count, success) {
+                        return $timeout(function () {
+                            var i, result, _i, _ref;
+                            result = [];
+                            for (i = _i = index, _ref = index + count - 1; index <= _ref ? _i <= _ref : _i >= _ref;
+                                 i = index <= _ref ? ++_i : --_i) {
+                                result.push('item #' + i);
+                            }
+                            return success(result);
+                        }, 100);
+                    };
+                    return {
+                        get: get
+                    };
+                }
+            ]);
+</script>
+</body>
+</html>

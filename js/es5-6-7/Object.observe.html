@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+	<pre>
+        Object.observe() 介绍
+        参考： 
+        http://updates.html5rocks.com/2012/11/Respond-to-change-with-Object-observe
+        http://weblog.bocoup.com/javascript-object-observe/
+        https://github.com/Polymer/observe-js
+
+        相关：https://gist.github.com/addyosmani/6951740
+
+        设置：chrome://flags -- 启用实验性JavaScript （Enable Experimental JavaScript）
+
+        
+	</pre>
+    <script>
+        var beingWatched = {};
+        function whatHappened(change) {
+            console.log(change.name + " was " + change.type + " and is now " + change.object[change.name]);
+        }
+        // Define callback function to get notified on changes
+        function somethingChanged(changes) {
+            // do something
+            changes.forEach(whatHappened);
+            Object.unobserve(beingWatched, somethingChanged); // Stop watching.
+        }
+        Object.observe(beingWatched, somethingChanged);
+        //Object.observe(beingWatched, function () { debugger; }); // for debugger
+
+        beingWatched.a = "foo"; // new
+        beingWatched.a = "bar"; // updated
+        beingWatched.a = "bar"; // no change
+        beingWatched.b = "amazing"; // new
+        //监听的对象属性每次变化，并不会执行回调，而是把多次改变和在一起执行回调
+
+
+        Object.observe(window, function (changes) {
+            //console.log(changes);
+        });
+        window.a = 'aa';
+        window.alert = 'bb';
+        //Observing window and document work but only for changes made by my code. 
+        //Changes made by the browser (i.e. updating of things like screenX) don't fire the event.
+
+    </script>
+
+
+
+    <script>
+
+        //from  http://weblog.bocoup.com/javascript-object-observe/
+        /*
+            涉及到的几个东西：
+                Object.observe
+                WeakMap
+                Object.defineProperties
+                Object.getNotifier
+                Object.freeze
+        */
+
+        function log(change) {
+            // Note that |change.object| is actually a reference to the
+            // target object.
+
+            if (change.type === "read") {
+                console.log("What was accessed? ", change.name);
+                console.log("What value was given? ", change.oldValue);
+            }
+            else {
+                // Only access properties when the event is not "read",
+                // Otherwise it will result in an infinite access loop
+
+                console.log("What Changed? ", change.name);
+                console.log("How did it change? ", change.type);
+                console.log("What was the old value? ", change.oldValue);
+                console.log("What is the present value? ", change.object[change.name]);
+            }
+        }
+
+        (function (exports) {
+            var priv = new WeakMap();
+
+            function User(name) {
+                this.name = name;
+
+                // Store some sensitive tracking information out of reach
+                priv.set(this, {
+                    login: Date.now(),
+                    lastSeen: Date.now()
+                });
+
+                // Create an accessor set that will act as an intermediary
+                // for updating sensitive data bound to this instance
+                Object.defineProperties(this, {
+                    seen: {
+                        set: function (val) {
+                            var notifier = Object.getNotifier(this),
+                            p = priv.get(this);
+
+                            // The program must trigger an "updated" notification
+                            // manually, since Object.observe will not notify
+                            // for accessors
+                            notifier.notify({
+                                type: "updated",
+                                name: "seen",
+                                oldValue: p.lastSeen
+                            });
+
+                            // Update and store the sensitive data
+                            p.lastSeen = val;
+
+                            priv.set(this, p);
+                        },
+                        get: function () {
+                            var notifier = Object.getNotifier(this),
+                            p = priv.get(this);
+
+                            // A program can also notify for custom behaviours;
+                            // in this case, theprogram will notify any time
+                            // the property is read.
+
+                            // WARNING!!!!
+                            // This will fire _every_ _time_ _any_ code
+                            // accesses the .seen property
+
+                            notifier.notify({
+                                type: "read",
+                                name: "seen",
+                                oldValue: p.lastSeen
+                            });
+
+                            return p.lastSeen;
+                        }
+                    }
+                });
+
+                // Make all instances of User observable
+                Object.observe(this, function (changes) {
+                    console.log("Observed...");
+                    changes.forEach(log);
+                });
+            }
+
+            exports.User = User;
+
+        }(this));
+
+        var user = new User("Rick");
+        console.log(user.seen);
+
+        user.seen = Date.now();
+        console.log(user.seen);
+
+        user.seen = Date.now();
+
+        //Object.freeze(user);
+        user.seen = Date.now();
+
+        user = new User("Rick");
+
+        user.name = "Rose";
+        user.name = "Alli";
+        user.name = "Taco";
+
+
+    </script>
+</body>
+</html>

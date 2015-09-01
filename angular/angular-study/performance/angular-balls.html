@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AngularJS bouncing balls performance test</title>
+  <script src="http://cdn.staticfile.org/angular.js/1.3.0/angular.min.js"></script>
+  <style>
+  .balls {
+    border: 1px solid black;
+    width: 420px;
+    height: 420px;
+    margin: 5px;
+  }
+
+  .ball {
+    display: inline-block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 1px solid black;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+  }
+
+  .fps-bar {
+    width: 200px;
+    height: 10px;
+    border: 1px solid black;
+    display: inline-block;
+    margin-left: 5px;
+  }
+
+  .fps {
+    height: 10px;
+    width: 60px;
+    background-color: green;
+  }
+  </style>
+</head>
+<body>
+<!-- modified version of https://plus.google.com/110323587230527980117/posts/eASDMQCyzuy  -->
+<div ng-app="balls" ng-controller="bounce">
+  <div class="balls">
+    <div ng-repeat="ball in balls"
+         ball-position="ball"></div>
+  </div>
+  <div>
+    <div class="fps-bar">
+      <div class="fps" ng-style="{width:fps + 'px'}"></div>
+    </div>
+  </div>
+  <button ng-click="startStop()">{{isRunning()}}</button>
+  <br> {{fps | number:0}} fps. ({{balls.length}} balls)
+  <br> avarage fps {{ averageFps }}
+  <br> max fps {{ maxfps | number:0 }} <br>
+  <a href ng-click="changeCount(1)">+1</a>
+  <a href ng-click="changeCount(10)">+10</a>
+  <a href ng-click="changeCount(100)">+100</a>
+  <br>
+  <a href ng-click="changeCount(-1)">-1</a>
+  <a href ng-click="changeCount(-10)">-10</a>
+  <a href ng-click="changeCount(-100)">-100</a>
+</div>
+<script>
+  angular.module('balls', []).directive('ballPosition', function () {
+    return function (scope, element, attrs) {
+      element.addClass('ball');
+      var ball = scope[attrs.ballPosition];
+      element.css('backgroundColor', ball.color);
+      scope.$watch(function () {
+        element.css({
+          left: (ball.x + 5) + 'px', top: (ball.y + 5) + 'px'
+        });
+      });
+    };
+  }).factory('animFrame', function ($rootScope) {
+    var animFrame = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function (callback) {
+          window.setTimeout(callback, 1000 / 60);
+        };
+    return function (fn) {
+      animFrame(function () {
+        $rootScope.$apply(fn);
+      });
+    }
+  }).controller('bounce', function ($scope, animFrame) {
+    var width = 400;
+    var height = 400;
+    var speed = .5;
+    var lastTime = new Date().getTime();
+
+    function color() {
+      var color = '#', i = 6;
+      while (i--) {
+        color += Number(Math.floor(16 * Math.random())).toString(16);
+      }
+      return color;
+    }
+
+    $scope.maxfps = 0;
+    $scope.balls = [];
+    $scope.running = false;
+    $scope.isRunning = function () {
+      return $scope.running ? "STOP" : "START";
+    }
+    $scope.startStop = function () {
+      $scope.running = !$scope.running;
+      tick();
+    }
+    $scope.changeCount = function (count) {
+      $scope.maxfps = 0;
+      while (count > 0) {
+        $scope.balls.push({
+          x: width * Math.random(),
+          y: height * Math.random(),
+          velX: 2 * speed * Math.random() - speed,
+          velY: 2 * speed * Math.random() - speed,
+          color: color()
+        });
+        count--;
+      }
+      while (count < 0) {
+        $scope.balls.pop();
+        count++;
+      }
+    }
+    var fpsArr = [], size = 0;
+    $scope.averageFps = 0;
+    function tick() {
+      var now = new Date().getTime(), delay = now - lastTime, balls = $scope.balls;
+      if (delay > 0) {
+        $scope.fps = Math.round(1000 / delay);
+        $scope.maxfps = $scope.fps > $scope.maxfps ? $scope.fps : $scope.maxfps;
+      }
+      //平均fps
+      if (size < 100) {
+        size++;
+        fpsArr.push($scope.fps);
+      } else {
+        $scope.averageFps = fpsArr.reduce(function (a, b) {
+          return a + b;
+        }, 0) / fpsArr.length;
+        size = 0;
+        fpsArr.length = 0;
+      }
+      //now only every 1000 ball is in move
+      //for(var i=0, ii=balls.length; i<ii; i=i+1000) {
+      //每个球都移动
+      for (var i = 0, ii = balls.length; i < ii; i++) {
+        var b = balls[i];
+        b.x += delay * b.velX;
+        b.y += delay * b.velY;
+        if (b.x < 0) {
+          b.x *= -1;
+          b.velX *= -1;
+        }
+        if (b.y < 0) {
+          b.y *= -1;
+          b.velY *= -1;
+        }
+        if (b.x > width) {
+          b.x = 2 * width - b.x;
+          b.velX *= -1;
+        }
+        if (b.y > height) {
+          b.y = 2 * height - b.y;
+          b.velY *= -1;
+        }
+      }
+      lastTime = now;
+      if ($scope.running) {
+        animFrame(tick);
+      }
+    }
+
+    $scope.changeCount(100);
+    //tick();
+  });
+</script>
+</body>
+</html>

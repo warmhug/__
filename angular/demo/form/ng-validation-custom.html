@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+    <style>
+        .error{
+            color: red;
+        }
+    </style>
+</head>
+<body ng-app="app" ng-controller="main">
+
+<form name="myForm">
+    <input type="text" name="userName" ng-model="user.name" integer
+           positive-int="random" pos-int-cfg="{{ default }}"
+            unique />
+    <div ng-show="myForm.userName.$invalid && myForm.userName.$dirty">
+        <span ng-show="myForm.userName.$error.integer" class="error">需要是整数，试试22</span><br>
+        <span ng-show="myForm.userName.$error.unique" class="error">有重复</span><br>
+        <span ng-show="myForm.userName.$error.posInt" class="error">需要是正整数</span>
+    </div>
+
+    <p><button ng-click="c()">其他条件触发验证</button></p>
+</form>
+
+<!--
+If you change $viewValue, $parsers will translate it back to $modelValue.
+If you change $modelValue, $formatters will convert it to $viewValue.
+ -->
+
+<script>
+    var app = angular.module('app', []);
+
+    app.controller('main', ['$scope', function($scope){
+        $scope.user = {
+            name: 'd'
+        };
+        $scope.c = function () {
+            $scope.random = Math.random();
+        };
+
+    }]);
+    
+    //正整数
+    app.directive('positiveInt', [function() {
+        return {
+            restrict: 'A',
+            priority: '0',
+            require: 'ngModel',
+            link: function(scope, element, attrs, ctrl) {
+
+                function valid(viewValue) {
+                    if(viewValue === void 0){
+                        console.log( 'viewValue is undefined' );
+                        console.log( 'ctrl.$viewValue is: ' + ctrl.$viewValue );
+                        return;
+                    }
+                    console.log('-- input invalid ? --', ctrl.$invalid );
+                    console.log('-- input dirty ? --', ctrl.$dirty );
+
+                    var viewValue = ctrl.$viewValue;
+                    if(viewValue > 0){
+                        ctrl.$setValidity('posInt', true);
+                        return viewValue;
+                    } else {
+                        ctrl.$setValidity('posInt', false);
+                        return undefined;
+                    }
+                }
+                ctrl.$parsers.unshift(valid);
+
+                //其他条件触发验证
+                scope.$watch(attrs.positiveInt, function (newValue, oldValue) {
+                    if(newValue && newValue !== oldValue){
+
+                        //把这个input变为 dirty 状态
+                        ctrl.$setViewValue(ctrl.$viewValue);
+                        //valid();  //不用手动调用
+                    }
+                });
+            }
+        }
+    }]);
+
+
+    var INTEGER_REGEXP = /^\-?\d+$/;
+    app.directive('integer', function () {
+        return {
+            require: 'ngModel',
+            priority: '0',
+            link: function (scope, elm, attrs, ctrl) {
+                //官方 方式
+                ctrl.$parsers.unshift(function (viewValue) {
+
+                    if(viewValue === void 0){
+                        console.log( 'viewValue is undefied' );
+                        return;
+                    }
+
+                    if (INTEGER_REGEXP.test(viewValue)) {
+                        ctrl.$setValidity('integer', true);
+                        return viewValue;
+                    } else {
+                        ctrl.$setValidity('integer', false);
+                        return undefined;
+                        return viewValue;
+                    }
+                });
+            }
+        };
+    });
+    
+
+    app.directive('unique', ['$timeout', function($timeout) {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function(scope, element, attrs, ctrl) {
+                //$watch 方式
+                scope.$watch(attrs.ngModel, function (newValue, oldValue) {
+                    if(newValue == '22'){
+                        ctrl.$setValidity('unique', false);
+                    } else {
+                        ctrl.$setValidity('unique', true);
+                    }
+                });
+            }
+        }
+    }]);
+</script>
+</body>
+</html>

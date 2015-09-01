@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>垂直居中</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta name="format-detection" content="telephone=no" />
+	
+	<style>
+	  ul,li{list-style:none;}
+	</style> 
+</head>
+<body>
+
+	<p>clip 属性剪切了一幅图像：验证不能用于 “大图在小div中居中” </p>
+	<div id="bgDiv" style="position: relative; height:200px; width:150px; overflow: hidden; background-color:#000;">
+		<img style="position: absolute; left: 0; top: 0; opacity: .5; width: 150px; height: 200px;" src="http://images.cnblogs.com/cnblogs_com/cloudgamer/143727/r_xx2.jpg">
+		<img style="z-index: 100; position: absolute; left: 0; top: 0; width: 150px; height: 200px; clip: rect(146px, 140px, 200px, 47px);" src="http://images.cnblogs.com/cnblogs_com/cloudgamer/143727/r_xx2.jpg">
+	</div>
+	
+	
+	<pre>
+	
+	
+	图片居中方法：参考：http://stackoverflow.com/questions/5481821/image-center-align-vertically-and-horizontally
+	
+	方法一：line-height
+		div { width:300px; height:300px; line-height:300px; text-align:center; }
+		div img { vertical-align:middle; }
+	
+	方法二：display:table-cell
+		div { width:300px; height:300px; text-align:center; display:table-cell; vertical-align:middle; }
+	
+	方法三：position:absolute
+		div { width:300px; height:300px; position:relative; }
+		div img { top:-50px; left:-50px; position:absolute; margin:50% 0 0 50%; }
+	
+	方法四：background-image  (见示例)
+		div style="background: url('7-612x612-2.png') no-repeat center center transparent;">&nbsp; /div
+		
+	方法五：伪类垂直居中 （见示例）
+	
+	方法六：transform水平垂直居中 （见示例）
+	
+	方法七：display box 水平垂直居中 （见示例）
+	</pre>
+	
+	<p>“大图在小div中居中” background-image + background-size:cover; 方法：  </p>
+	<div style="position:relative; width:100%; height: 150px;">
+	<div style="background:url(http://dummyimage.com/600x400) no-repeat 0 50%; background-size:cover; position:absolute; width:100%; height:140px;"></div>
+	</div>
+	
+	<p>-----风骚的分割线------</p>
+	
+	<p>伪类垂直居中方法：</p>
+	<style type="text/css">
+		.item{ width:300px; height:300px; border:1px solid #ccc; }
+		.item:after{
+			content : " ";
+	       visibility : hidden;
+	       display : inline-block;
+	       height : 100%;
+	       vertical-align : middle;
+		}
+		.item img{ width:100%; vertical-align: middle; }
+	</style>
+	<ul>
+		<li class="item"><img src="http://dummyimage.com/200x100" /></li>
+	</ul>
+
+    <p>-----风骚的分割线------ </p>
+    <p>transform水平垂直居中：（此方法在ios6上有兼容问题）</p>
+    <style type="text/css">
+        .mod {  /*水平垂直居中*/
+          position: absolute;
+          width: 200px;
+          background: #eee;
+          border: 1px solid #eee;
+          padding: 20px;
+          -webkit-box-shadow: 0 0 4px 0 rgba(0,0,0,0.2);
+             -moz-box-shadow: 0 0 4px 0 rgba(0,0,0,0.2);
+                  box-shadow: 0 0 4px 0 rgba(0,0,0,0.2);
+          top: 50%;
+          left: 50%;
+          -webkit-transform: translate(-50%, -50%);
+             -moz-transform: translate(-50%, -50%);
+                  transform: translate(-50%, -50%); 
+        }
+    </style>
+    <div style="position:relative; width:100%; height: 150px; border:1px solid #ccc;">
+        <div class="mod"></div>
+    </div>
+    
+    <p>-----风骚的分割线------ </p>
+    <p>display box 水平垂直居中：</p>
+    <p>要垂直居中的元素为img时，设置其宽度为100%，只是相对img本身大小的宽度，不是相对于父元素</p>
+    <style type="text/css">
+        .box {  /*水平垂直居中*/
+          display:-webkit-box;
+          -webkit-box-pack: center;
+          -webkit-box-align: center;
+        }
+    </style>    
+	<div class="box" style="position:relative; width:100%; height: 150px; border:1px solid #ccc;">
+        <!-- <div class="inner" style="width:80%; height:100px; background:#ccc;"></div> -->
+        <img style="width:80%; height:100px;" src="http://dummyimage.com/200x100" />
+    </div>    
+</body>
+</html>

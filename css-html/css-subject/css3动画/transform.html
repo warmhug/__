@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+	/*
+		.trans_rotate { transform:rotate(45deg); }
+		.trans_scale { transform:scale(1, 0.5); }
+		.trans_skew { transform: skew(35deg); }
+		.trans_translate { transform:translate(10px, 20px); }
+		.transform-origin{ transform-origin: left top;}
+		
+		  transform: rotate | scale | skew | translate ;
+		  transform-origin: left|center|right|length|%  top|center|bottom|length|%;
+	
+	*/
+	
+	.anim_image {
+		-webkit-transition: all 1s ease-in-out;
+		-moz-transition: all 1s ease-in-out;
+		-o-transition: all 1s ease-in-out;
+		transition: all 1s ease-in-out;
+	}
+	.anim_image_top {
+		position: absolute;
+		-webkit-transform:scale(1,0);
+		opacity: 0;
+		filter: Alpha(opacity=0);
+	}
+	.anim_box:hover .anim_image_top {
+		opacity: 1;
+		filter: Alpha(opacity=100);
+		-webkit-transform: scale(1, 1);        
+	}
+	.anim_box:hover .anim_image_bottom {
+		-webkit-transform:rotate(360deg) scale(0,0);
+	}
+	</style>
+</head>
+<body>
+	<div id="testBox" class="demo anim_box">
+		<img class="anim_image anim_image_top" src="http://image.zhangxinxu.com/image/study/p/s200/ps6.jpg" />
+		<img class="anim_image anim_image_bottom" src="http://image.zhangxinxu.com/image/study/p/s200/ps4.jpg" />
+	</div>
+
+	<!-- 
+		 transform闪动问题：
+		 -webkit-backface-visibility : hidden; 
+		 -webkit-transform-style : preserve-3d; 
+		 -webkit-transform : translate3d(0,0,0)；
+
+	 -->
+</body>
+</html>

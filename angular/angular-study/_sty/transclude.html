@@ -1,0 +1,74 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.js"></script>
+</head>
+<body>
+    <div ng-controller="Ctrl">
+        <div simple>
+            <p>最简单情形</p>
+        </div>
+        <div ng-controller="inner">
+            <div simple>
+                <p>{{ sim }}</p>
+            </div>
+        </div>
+        <div in-compile>
+            没有ng-transclude，使用compile
+            <button class="btn" data-ng-click="btnClick()">文本一</button>
+            <p class="txt2">文本二</p>
+        </div>
+        <div in-controller>
+            没有ng-transclude，使用controller方式，推荐
+            <button class="btn" data-ng-click="btnClick()">文本一</button>
+            <p class="txt2">文本二</p>
+        </div>
+    </div>
+    <script>
+        angular.module('app', []).controller('Ctrl',function ($scope) {
+            $scope.message = "Waiting 2000ms for update";
+            $scope.btnClick = function () {
+                alert('txt')
+            }
+        }).controller('inner', ['$scope', function($scope){
+          $scope.sim = 'inn'
+        }]).directive('simple', function () {
+            return {
+                restrict: 'EA',
+                template: '<div class="simple"><div class="demo" ng-transclude></div></div>',
+                replace: true,
+                transclude: true
+            }
+        }).directive('inCompile', function () {
+            return {
+                restrict: 'EA',
+                template: '<div class="c"><div class="demo"></div></div>',
+                replace: true,
+                transclude: true,
+                compile: function (tEle, tAttrs, transcludeFn) {
+                    return function (scope, ele, attrs) {
+                        transcludeFn(scope, function (clone) {
+                            tEle.find('.demo').html(clone.filter('.btn'));
+                            console.log(ele);
+                        })
+                    }
+                }
+            }
+        }).directive('inController', function () {
+            return {
+                restrict: 'EA',
+                template: '<div class="c"><div class="demo"></div></div>',
+                replace: true,
+                transclude: true,
+                scope: {},
+                controller: ['$scope', '$element', '$transclude', function ($scope, $element, $transclude) {
+                    $transclude(function(clone) {
+                        $element.find('.demo').html(clone.filter('.btn'));
+                    });
+                }]
+            }
+        });
+    </script>
+</body>
+</html>

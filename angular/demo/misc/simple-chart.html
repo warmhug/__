@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://cdn.bootcss.com/angular.js/1.2.16/angular.min.js"></script>
+  <meta charset="utf-8">
+  <title>JS Bin</title>
+  <style id="jsbin-css">
+    /* color series */
+    .series0 {
+      fill: rgb(255, 127, 80);
+    }
+
+    .series1 {
+      fill: rgb(135, 206, 250);
+    }
+
+    .series2 {
+      fill: rgb(218, 112, 214);
+    }
+
+    .series3 {
+      fill: rgb(50, 205, 50);
+    }
+
+    .series4 {
+      fill: rgb(100, 145, 237);
+    }
+
+    .series5 {
+      fill: rgb(255, 105, 180);
+    }
+
+    .legend-box {
+      stroke: black;
+      stroke-width: 1;
+      fill: white;
+    }
+
+    .legend-text {
+      font-size: 15px;
+      text-anchor: start;
+    }
+  </style>
+</head>
+<body ng-app>
+<div ng-controller="PieCtrl">
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="{{width}}" height="{{height}}">
+    <title>用AngularJS做图表</title>
+    <desc>用AngularJS生成的图表</desc>
+    <!--背景-->
+    <rect x="0" y="0" width="{{width}}" height="{{height}}" stroke-width="1" stroke="none" fill="white" />
+    <!--饼图-->
+    <g transform="{{chartTransform()}}">
+      <path ng-repeat="data in pieData" ng-class="pieClass($index)" d="{{path($index)}}" />
+    </g>
+    <!--图例-->
+    <g id="legend" transform="{{legendTransform()}}">
+      <rect class="legend-box" x="0" y="0" width="150" height="120" />
+      <rect ng-repeat-start="data in pieData" ng-class="pieClass($index)" transform="scale(1, -1)"
+            x="5" y="{{-21 - 21*$index}}" width="30" height="15" />
+      <text ng-repeat-end class="legend-text" x="40" y="{{21 + 21*$index}}">{{data.title}}</text>
+    </g>
+  </svg>
+</div>
+<script>
+  function PieCtrl($scope) {
+    $scope.width = 640;
+    $scope.height = 480;
+
+    $scope.offsetX = 0;
+    $scope.offsetY = 0;
+
+    $scope.radius = 200;
+
+    $scope.pieData = [
+      {title: "Test 1", value: 8}, {title: "Test 2", value: 2}, {title: "Test 3", value: 6},
+      {title: "Test 4", value: 2}, {title: "Test 5", value: 8}
+    ];
+
+    var total;
+    var position = [];
+
+    $scope.$watch("pieData", function () {
+      total = 0;
+      position = [];
+
+      for (var i = 0; i < $scope.pieData.length; i++) {
+        total += $scope.pieData[i].value;
+        position.push(total);
+      }
+    }, true);
+
+    $scope.pieClass = function (index) {
+      return "series" + index;
+    };
+
+    $scope.chartTransform = function () {
+      return "scale(1, -1) translate(" + ($scope.offsetX + $scope.radius) + ", " + (-$scope.offsetY - $scope.radius) + ")";
+    };
+
+    $scope.legendTransform = function () {
+      return "translate(" + ($scope.offsetX + 2 * $scope.radius + 10) + ", 50)";
+    };
+
+    $scope.path = function (index) {
+      var rx = $scope.radius;
+      var ry = $scope.radius;
+
+      var start;
+      if (index == 0) {
+        start = 0;
+      } else {
+        start = 2 * Math.PI * position[index - 1] / total;
+      }
+      var stop = 2 * Math.PI * position[index] / total;
+
+      var e1x = rx * Math.cos(start);
+      var e1y = rx * Math.sin(start);
+      var e2x;
+      var e2y;
+      var e3x;
+      var e3y;
+
+      if (stop - start < Math.PI) {
+        e2x = ry * Math.cos(stop);
+        e2y = ry * Math.sin(stop);
+        e3x = e2x;
+        e3y = e2y;
+      } else {
+        e2x = ry * Math.cos(Math.PI);
+        e2y = ry * Math.sin(Math.PI);
+        e3x = ry * Math.cos(stop);
+        e3y = ry * Math.sin(stop);
+      }
+
+      var path = "M 0, 0 " + e1x + "," + e1y + "A" + rx + "," + ry + " 1 0,1 " + e2x + "," + e2y + "A" + rx + "," + ry + " 1 0,1 " + e3x + "," + e3y + "z";
+      return path;
+    };
+  }
+</script>
+</body>
+</html>

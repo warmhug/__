@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title></title>
+</head>
+<body>
+<div id="test" dir="ltr">An element to observe.</div>
+<script>
+  var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+
+  var targetObject = document.getElementById('test');
+
+  // Create an observer object and assign a callback function.
+  var observerObject = new MutationObserver(mutationObjectCallback);
+
+  // Inspect the array of MutationRecord objects to identify the nature of the change.
+  function mutationObjectCallback(mutationRecordsList) {
+    console.log("mutationObjectCallback invoked.");
+
+    mutationRecordsList.forEach(function(mutationRecord) {
+      console.log("Type of mutation: " + mutationRecord.type);
+      if ("attributes" === mutationRecord.type) {
+        console.log("Old attribute value: " + mutationRecord.oldValue);
+      }
+    });
+  }
+
+  // Register the target node to observe and specify which DOM changes to watch.
+  observerObject.observe(targetObject, {
+    attributes: true,
+    attributeFilter: ["id", "dir"],
+    attributeOldValue: true,
+    childList: true
+  });
+
+  // This will invoke the mutationObjectCallback function (but only after all script in
+  // this scope has run). For now, it simply queues a MutationRecord object with the change info.
+  targetObject.appendChild(document.createElement('div'));
+
+  // Now a second MutationRecord object will be added, this time for an attribute change.
+  targetObject.dir = 'rtl';
+
+</script>
+
+</body>
+</html>

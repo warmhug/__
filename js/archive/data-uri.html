@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>图片转data-uri</title>
+</head>
+<body>
+选择一个图片：
+    <input type = "file" id = "file" name = "file" />
+    <div id="result" style="padding:10px;width:500px;min-height:300px;border:1px solid #ccc;word-wrap:break-word;">
+    </div>
+
+    <script>
+        function ProcessFile( e ) {
+            var file = document.getElementById('file').files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function ( event ) {
+                    var txt = event.target.result;
+                    document.getElementById("result").innerHTML = txt;
+                };
+            }
+            reader.readAsDataURL( file );
+        }
+        function contentLoaded () {
+            document.getElementById('file').addEventListener( 'change', ProcessFile , false );
+        }
+        window.addEventListener( "DOMContentLoaded" , contentLoaded , false );
+    </script>
+</body>
+</html>

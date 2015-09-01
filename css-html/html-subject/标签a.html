@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+<!--
+
+1、A标签是web应用中重要的核心标签之一，它有两个常用的用途：
+   作为锚点：定义页面上的一个锚点，可通过其它A标签的href属性访问。
+   作为链接：导航到A标签href属性所指定的目标地址（URI地址、或同一文档的锚点）
+
+2、A标签的渲染，有四个常用的伪类，如下：
+   ':link' ：适用于未被访问的链接。
+   ':visited' ：适用于已经访问过的链接。
+   ':hover' ： 适用于光标（鼠标指针）指向一个元素，但还未激活它时。
+   ':active' ：适用于一个元素被用户激活时。
+
+3、 绝大多数情况下，A标签都是作为链接来使用的，此时必须定义href属性，如果缺乏，将被视为普通标签。
+
+-->
+
+<!--
+w3c css21规范中指出：
+  A:hover必须放置在A:link和A:visited之后，否则将隐藏A:hover内定义的相同规则。
+  同理，A:active应在A:hover之后，否则A:active中的相同规则将被隐藏。
+
+  A标记的伪类书写遵循w3c css2.1 规范中的 L-V-H-A 顺序。
+-->
+<!-- 举个反例 -->
+<style type="text/css">
+    a:hover{background-color:red;}
+    a:link{background-color:yellow;}
+    a:visited{background-color:blue;}
+    a:active{background-color:green;}
+</style>
+<a href="#">put your mouse on</a>
+<!-- IE6(S)(Q)/IE7(Q)/IE8(Q)下出问题！ -->
+</div>
+</body>
+</html>

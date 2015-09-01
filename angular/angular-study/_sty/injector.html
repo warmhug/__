@@ -1,0 +1,89 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular-sanitize.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular-animate.js"></script>
+</head>
+<body>
+    <div ng-controller="Ctrl"></div>
+
+    <script>
+        //var app = angular.module('app', ['ngAnimate', 'ngSanitize','app.services']);
+        var app = angular.module('app', []);
+        app.controller('Ctrl', ['$scope', function ($scope) {
+            this.name = 'myCtrl'
+        }]).controller('MyCtrl', function ($scope) {
+            $scope.content = 'ccc';
+        });
+
+        angular.module('app.services', []).factory('getData', function () {
+            return {
+                getData: function () {
+                    return 'data'
+                }
+            }
+        });
+
+
+        var $injector = angular.injector(['ng', 'app']);
+        //var $injector = angular.injector(['app']);
+        //var $injector = angular.injector(['app.services']);
+        console.log($injector.has('ng'))
+        console.log($injector.has('ngAnimate'))
+        console.log($injector.has('$rootScope'))
+        console.log($injector.has('getData'))
+
+        console.log(angular.element(document).injector)
+
+        // Retrieve $rootElement
+        angular.element(document).ready(function() {
+            var element = document.querySelector('.ng-scope');
+            var $rootElement = angular.element(element).injector().get('$rootElement');
+            console.log($rootElement);
+        });
+
+        var $div = $('<div ng-controller="MyCtrl">{{content.label}}</div>');
+        $(document.body).append($div);
+        angular.element(document).injector().invoke(function ($compile) {
+            var scope = angular.element($div).scope();
+            $compile($div)(scope);
+        });
+
+
+        function MyCtrl($scope) {
+            $scope.content = 'mmm'
+        }
+        //外部元素注入
+        setTimeout(function () {
+            var $div = $('<div ng-controller="MyCtrl"><p>{{content}}</p></div>');
+            $(document.body).append($div);
+            angular.element(document).injector().invoke(function ($compile) {
+                var scope = angular.element($div.contents()).scope();
+                $compile($div)(scope);
+            });
+        }, 100)
+
+
+        /*
+        *   ng module：
+        *   angular.bootstrap automatically adds the ng module to the dependencies when used
+        *   (manually or with ngApp)
+            $rootScope / $compile services are part of the ng module.
+            You need to use injector.invoke if you want these services.
+        *
+        * */
+        angular.module('simpleExample', ['ng']);
+        angular.injector(['simpleExample']).invoke(['$rootScope', '$compile',
+                    function ($rootScope, $compile) {
+                        var elm = $compile('<a href="" ng-click="someFunctionOnRootScope()">Text</a>')($rootScope);
+                        $rootScope.someFunctionOnRootScope = function () {
+                            alert("Hello there!");
+                        }
+                        angular.element(document.body).append(elm);
+                    }
+                ]);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="http://cdn.staticfile.org/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.min.js"></script>
+</head>
+<body ng-app ng-controller="main">
+
+
+    <!-- 
+            最基本js form操作
+     -->
+    <form id="one" action="/example/home.html"
+          onsubmit="return validate()">
+        <!-- onsubmit里要有return --> 
+        年龄（从 1 到 100）： <input type="text" id="age" size="20"> 
+    </form>
+    <input type="submit" form="one" value="form外提交按钮" />
+    <script>
+        function validate() {
+            console.log(document.forms['one'], document.forms[0][0].value);
+            var age = document.getElementById("age").value;
+            if (isNaN(age) || age < 1 || age > 100) {
+                alert("年龄必须是 1 与 100 之间的数字。")
+                return false
+            }
+        }
+    </script>
+
+    <hr >
+
+
+    <!-- 
+            jQuery form操作
+     -->
+    <form id="speAction" action="javascript:alert('success')">
+        <input type="text" />
+        <input type="submit" value="submit" />
+        <span></span>
+    </form>
+    <script>
+        var speForm = $('#speAction');
+        speForm.submit(function (e) {
+            console.log(e);
+            if (speForm.find('input:first').val() == 'ss') {
+                speForm.find('span').text("Validated...").show();
+                return;
+            }
+            speForm.find('span').text("Not valid!").show().fadeOut(1000);
+            //event.preventDefault();
+        })
+    </script>
+
+
+    <hr >
+
+
+    <!-- 
+            angular form操作
+     -->
+    <form ng-submit="targetSubmit()" action="bs-form.html">
+        <input type="text" ng-model="formData.name">
+        <input type="submit" value="Go">
+    </form>
+    <script>
+        function main($scope) {
+            $scope.formData = {
+                name: 'lucy'
+            };
+            $scope.targetSubmit = function () {
+                alert('跳转吗');
+            }
+        }
+    </script>    
+</body>
+</html>

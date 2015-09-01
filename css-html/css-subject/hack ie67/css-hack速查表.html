@@ -1,0 +1,763 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+<title>hack速查表</title>
+
+<style type="text/css">
+
+/*reset*/
+
+* { margin:0; padding:0; }
+
+body { font:normal 12px/2 Tahoma, Arial, "\5b8b\4f53", Helvetica, sans-serif; height:100%; text-align:center; background:#fff; }
+
+h1, h2, h3, h4, h5, h6 { font-size:100%; font-weight:normal; }
+
+/* Tables still need 'cellspacing="0"' in the markup. */
+
+table { border-collapse:collapse; border-spacing:0; }
+
+ul, ol { list-style:none; }
+
+em { font-style:normal; color:#f00; }
+
+h1 { font-size:2em; font-weight:700; }
+
+.hack { width:1000px; margin:0 auto; text-align:left; }
+
+.hack table { width:100%; margin:10px 0;  }
+
+.hack td, .hack th { height:30px; padding:0 5px; border:1px solid #ccc; }
+
+.hack th { color:#cc0bf6; }
+
+.hack th.eq, .hack td.eq { width:350px; color:#333; }
+
+.hack th.identifier, .hack td.hack-data { width:350px; color:#61602f; }
+
+.hack td.no { color:#fff; text-align:center;background-color:red; }
+
+.hack td.yes { color:#fff; text-align:center;background-color:green; }
+
+.hack p b { color:green; }
+
+.hack p b.red { color:red; }
+
+.hack h2 { margin:10px 0 0 0; font-size:1.5em; font-weight:700; }
+
+.hack-list { margin:10px 0; }
+
+.hack-list li { margin-bottom:5px;zoom:1; }
+
+.hack-list span { float:left; width:15px; font-family:"\5b8b\4f53"; }
+
+.hack-list-inf { padding:0 0 0 15px;}
+
+.hack-list em { display:inline-block; margin:0 5px; }
+
+</style>
+
+</head>
+
+<body>
+
+<h1>hack速查表</h1>
+
+<div class="hack">
+
+  <p>建议：以标准浏览器为准书写代码，如遇到兼容问题，尝试其他方法解决问题，在万不得已怕情况下，采用HACK解决。</p>
+
+  <p>以下是我总结的HACK书写方法:</p>
+
+  <p>浏览器：仅限IE6+，FF，safari,chrome,opera;(截止到2011.10.12非IE均为最新版本)。</p>
+
+  <p>测试环境：windows系统;</p>
+
+  <p>DOCTYPE:<!doctype html>.</p>
+
+  <table cellpadding="0">
+
+    <thead>
+
+      <tr>
+
+        <th class="identifier">标志符</th>
+
+        <th class="eq">示例</th>
+
+        <th>IE6</th>
+
+        <th>IE7</th>
+
+        <th>IE8</th>
+
+        <th>IE9</th>
+
+        <th>FF</th>
+
+        <th>OP</th>
+
+        <th>SA</th>
+
+        <th>CH</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      <tr>
+
+        <td class="hack-data">*</td>
+
+        <td>.eq {*color:#000;}</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">_</td>
+
+        <td>.eq {_color:#000;}</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">+</td>
+
+        <td>.eq {+color:#000;}</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">-</td>
+
+        <td>.eq {-color:#000;}</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">></td>
+
+        <td>.eq {>color:#000;}</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">\0</td>
+
+        <td>.eq {color:#000\0;}</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">\9</td>
+
+        <td>.eq {color:#000\9;}</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">\9\0</td>
+
+        <td>.eq {color:#000\0;}</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td>N\Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">:root .xx{xxx:xxx\9;}</td>
+
+        <td>:root .eq {color:#a00\9;}</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">*+</td>
+
+        <td>.eq {*+color:#000;}</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">*-</td>
+
+        <td>.eq {*-color:#000;}</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">*html</td>
+
+        <td><span class="hack-data">*html</span> .eq {color:#000;}</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">*+html</td>
+
+        <td><span class="hack-data">*+html</span> .eq {color:#000;}</td>
+
+        <td class="no">N</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">html*</td>
+
+        <td>html* .eq {color:#000;}</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">[;</td>
+
+        <td>.eq {color:red;[;color:blue;}</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">html>body</td>
+
+        <td>html>body .eq {color:blue;}</td>
+
+        <td class="no">N</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">html>/**/body</td>
+
+        <td>html>/**/body .eq {color:blue;}</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">html/**/>body</td>
+
+        <td>html/**/>body .eq {color:blue;}</td>
+
+        <td class="no">N</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">@media all and (min-width:0px){}</td>
+
+        <td><span class="hack-data">@media all and (min-width:0px){.eq {color:#000;}}</span></td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">*:first-child+html</td>
+
+        <td>*:first-child+html .eq {color:blue;}</td>
+
+        <td class="no">N</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">*:first-child+html{} *html</td>
+
+        <td>*:first-child+html{} *html .eq {color:blue;}</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">@-moz-document url-prefix(){}</td>
+
+        <td>@-moz-document url-prefix(){ .eq {color:blue;}}</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">@media screen and (-webkit-min-device-pixel-ratio:0){}</td>
+
+        <td>@media screen and (-webkit-min-device-pixel-ratio:0){.eq {color:blue;}}</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">@media all and (-webkit-min-device-pixel-ratio:10000), not all and (-webkit-min-device-pixel-ratio:0){}</td>
+
+        <td><span class="hack-data">@media all and (-webkit-min-device-pixel-ratio:10000), not all and (-webkit-min-device-pixel-ratio:0){.eq {color:blue;}}</span></td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="yes">Y</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="hack-data">body:nth-of-type(1)</td>
+
+        <td>body:nth-of-type(1) .eq {color:blue;}</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="no">N</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+        <td class="yes">Y</td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+  <p>FF:firefox; OP:opera; SA:safari; CH:chrome; <b>Y</b>代表支持，<b class="red">N</b>代表不支持。</p>
+
+  <h2>注意事项：</h2>
+
+  <ul class="hack-list">
+
+    <li><span>·</span><div class="hack-list-inf">由于各浏览器更新神速，所以有些HACK可能会有变化，所以请大家注意。</div></li>
+
+    <li><span>·</span><div class="hack-list-inf"><em>[;</em>此种方式会影响后续样式，不可取。</div>  </li>
+
+    <li><span>·</span><div class="hack-list-inf"><em>\9\0</em>并非对所有属性都能区分IE8和IE9.比如：background-color可以，但background不可以，还有border也不可以。所以在实际用时要测试下。</div>  </li>
+
+    <li><span>·</span><div class="hack-list-inf">当同时出现<em>\0</em>;<em>*</em>;<em>_</em>;时，推荐将\0写在*和_前面。例如:color:red\0;*color:blue;_color:green;可行，否则IE7和IE6里的效果会失效。但border例外，放在前后都可以。保险起见，还是放在前面。 </div> </li>
+
+  </ul>
+
+  <h2>推荐写法：</h2>
+
+  <h3>demo:</h3>
+
+  <pre>
+
+        .eq {
+
+             color:#f00;/*标准浏览器*/
+
+             color:#f30\0;/*IE8,IE9,opera*/
+
+             *color:#c00;/*IE7及IE6*/
+
+             _color:#600;/*IE6专属*/
+
+            }
+
+        :root .eq {color:#a00\9;}/*IE9专属*/
+
+        @media all and (-webkit-min-device-pixel-ratio:10000), not all and (-webkit-min-device-pixel-ratio:0){.eq {color:#450;}}/*opera专属*/
+
+        @media screen and (-webkit-min-device-pixel-ratio:0){.eq {color:#879;}}/*webkit专属*/
+
+        @-moz-document url-prefix(){ .eq {color:#4dd;}}/*firefox专属*/
+
+  </pre>
+
+</div>
+
+</body>
+</html>

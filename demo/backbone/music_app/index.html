@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>index</title>
+    <link rel="stylesheet/less" type="text/css" href="assets/style/app.less" />
+    <script src="http://a.tbcdn.cn/mw/base/libs/less/1.3.0/less-debug.js"></script>
+</head>
+<body>
+    <div class="main-nav">
+        <a href="#home">首页</a>
+    </div>
+    <div class="bd"></div>
+    <div class="player-box none"></div>
+
+    <script src="https://a.alipayobjects.com/??seajs/seajs/2.2.0/sea-debug.js"></script>
+    <script>
+        seajs.config({
+            base: './'
+        })
+        seajs.use('./src/app');
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="http://cdn.staticfile.org/angular.js/1.3.0/angular.min.js"></script>
+</head>
+<body ng-app="app">
+
+<h2> angular1.3 $validators $asyncValidators  </h2>
+<p>
+As you can see, we no longer have to take care of calling $setValidity().  <br>
+Angular calls $setValidity() internally, with the value that a validator returns  
+</p>
+
+<form name="myForm">
+  <input type="text" name="name" ng-model="p.name" validate-username>
+  <p ng-if="myForm.name.$pending">Validating user name...</p>
+
+  <input type="text" name="age" ng-model="p.age" validate-integer>
+  <p ng-bind="myForm.age.$error | json"></p>
+</form>
+
+  <script>
+    var app = angular.module('app', []);
+    app.controller('main', main);
+    function main($scope) {
+      $scope.p = {
+        name: '',
+        age: ''
+      }
+    }
+
+    app.directive('validateUsername', function ($q) {
+      return {
+        require: 'ngModel',
+        link: function (scope, element, attrs, ctrl) {
+          ctrl.$asyncValidators.name = function (modelValue, viewValue) {
+            return $q(function (resolve, reject) {
+
+              setTimeout(function() {
+                if (viewValue === 'ann') {
+                  resolve('Hello, ' + name + '!');
+                } else {
+                  reject('Greeting ' + name + ' is not allowed.');
+                }
+              }, 1000);
+
+            });
+          };
+        }
+      };
+    });   
+      
+    app.directive('validateInteger', function () {
+      var REGEX = /^\-?\d+$/;
+      return {
+        require: 'ngModel',
+        link: function (scope, element, attrs, ctrl) {
+          ctrl.$validators.age = function (modelValue, viewValue) {
+            if (REGEX.test(viewValue)) {
+              return true
+            }
+            return false;
+          };
+        }
+      };
+    });
+
+     
+  </script> 
+</body> 
+</html>

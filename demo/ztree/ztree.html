@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title></title>
+  <script src="https://a.alipayobjects.com/laputa/jquery/1.11.1/jquery.min.js"></script>
+  <!-- ztree -->
+  <link href="lib/zTreeStyle.css" rel="stylesheet" />
+  <script src="lib/jquery.ztree.core-3.5.js"></script>
+  <!--<script src="lib/jquery.ztree.excheck-3.5.js"></script>-->
+  <!--<script src="lib/jquery.ztree.exedit-3.5.js"></script>-->
+  <style>
+    div#rMenu {
+      position: absolute;
+      visibility: hidden;
+      top: 0;
+      background-color: #555;
+      text-align: left;
+      padding: 2px;
+    }
+
+    div#rMenu ul li {
+      margin: 1px 0;
+      padding: 0 5px;
+      cursor: pointer;
+      list-style: none outside none;
+      background-color: #DFDFDF;
+    }
+  </style>
+</head>
+<body>
+<div>
+  <button id="ztExpand">全部展开</button>
+  <button id="ztClose">全部闭合</button>
+</div>
+<ul id="treeDemo" class="ztree"></ul>
+<div id="rMenu">
+  <ul>
+    <li id="m_add" onclick="addTreeNode();">增加节点</li>
+    <li id="m_del" onclick="removeTreeNode();">删除节点</li>
+    <li id="m_check" onclick="checkTreeNode(true);">Check节点</li>
+    <li id="m_unCheck" onclick="checkTreeNode(false);">unCheck节点</li>
+    <li id="m_reset" onclick="resetTree();">恢复zTree</li>
+  </ul>
+</div>
+<script>
+  var setting = {
+    view: {
+      showIcon: function (treeId, treeNode) {
+        return !treeNode.isParent;
+      }
+    }, data: {
+      simpleData: {
+        enable: true
+      }
+    }, callback: {
+      onRightClick: OnRightClick
+    }
+  };
+  function OnRightClick(event, treeId, treeNode) {
+    if (!treeNode && event.target.tagName.toLowerCase() != "button" && $(event.target).parents("a").length == 0) {
+      zTree.cancelSelectedNode();
+      showRMenu("root", event.clientX, event.clientY);
+    } else if (treeNode && !treeNode.noR) {
+      zTree.selectNode(treeNode);
+      showRMenu("node", event.clientX, event.clientY);
+    }
+  }
+
+  function showRMenu(type, x, y) {
+    $("#rMenu ul").show();
+    if (type == "root") {
+      $("#m_del").hide();
+      $("#m_check").hide();
+      $("#m_unCheck").hide();
+    } else {
+      $("#m_del").show();
+      $("#m_check").show();
+      $("#m_unCheck").show();
+    }
+    rMenu.css({"top": y + "px", "left": x + "px", "visibility": "visible"});
+
+    $("body").bind("mousedown", onBodyMouseDown);
+  }
+  function hideRMenu() {
+    if (rMenu) {
+      rMenu.css({"visibility": "hidden"});
+    }
+    $("body").unbind("mousedown", onBodyMouseDown);
+  }
+  function onBodyMouseDown(event) {
+    if (!(event.target.id == "rMenu" || $(event.target).parents("#rMenu").length > 0)) {
+      rMenu.css({"visibility": "hidden"});
+    }
+  }
+
+  var zNodes = [
+    {id: 1, pId: 0, name: "父节点1 - 展开", open: true, noR: true}, {id: 11, pId: 1, name: "父节点11 - 折叠"},
+    {id: 111, pId: 11, name: "叶子节点111"}, {id: 112, pId: 11, name: "叶子节点112"}, {id: 113, pId: 11, name: "叶子节点113"},
+    {id: 114, pId: 11, name: "叶子节点114"}, {id: 12, pId: 1, name: "父节点12 - 折叠"}, {id: 121, pId: 12, name: "叶子节点121"},
+    {id: 122, pId: 12, name: "叶子节点122"}, {id: 123, pId: 12, name: "叶子节点123"}, {id: 124, pId: 12, name: "叶子节点124"},
+    {id: 13, pId: 1, name: "父节点13 - 没有子节点", isParent: true}, {id: 2, pId: 0, name: "父节点2 - 折叠"},
+    {id: 21, pId: 2, name: "父节点21 - 展开", open: true}, {id: 211, pId: 21, name: "叶子节点211"},
+    {id: 212, pId: 21, name: "叶子节点212"}, {id: 213, pId: 21, name: "叶子节点213"}, {id: 214, pId: 21, name: "叶子节点214"},
+    {id: 22, pId: 2, name: "父节点22 - 折叠"}, {id: 221, pId: 22, name: "叶子节点221"}, {id: 222, pId: 22, name: "叶子节点222"},
+    {id: 223, pId: 22, name: "叶子节点223"}, {id: 224, pId: 22, name: "叶子节点224"}, {id: 23, pId: 2, name: "父节点23 - 折叠"},
+    {id: 231, pId: 23, name: "叶子节点231"}, {id: 232, pId: 23, name: "叶子节点232"}, {id: 233, pId: 23, name: "叶子节点233"},
+    {id: 234, pId: 23, name: "叶子节点234"}, {id: 3, pId: 0, name: "父节点3 - 没有子节点", isParent: true}
+  ];
+
+  var zTree, rMenu;
+  $(document).ready(function () {
+    $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+    zTree = $.fn.zTree.getZTreeObj("treeDemo");
+    rMenu = $("#rMenu");
+    $('#ztExpand').on('click', function () {
+      zTree.expandAll(true);
+    });
+    $('#ztClose').on('click', function () {
+      zTree.expandAll(false);
+    })
+  });
+</script>
+</body>
+</html>

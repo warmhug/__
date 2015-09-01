@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+</head>
+<body>
+
+    <script src="src/observe.js"></script>
+    <script>
+
+        /*
+        *   ArrayObserver
+        * */
+        var arr = [0, 1, 2, 4];
+        var observer = new ArrayObserver(arr);
+        observer.open(function(splices) {
+          // respond to changes to the elements of arr.
+          splices.forEach(function(splice) {
+            splice.index; // index position that the change occurred.
+            splice.removed; // an array of values representing the sequence of elements which were removed
+            splice.addedCount; // the number of elements which were inserted.
+          });
+        });
+
+        /*
+        *   ObjectObserver
+        * */
+        var myObj = { id: 1, foo: 'bar' };
+        var observer = new ObjectObserver(myObj);
+        observer.open(function(added, removed, changed, getOldValueFn) {
+          // respond to changes to the obj.
+          Object.keys(added).forEach(function(property) {
+            property; // a property which has been been added to obj
+            added[property]; // its value
+          });
+          Object.keys(removed).forEach(function(property) {
+            property; // a property which has been been removed from obj
+            getOldValueFn(property); // its old value
+          });
+          Object.keys(changed).forEach(function(property) {
+            property; // a property on obj which has changed value.
+            changed[property]; // its value
+            getOldValueFn(property); // its old value
+          });
+        });
+
+        /*
+        *   CompoundObserver
+        * */
+        var obj = {
+          a: 1,
+          b: 2
+        };
+        var otherObj = { c: 3 };
+        var observer = new CompoundObserver();
+        observer.addPath(obj, 'a');
+        observer.addObserver(new PathObserver(obj, 'b'));
+        observer.addPath(otherObj, 'c');
+        observer.open(function(newValues, oldValues) {
+          // Use for-in to iterte which values have changed.
+          for (var i in oldValues) {
+            console.log('The ' + i + 'th value changed from: ' + newValues[i] + ' to: ' + oldValues[i]);
+          }
+        });
+        </script>
+</body>
+</html>

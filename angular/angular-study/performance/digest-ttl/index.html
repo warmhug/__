@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <title>test</title>
+    <meta charset="utf-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.js"></script>
+<body>
+<div ng-app="bugapp">
+  <div ng-controller="bugController">
+    <script type="text/ng-template" id="mytemplate.html">
+      I am at {{item.ID}}
+      <ul>
+         <li ng-repeat="item in item.children" ng-include="'mytemplate.html'"></li>
+      </ul>
+    </script>
+    <div ng-include="'mytemplate.html'"></div>
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

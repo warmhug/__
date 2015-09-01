@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.js"></script>
+</head>
+<body ng-app="myApp">
+  <div ng-controller="myController">{{ hellos }}</div>
+  <div ng-controller="Ctrl">{{ hellos }}</div>
+    
+  <script>
+  var myApp = angular.module('myApp', []);
+
+  // factory is function，返回任意对象，不同实例
+  // a factory is a provider with only a $get method
+  myApp.factory('myFactory', function () { 
+
+    // 这里可以是个构造器
+    function Ctor (options) {
+      this.options = options
+    }
+    Ctor.prototype.getName = function () {
+      return this.options.name
+    }
+
+    return { 
+      NameCtor: Ctor, 
+      hello: function() { 
+        return "Hello World"; 
+      }
+    } 
+  });
+
+  // service is constructor，返回同一个实例对象，singleton，共享数据
+  myApp.service('myService', ['$timeout', function ($timeout){ 
+    var name = 'jack'
+    var p = {nick: 'eb'}
+    this.setName = function (name) {
+      name = name
+      p.nick = name
+    }
+    this.getName = function() { 
+      return name + ' - ' + p.nick; 
+    }
+
+  }]); 
+
+  myApp.provider('myProvider', ['$timeoutProvider', function($timeoutProvider) { 
+    //此factory函数，参数能接受其他provider、constants、the $provide service
+  
+    var version;
+    this.setVersion = function (value) {  //生成对象前，可配置
+        version = value;
+    }
+
+    this.phrase = "Hello World";
+    this.$get = ['$window', function ($window) {
+        var phrase = this.phrase;
+        return {
+          hello: function() { 
+            return phrase; 
+          }
+        }
+    }];
+
+  }]);
+
+  myApp.value('movieTitle', 'The Matrix');
+
+  myApp.config(function($provide, myProviderProvider){
+    myProviderProvider.phrase = "Hello Yo!";
+
+    $provide.decorator('movieTitle', function ($delegate) {
+        return $delegate + ' - starring';
+    });    
+
+  });
+
+  myApp.controller('myController', function ($scope, myFactory, myService, myProvider) {
+    $scope.hellos = [myFactory.hello(), myService.getName(), myProvider.hello() ];
+  });
+
+  myApp.controller('Ctrl', function ($scope, myFactory, myService, myProvider) {
+    myService.setName('lucy')
+    $scope.hellos = [myFactory.hello(), myService.getName(), myProvider.hello() ]
+  });  
+
+  </script>
+</body>
+
+</html>

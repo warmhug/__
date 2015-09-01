@@ -1,0 +1,28 @@
+/* CSS crunched with Crunch - http://crunchapp.net/ */
+*{margin:0;padding:0;}
+table{border-collapse:collapse;border-spacing:0;}
+h1,h2,h3,h4,h5,h6{font-size:100%;}
+ul,ol,li{list-style:none;}
+em,i{font-style:normal;}
+img{border:none;}
+input,img{vertical-align:middle;}
+body{color:#000;font-family:arial;background:#FFF;}
+.clearfix:after{display:block;content:'';clear:both;visibility:hidden;}
+.none{display:none;}
+.no-spacing{margin:0;padding:0;}
+.margin-center{margin:0 auto;text-align:center;}
+.player{position:relative;margin:50px 20px;width:300px;height:60px;border:1px solid #ccc;-webkit-border-radius:3px;font-size:14px;}.player .info{height:25px;line-height:25px;}.player .info .name{padding-left:10px;color:blue;}
+.player .ctrl{height:32px;background:#eee;padding-top:3px;}.player .ctrl>span{vertical-align:top;display:inline-block;padding-top:5px;}
+.player .ctrl .play::before,.player .ctrl .play::after,.player .ctrl .pause::before,.player .ctrl .pause::after{content:" ";position:absolute;left:5px;top:5px;}
+.player .ctrl .play::before,.player .ctrl .pause::before{width:16px;height:16px;-webkit-border-radius:16px;background:#C55500;}
+.player .ctrl .play:after{left:12px;top:9px;border:4px solid transparent;border-left-color:white;background:transparent;}
+.player .ctrl .pause:after{left:10px;top:9px;width:2px;height:8px;border:2px solid white;border-width:0 2px;background:transparent;}
+.player .ctrl .c-btn{position:relative;width:28px;height:26px;}
+.player .ctrl .proBar{position:relative;margin:3px 0;width:218px;height:16px;border:1px solid #ccc;}.player .ctrl .proBar b{display:inline-block;position:absolute;top:-3px;left:0;width:3px;height:28px;background:#333;}
+.player .ctrl .time{padding-left:10px;}
+body{height:1000px;font-size:14px;}
+a{text-decoration:none;color:#333;}
+.main-nav{width:100%;height:40px;background:#eee;}.main-nav a{position:relative;top:13px;left:15px;padding:5px 10px;border:1px solid #ddd;}
+.home{position:relative;left:-620px;-webkit-transition:left 0.3s ease-out;}.home p{margin:20px;}.home p a{color:#00e;}
+.lists{position:relative;left:-620px;-webkit-transition:left 0.3s ease-out;margin:20px 0;padding-left:30px;}.lists ul{width:250px;}.lists ul li{padding:5px;border:1px solid #eee;border-bottom:none;}.lists ul li:last-child{border-bottom:1px solid #eee;}
+.player-box{position:fixed;bottom:10px;}

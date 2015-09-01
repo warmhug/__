@@ -1,0 +1,131 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <title></title>
+    <!-- 库 -->
+    <script src="http://cdn.staticfile.org/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular-sanitize.js"></script>
+    <script src="http://cdn.staticfile.org/angular.js/1.2.16/angular-resource.js"></script>
+</head>
+<body>
+    <div ng-controller="Ctrl" xx-yy>
+        <p ng-bind-html="num"></p>
+
+        <p>http: {{ htmlStr0 }}</p>
+        <p ng-bind-html="htmlStr"></p>
+        <div>
+            用了filter，显示正常：<span ng-bind-html="htmlStr | to_trusted"></span>
+        </div>
+        <!-- 新模板 -->
+        <div id="wrap"></div>
+    </div>
+    <!-- 小模板 -->
+    <script type="text/ng-template" id="tpl">
+        <div style="background-color: #ccc;">
+            bind-html来自模板：
+            <p>如果htmlStr里有ng-click等directives，不应该用ng-bind-html去编译它。</p>
+            <p compile="htmlStr"></p>
+            <p ng-bind-html="htmlStr"></p>
+            <p ng-bind-html="htmlStr | to_trusted"></p>
+            <p ng-bind-template="{{htmlStr}}"></p>
+        </div>
+    </script>
+
+    <!--  -->
+    <script>
+        var app = angular.module('app', ['ngSanitize', 'ngResource']);
+        app.config(function ($sceProvider) {
+            // 完全禁掉$sce
+            // 之后就不需要 ngSanitize 模块了！
+            //$sceProvider.enabled(false);
+        });
+        app.config(function ($sceDelegateProvider) {
+            $sceDelegateProvider.resourceUrlWhitelist([ //加白名单
+                'self', // 允许同域资源加载
+                'http://srv*.assets.example.com/**' //允许指定域，注意*和**的不同
+            ]);
+        });
+
+        app.controller('Ctrl', ['$scope', '$sce', '$compile', '$http', '$resource', 'utils',
+                                function ($scope, $sce, $compile, $http, $resource, utils) {
+            //$scope.num = 3;  //不是字符串类型，不能用ng-bind-html
+
+            //使用$sce信任处理后，可行
+            //$scope.htmlStr = $sce.trustAsHtml('<span style="color:red;">red</span>');
+
+            //style会被sce过滤掉
+            $http.get('./json/one.json').success(function (data, status) {
+                $scope.htmlStr0 = data;
+            });
+
+            $scope.htmlStr = '<span ng-click="alert()" onmouseover="console.log(1)">连接</span>';
+            //$scope.htmlStr = $resource('./json/one.json').get();
+
+            $scope.alert = function () {
+                alert('xx')
+            }
+
+
+            //处理模板
+            var tplPromise = utils.fetchTemplate('tpl'), compiled;
+            tplPromise.then(function (tpl) {
+                compiled = $compile(tpl)($scope, function (clonedElement, scope) {});
+                $('#wrap').html(compiled);
+            })
+
+        }]);
+
+        //使用filter
+        app.filter('to_trusted', ['$sce', function($sce){
+            return function (text) {
+                return $sce.trustAsHtml(text);
+            };
+        }]);
+
+        //compile
+        //https://github.com/angular/angular.js/issues/4992
+        app.directive('compile', function($compile) {
+            // directive factory creates a link function
+            return function (scope, element, attrs) {
+                scope.$watch(
+                        function (scope) {
+                            // watch the 'compile' expression for changes
+                            return scope.$eval(attrs.compile);
+                        },
+                        function (value) {
+                            // when the 'compile' expression changes
+                            // assign it into the current DOM
+                            element.html(value);
+
+                            // compile the new DOM and link it to the current
+                            // scope.
+                            // NOTE: we only compile .childNodes so that
+                            // we don't get into infinite loop compiling ourselves
+                            $compile(element.contents())(scope);
+                        }
+                );
+            };
+        });
+
+        //帮助函数
+        app.factory('utils', ['$http', '$q', '$templateCache', function ($http, $q, $templateCache) {
+            function fetchTemplate(template) {
+                return $q.when($templateCache.get(template) || $http.get(template))
+                    .then(function (res) {
+                        if (angular.isString(res)) {
+                            $templateCache.put(template, res);
+                        } else if (angular.isObject(res)) {
+                            $templateCache.put(template, (res = JSON.stringify(res)));
+                        }
+                        return res;
+                    });
+            }
+            return {
+                fetchTemplate: fetchTemplate
+            }
+        }])
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+/**
+ * Created by hua on 14-5-16.
+ */
+.combo-select .active {
+  background-color: #ddd;
+}
+.combo-select .c-left,
+.combo-select .c-right,
+.combo-select .control {
+  float: left;
+}
+.combo-select .c-left,
+.combo-select .c-right {
+  list-style: none;
+  padding: 0;
+  border: 1px solid #ddd;
+  min-width: 150px;
+  min-height: 100px;
+}
+.combo-select .c-left li,
+.combo-select .c-right li {
+  padding: 0 10px;
+  line-height: 25px;
+}
+.combo-select .control {
+  margin: 10px;
+}
+.combo-select .control p {
+  vertical-align: middle;
+}

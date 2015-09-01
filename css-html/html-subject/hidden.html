@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>hidden</title>
+</head>
+<body>
+	hidden属性，用于隐藏和显示HTML元素。这与CSS中display:none属性的效果相同。虽然用CSS来隐藏元素是通常的做法，
+    但实际上HTML5标准鼓励使用hidden属性。hidden为对应的元素增加了额外的语义。设置这个属性表示元素目前不相关。
+    例如，这可以被屏幕阅读器利用，否则它需要通过CSS的display属性来遍历整个页面。
+	
+	<div>hidden 了</div>
+    <div hidden id="test" style="width:100px; height:100px; border:1px solid #ccc"></div>
+</body>
+</html>

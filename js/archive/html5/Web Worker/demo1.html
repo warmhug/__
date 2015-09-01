@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title>New Document </title>
+    <meta name="Generator" content="EditPlus">
+    <meta name="Author" content="">
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+</head>
+<body>
+    <button onclick='checkBrowser();'>
+        check browser</button>
+    <br />
+    <button onclick="post('hello');">
+        post message</button>
+    <br />
+    <div id="d1">
+        receive message :</div>
+</body>
+<script>
+    var worker = new Worker('worker.js');
+
+    worker.addEventListener('message', function (e) {
+        document.getElementById('d1').innerHTML = e.data;
+    }, false);
+
+    worker.addEventListener('error', function (e) {
+        alert(e.message);
+    }, false);
+
+    function checkBrowser() {
+        if (worker) {
+            worker.postMessage({ 'msg': 'check' });
+        }
+    }
+
+    function post(message) {
+        if (worker) {
+            var url = document.location;
+            worker.postMessage({ 'msg': 'hello', 'url': url.href });
+        }
+    }
+
+
+</script>
+</html>

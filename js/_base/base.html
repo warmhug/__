@@ -1,0 +1,186 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript">
+	/**************  基础知识  ***************/
+
+	/* 根据运算符，自动转换数据类型
+     */
+    console.log("10" * 5); // * - / 转换为整型，+ 转换为字符串
+	/*
+	（1） 除法运算符（/）
+	Js中所有数字都是浮点型，这一点跟区分整数和浮点数的程序语言不同，如5/2结果是2.5，而不是2
+	除 数为0的结果是正无穷大（Infinity）或者负无穷大（-Infinity），而0/0结果则是特殊值NaN
+	（2）模运算符（%）
+	取模运算通常都是整数，但Js中也适用于浮点数，如-4.3%2.1=-0.1
+     */
+
+
+
+	/* 字符串中的汉字编码
+     */
+	console.log(String.fromCharCode(255));
+	// 判断双字节（Unicode编码大于255就能确定是双字节）
+	//charCodeAt()用于获取指定位置字符的 Unicode 编码；0xff00是 “1111 1111 0000 0000” 的十六进制表示法；
+	var str="dfdfdfd中",cha=[];
+	for(var i = 0, len = str.length; i < len; i++){
+		if((str.charCodeAt(i) & 0xff00) != 0){
+			cha.push(i);
+		}
+	}
+	console.log(cha);
+
+
+	/*
+	 * Boolean 类型。 类型转换 通过使用 否 操作符两次，可以把一个值转换为布尔型。
+	 更多参考：http://www.w3school.com.cn/js/js_obj_boolean.asp
+	*/
+	var myBoolean=new Boolean();
+	var myBoolean=new Boolean(0);
+	var myBoolean=new Boolean(null);
+	var myBoolean=new Boolean("");
+	var myBoolean=new Boolean(false);
+	var myBoolean=new Boolean(NaN);
+	//以上布尔对象的值均为 false
+
+	var myBoolean=new Boolean(1);
+	var myBoolean=new Boolean(true);
+	var myBoolean=new Boolean("false");
+	//以上布尔对象的值均为 true
+
+	console.log(!!'');		//false
+	console.log(!!' ');		//true
+	console.log(!!'0');		//true
+	console.log(!!{});		//true
+
+
+
+
+	/* ============================== Number、String类型 ====================================== */
+
+	/*
+		NaN类型 not a number NaN自身和自身不想等，使用isNaN()函数判断NaN类型,
+	isNaN函数适用于对象，调用是先调用对象的valueOf()方法，确定是否可以转换为数值，
+	如果不能，基于这个返回值，再调用toString()方法，再测试返回值
+     */
+	console.log(isNaN(10));		 //false
+	console.log(isNaN('10'));	 //false
+	console.log(isNaN(true));	 //false
+	console.log(isNaN('blue'));	 //true
+  console.log(isNaN(NaN));     //true
+
+
+	/*
+	 * 数值转换。通过Number转换，如果是null，返回0；如果是undefined返回NaN；
+	*/
+	var num1 = Number('fuck you');
+	var num2 = Number('');
+	var num3 = Number('0000011111');
+	var num4 = Number(true);
+	console.log(num1,num2,num3,num4);  //NaN 0 11111 1
+
+	//转换字符串的函数parseInt()和parseFloat(),
+	var num1 = parseInt('1234fuck you');
+	var num2 = parseInt('');
+	var num3 = parseInt('0000011111');
+	var num4 = parseInt('smsn');
+	var num5 = parseInt('0xA');		//10十六进制
+	var num6 = parseInt(22.5);
+	var num7 = parseInt('070');		//56 八进制
+	var num8 = parseInt('70');		//10 十进制
+	var num9 = parseInt('0xf')		//15 十六进制
+	console.log(num1,num2,num3,num4,num5,num6,num7,num8,num9) //1234 NaN 4681 NaN 10 22 56 70 15
+
+	//parseFloat()原理和parseInt()解析方式相同，唯一区别是他只能解析十进制的值
+	var num1 = parseFloat('1234fuck you');
+	var num2 = parseFloat('0xA');			//十六进制转换为0
+	var num3 = parseFloat('070');			//八进制转换为70
+	var num4 = parseFloat('0808.5');
+	var num5 = parseFloat('22.555.55');
+	var num6 = parseFloat('3.11415926e7');
+	console.log(num1,num2,num3,num4,num5,num6)		//1234 0 70 808.5 22.555 31141592.6
+
+
+	/* 各进制数的转换。二进制、八进制、十进制、十六进制 的互相转换。
+	 *
+	 parseInt() 方法有基模式，可以把二进制、八进制、十六进制或其他任何进制的字符串转换成整数。
+	 基是由 parseInt() 方法的第二个参数指定的。
+	 详细参考：http://www.w3school.com.cn/js/pro_js_typeconversion.asp
+	*/
+	parseInt("10");			//返回 10
+	parseInt("19",10);		//返回 19 (10+9)
+	parseInt("11",2);		//返回 3 (2+1)
+	parseInt("17",8);		//返回 15 (8+7)
+	parseInt("1f",16);		//返回 31 (16+15)
+	parseInt("010");		//未定：返回 10 或 8 应在第二个参数中指定字符串的进制
+	parseInt("He was 40")   //返回 NaN
+
+
+	/*
+	 * toString()方法
+	 * 转换为字符串，1.调用每个值都有的toString()方法，toString可指定基数，默认为十进制,
+						null和undefined没有这个方法
+	 *				  2.不知道转换值为null或undefined情况下 使用String()
+	*/
+
+	console.log(20013..toString(2)); //你没看错, 就是两个 .
+	console.log((20013).toString(2));
+
+	var age = 11;
+	var bol = true;
+	var num = 10;
+	console.log(age.toString());		//'11'
+	console.log(bol.toString());		//'true'
+	console.log(num.toString(2));		//'1010'
+	console.log(num.toString(8));		//'12'
+	console.log(num.toString(10));		//'10'
+	console.log(num.toString(16));		//'a'
+
+	var value1 = null;
+	var value2 = undefined;
+	console.log(String(value1));		//'unll'
+	console.log(String(value2));		//'undefined'
+
+
+
+
+
+
+	/*  String 对象
+
+		JavaScript 的字符串是不可变的（immutable），String 类定义的方法都不能改变字符串的内容。
+		像 String.toUpperCase() 这样的方法，返回的是全新的字符串，而不是修改原始字符串。
+
+		更多参考：http://www.w3school.com.cn/js/pro_js_referencetypes.asp
+	*/
+	var oStringObject = new String("hello world");
+	console.log(oStringObject.valueOf() == oStringObject.toString());	//输出 "true"
+
+	// slice() 和 substring() 的用法相同，只在参数为负数时，它们处理参数的方式才稍有不同。
+	console.log(oStringObject.slice("-3"));		//输出 "rld"
+	console.log(oStringObject.substring("-3"));	//输出 "hello world"
+	console.log(oStringObject.slice("3, -4"));		//输出 "lo w"
+	console.log(oStringObject.substring("3, -4"));	//输出 "hel"
+
+	var oStringObject = new String("yellow");
+	console.log(oStringObject.localeCompare("brick"));		//输出 "1"
+	console.log(oStringObject.localeCompare("yellow"));		//输出 "0"
+	console.log(oStringObject.localeCompare("zoo"));		//输出 "-1"
+
+
+
+	/*
+	 * Object每个实例都具有的属性和方法：
+	 * constructor 保存着用于创建当前对象的函数
+	 * hasOwnProperty 检查给定的属性在当前的对象实例中是否存在，而不是实例的原型中，
+	 * isPrototypeOf(object),用于检查传入的对象是否为另一个对象的原型
+	 * propertyIsEnumerable, 检查给定的属性是否可以使用for-in枚举
+	 * toString(),返回对象的字符串表示，
+	 * valueOf() 返回对象的字符串，数值或布尔值表示，返回值通常和toString()返回的值相同，
+	*/
+	</script>
+</body>
+</html>

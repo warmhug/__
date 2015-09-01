@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>example</title>
+    <script src="http://underscorejs.org/underscore.js"></script>
+    <script src="http://zeptojs.com/zepto.js"></script>
+    <script src="http://backbonejs.org/backbone.js"></script>
+    <script src="backbone.stickit.js"></script>
+</head>
+<body>
+    <div id="test">
+        <div id="dis" style="width:100px; height:100px; border:1px solid #ccc"></div>
+        <input id="author" type="text"><br>
+        <input type="button" id="btn" value="click me" /><br>
+        <input type="button" id="destroy" value="destroy model" />
+    </div>
+
+    <script type="text/template" id="inf">
+        <span class="name"><%= name %></span> <br>
+        <span class="sex"><%= sex %></span> <br>
+        <span class="age"><%= age %></span> <br>
+        <div id="title"></div> 
+    </script>
+    <script>
+
+        var Person = Backbone.Model.extend({
+            defaults: function () {
+                return {
+                    'id': 1,
+                    'name': 'def',
+                    'sex': 'male',
+                    'age': 19
+                }
+            }
+        });
+
+        var People = Backbone.Collection.extend({
+            model: Person
+        });
+
+        var app = Backbone.View.extend({
+            el: $('#test'),
+            template: _.template($('#inf').html()),
+            events: {
+                "click #btn": "handler",
+                "click #destroy": "clear"
+            },
+            bindings: {
+                '.name': 'name',
+                '#title': 'sex',
+                '#author': 'sex'
+            },
+            initialize: function () {
+                this.dis = this.$('#dis');
+
+                this.model = new Person();
+
+                this.listenTo(this.model, 'destroy', this.clear);
+                //this.listenTo(this.model, 'change', this.render);
+                this.listenTo(this.model, 'change', function (model, res) {
+                    console.log(res);
+                });
+                this.listenTo(this.model, 'change:sex', function (model, res) {
+                    //console.log(arguments);
+                    console.log(model, res);
+                });
+
+                this.collection = new People();
+                //var cr = this.collection.create({
+                //    title: "Othello",
+                //    author: "William Shakespeare"
+                //});
+                console.log(this.collection)
+            },
+            render: function () {
+                //this.dis.html(this.template(this.model.toJSON()));
+                this.dis.html($('#inf').html());
+                this.stickit();
+            },
+            handler: function () {
+                this.model.set({ 'name': 'lucy' }, { silent: true });
+                this.model.set('name', 'lucy');
+                this.model.set({ 'sex': 'female' });
+                this.model.set({ 'age': '19' + Math.random() });
+            },
+            clear: function () {
+                //this.model.destroy();
+                this.remove()
+            }
+        })
+        
+        var ap = new app();
+        ap.render();
+    </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://code.angularjs.org/1.0.8/angular.js"></script>
+    <!--<script src="accordion.js"></script>-->
+    <script src="accordion-tpls.js"></script>
+</head>
+<body>
+<div ng-controller="AccordionDemoCtrl">
+  <label class="checkbox">
+    <input type="checkbox" ng-model="oneAtATime">
+    Open only one at a time
+  </label>
+  <accordion close-others="oneAtATime">
+    <accordion-group heading="Static Header, initially expanded" is-open="true">
+      This content is straight in the template.
+    </accordion-group>
+    <accordion-group heading="{{group.title}}" ng-repeat="group in groups">
+      {{group.content}}
+    </accordion-group>
+    <accordion-group heading="Dynamic Body Content">
+      <p>The body of the accordion group grows to fit the contents</p>
+        <button class="btn btn-default btn-sm" ng-click="addItem()">Add Item</button>
+        <div ng-repeat="item in items">{{item}}</div>
+    </accordion-group>
+    <accordion-group is-open="isopen">
+        <accordion-heading>
+            I can have markup, too! <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+        </accordion-heading>
+        This is just some content to illustrate fancy headings.
+    </accordion-group>
+  </accordion>
+</div>
+    
+    <script>
+        angular.module('app', ['ui.bootstrap']);
+function AccordionDemoCtrl($scope) {
+  $scope.oneAtATime = true;
+
+  $scope.groups = [
+    {
+      title: "Dynamic Group Header - 1",
+      content: "Dynamic Group Body - 1"
+    },
+    {
+      title: "Dynamic Group Header - 2",
+      content: "Dynamic Group Body - 2"
+    }
+  ];
+
+  $scope.items = ['Item 1', 'Item 2', 'Item 3'];
+
+  $scope.addItem = function() {
+    var newItemNo = $scope.items.length + 1;
+    $scope.items.push('Item ' + newItemNo);
+  };
+}
+    </script>
+</body>
+</html>
