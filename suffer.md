@@ -4,6 +4,10 @@
 
 
 
+### 2024
+
+vscode 里 eslint 报错、找不到报错原因，使用 cmd+shift+p 输入 reload window 重启 vscode 即可。
+
 ### 2023
 
 代码写的要优美(卷)：分块用class类、赋值用lodash set。
@@ -126,21 +130,6 @@ dashboard 数据边界细节很多。
 - 图表组件 g2 不起作用，antd、react-dom 等引用内容要移除。
 - 迁移额外成本：很多地方都要修改，架构调整(找到pc各模块代码、删减/重新组织)。
 - 小程序：picker 和 optionsSelect 的使用场景区别？mobile table design patterns 用列表代替表格。
-
-
-## 2019 Charles 抓包
-- 使用没有 被设置代理的 浏览器（比如 Chrome **翻墙代理需要关掉**）
-- HTTPs 支持：
-   - Help -> SSL Proxying -> Install Charles Root Certificate (挨着的 **模拟器** / **手机 **证书都装)
-      - 注意：**手机上安装的 证书 和 连接的 mac 电脑要匹配。使用新电脑需要重新给手机安装证书。**
-   - 在 macOS 钥匙串访问 里信任证书，iOS 设置里信任证书。
-   - 在 Charles 里菜单 Proxy -> “Proxy Setting” Port: 8888 / “SSL Proxying Settings - SSL Proxying - add” 内容 Host:* 、Port:443
-   - 在 iOS (**不用连数据线**) WiFi 设置 HTTP 代理，服务器输入 电脑 ip、端口 8888
-- 其他：
-   - 关闭 mac 端包的抓取：菜单 Proxy 将 maxOS Proxy 取消选中 （这样 iOS 模拟器里也抓不了）
-   - 抓取支付宝 RPC 请求：支付宝 可切换环境包 设置关闭 mmtp 开关
-   - 映射本地 js 文件、调试代码：菜单 Tools -> Map Remote / Map Local…
-   - 为请求配置跨域 CORS：菜单 Tools -> Rewrite...
 
 
 ## 2019-02 大安全移动业务开发

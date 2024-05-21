@@ -1,0 +1,22 @@
+{
+  "name": "chrome extension new",
+  "description": "Test new features",
+  "version": "1.0",
+  "manifest_version": 3,
+  "icons": {
+    "16": "favicon.png"
+  },
+  "permissions": [
+    "tabs",
+    "sidePanel"
+  ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "popup"
+  }
+}

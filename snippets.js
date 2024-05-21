@@ -1138,6 +1138,88 @@ var matches = urlStr.match(/.+(\?|\&)q=([^&.]+)?&/);
 // 正则表达式验证 6 位数字密码？6~15位数字、字母？
 // /^\d{6}$/  /^[a-zA-Z0-9]{6,15}$/
 
+// trim 空格
+' aab'.replace(/(^\s*)|(\s*$)/g , "");
+
+// 元字符  ( [ { / ^ $ | ) ? * + .  预定义字符  \t \n \r . \d \D \w   要进行转义
+/index(\.web)?\.tsx$/.test('index.web.tsx');
+'S89(KKK,L)'.test(/S\d+[\(]\w+,\w+\)/g);
+/\bend\b/.test('weekend , endFor , end');
+'bb=2.blueidea.com'.replace(/(bb=)\d/, "\$1" + "3");
+// contain 子字符串
+/(my|you)/i.test('it is my name and you...')
+console.log( /^a|bc$/.exec("add") ); //匹配开始位置的a或结束位置的bc
+console.log( /^(a|bc)$/.exec("bc") ); //匹配a或bc
+console.log( /(abc){2}/.exec("abcabc ###") );
+console.log( /(?:abc){2}/.exec("abcabc ###") ); // 非捕获分组 ?:
+
+// 反向引用被存储在RegExp对象的静态属性$1―$9中
+console.log( /(A?(B?(C?)))/.exec("ABC") );
+console.log( RegExp.$1 + "\n" + RegExp.$2 + "\n" + RegExp.$3 );
+console.log( "1234 5678".replace(/(\d)\s(\d)/, "$2 $1") );
+// \1 \2 形式
+console.log( /\d+(\D)\d+\1\d+/.exec("2008-1-1") );
+console.log( /(\w)(\w)\2\1/.exec("woow") );
+console.log( /(\w)\1{4,}/.exec("aa bbbb ccccc 999999999") );
+
+// 多行匹配
+console.log( "ab\ncdef".replace(/[a-z]$/g, '#') );
+console.log( "ab\ncdef".replace(/[a-z]$/gm, '#') );
+
+// 正向前瞻(?=)
+console.log( /([a-z]+(?=\d))/i.test("abc every1 abc") ); //true
+console.log( RegExp.$1 ); //every，不返回数字
+//负向前瞻
+console.log( /([a-z](?!\d))/i.test("abc1 one") );
+console.log( RegExp.$1 ); //one
+
+// search方法，无需在search时用g标识
+console.log( 'my age is 180 year old'.search(/\d+/) );
+
+//手机号码验证（国内、国际号码）
+var chinaMobile = /^0*1[3,4,5,8]\d{9}$/.test(123);
+/^(886){1}0{0,1}[6,7,9](?:\d{7}|\d{8}|\d{10})$/.test(88);
+
+//email验证
+/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test(value);
+
+//验证邮编（国内、国际） 国际邮编：只能由数字、字母、空格、横杆组成
+/^\d{6}|0{6}$/.test(val);
+/^[a-zA-Z0-9\s\-]{6,10}$/.test(val);
+/^\d{3}|0{3}$/.test(val);
+
+```html
+<script type="tpl" id="tpl">
+  <html><head></head>
+  <body>
+    <div></div>
+  </body>
+  </html>
+</script>
+```
+// 多行匹配 html
+var html = document.getElementById('tpl').innerHTML;
+var match = html.match(/^([\s\S]*<body.*>)([\s\S]*)(<\/body>[\s\S]*)$/m);
+
+// stripTags 检测html的tag
+'<aa>xx</a>'.replace(/<\/?[^>]+>/g , "");
+'<aa>xx</a>'.replace(/<[^>]*>|<\/[^>]*>/g, "");
+
+// 调换位置
+"Doe, John".replace(/(\w+)\s*,\s*(\w+)/, "$2 $1");
+
+// 将所有双引号包含的字符替换成中括号包含的字符
+'"JavaScript" 非常强大！'.replace(/"([^"]*)"/g, "[$1]");
+
+//转化成camelize命名方式： background-color → backgroundColor
+s.replace(/-([a-z])/ig, function(letter){ return letter.toUpperCase(); });
+
+// 日期格式  替换
+'12/05/2008'.replace(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/g, '$3-$1-$2');
+
+
+
+
 
 
 /*

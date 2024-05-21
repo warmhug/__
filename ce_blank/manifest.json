@@ -19,7 +19,7 @@
     "open_in_tab": true
   },
   "action": {
-    "default_title": "点击打开 new tab 页面",
+    "default_title": "popup",
     "default_popup": "popup.html"
   },
   "commands": {

@@ -23,7 +23,15 @@ defaults read com.apple.screencapture  # 查看系统截图设置
 defaults write com.apple.screencapture type jpg  # 将系统截屏后图片保存为 jpg 格式
 defaults write com.apple.screencapture location ~/Downloads/  # 修改截屏图片保存路径
 
+# https://gist.github.com/rmcdongit/f66ff91e0dad78d4d6346a75ded4b751
+# https://gist.github.com/dvessel/2b6ad97b2da16d445671b39618221aab
+open /System/Library/PreferencePanes/Network.prefPane  # 打开网络偏好设置面板
+open "x-apple.systempreferences:com.apple.Network-Settings.extension?Proxies"
+networksetup -setproxyautodiscovery Wi-Fi on  # 打开 WiFi 里 自动发现代理 开关
+
 sudo spctl --master-disable  # 允许安装”任何来源“的软件，解决「xxx.app已损坏」问题
+xattr -cr /Applications/Movist.app  # macOS 14.4 以上版本，需要运行此命令后 再右键打开
+
 xcode-select --install  # 安装 git & gcc
 
 csrutil disable  # 关闭sip。 关机、按住电源键(非m1按下`Cmd R`) 选择实用工具->终端
@@ -43,48 +51,23 @@ cmd + shift + . # 在 finder 切换显示“隐藏文件”
 - 欧路词典: 修改 ~/Library/Preferences/ com.eusoft.eudic.plist 修改 MAIN_TimesLeft：允许使用次数(任意改) 10000000 重启 （更新 [notion](https://www.notion.so/Eudic-Mac-0b5e993809794576868714f613f637ff)、百度网盘下载 再升级）
 
 
-## 手机和Windows
-
-```sh
-# https://github.com/Genymobile/scrcpy/blob/master/doc/shortcuts.md
-# 第一次电脑和手机需要usb线链接，手机打开“开发者选项和usb调试”。
-# 手机开发者选项: 建议打开 停用adb授权超时功能(disable ADB authorization timeout)。
-# scrcpy --tcpip  # 插入usb线时、设置无线连接。
-# scrcpy --tcpip=10.94.62.181  # 通过具体ip地址链接、不用插入usb线。如果ip正确但也连不上 删掉ip 插上线。
-# 如下添加更多其他选项。
-scrcpy --shortcut-mod=lctrl --stay-awake --turn-screen-off -m1024 -b2M --tcpip=10.94.62.181
-
-# 其他选项 --select-usb  --max-fps 15 --max-size 960
-# 快捷键: ctrl p(开电源) o(关屏幕) h(主屏幕) ↑(音量) nn(通知/设置)
-```
-
-- 手机软件: Touch-Helper, MX播放器(VLC不能播放加密文件), 开发助手, IP Widget(能看到VPN的地址)。
-- 安卓自动化: 微动手势(允许后台弹出界面和显示悬浮窗), automate, quick cursor, kwgt, popup widget, macrodroid, tasker(收费), easytouch, anywhere。
-
-- 电脑控制手机 https://www.zhihu.com/question/46795475 、 anydesk 体验不错、但不能远程操作iPhone，国产抄袭版 todesk 会卡死，Wormhole虫洞 利用 iPhone 的辅助功能-触控 能被三方控制功能实现远程操作、但体验很差。
-- iOS快捷指令 朗读的 声音大小和siri一样，不受设置里声音大小的控制，通过设置 Siri 的声音来控制。
-
-- 小米应用设置，右上角三个点，显示所有应用。搜索应用，搜小米画报，点进去，卸载。 可使用 adb 卸载。 第三方充电器都不支持小米私有协议快充。
-- 小米多看电纸书[一代](https://item.jd.com/100010633100.html)、安装app[方法](https://www.bilibili.com/video/av893445949/)
-- 支持 Mac + Win 读写的U盘格式: exFAT FAT32 NTFS(软件 ntfstool / ParagonNTFS )。
-- 2024-04 [Win系统安装盘](https://zhuanlan.zhihu.com/p/273305963)、系统[下载地址](https://hellowindows.cn/)，电脑开机(按F12)设置U盘优先启动。
-
-
-## 图像视频
+## 图像-视频-文件
 
 xnip snipaste lightshot (snip) / licecap (kap gifify) / UPDF / Readiris-ocr / any-video-converter (在线 online-audio-converter.com) / XnConvert(图像处理) / Movist (IINA) / ExifRenamer(重命名图片) / ExifTool [exifr](https://mutiny.cz/exifr/) / HandBrake / MKVToolnix(mkv字幕抽取) / perian(QuickTime 插件) / aria2 / NeatDownloadManager / extract-video-ppt
 
 - sips -z height width [file]   # 修改图片的宽和高, sips -Z 640 *.jpg 批量修改图片的 宽或高 最大值 保持原来宽高比
 - 如何下载HLS视频到本地？https://www.zhihu.com/question/35564371/answer/694240638 / https://www.downloadhelper.net
-- 自己搭建 ftp 服务器共享文件。
 
 Mac smb 文件共享(速度约1M/s较慢)
 在需要共享文件的 Mac 上打开「系统偏好设置-共享-文件共享」会显示类似 smb://192.168.1.9 的共享地址。在另一台 Mac 上打开访达，点左侧的「位置-网络」图标 或者在访达菜单栏选择「前往-连接服务器」。在 iPhone 或 iPad 打开「文件」App，点击右上角选项图标，选择「连接服务器」，连过一次的共享 下次可以直接在「文件」App 的「已共享」里看到。在Windows PC访问 Mac 的共享文件，需要先做一些设置。
-这样把一台 Mac 作为「共享盘」，有点 NAS 的意思。
+这样把一台 Mac 作为「共享盘」，有点 NAS 的意思。 自己搭建 ftp 服务器共享文件。
 
 视频字幕类型有三种：内嵌字幕、外挂字幕、封装软字幕。可以视频转为音频、再提取字幕。
 字幕下载 https://subhd.tv  剪映 / 钉钉闪记 / B站必剪 / 迅捷文字转语音(1G内免费)。
 Subtitle Edit / Aegisub / Subtitle Workshop / HandBrake / FFmpeg / adobe PR
+
+文件传输: https://snapdrop.net/  https://easychuan.cn/  https://www.wenshushu.cn/
+https://github.com/schollz/croc
 
 
 ## chrome
@@ -93,7 +76,8 @@ Subtitle Edit / Aegisub / Subtitle Workshop / HandBrake / FFmpeg / adobe PR
 - Chrome cmd+t在右侧标签打开 https://superuser.com/a/1260437
 - Chrome tab卡死: 菜单 - 窗口 - 任务管理器 - 找到相应tab名 查看内存占用空间排序为空 - 结束进程。
 - Chrome 地址栏搜索 无法在新标签页打开结果 https://www.runningcheese.com/tabs
-- Chrome extensions: 一键切换(Jomic) 搜索拐杖 下一页(空格键自动翻到下一页) XSwitch Tamper / Disable Content-Security-Policy / Talend API Tester / Web Developer / Neat URL / Copy Tab Info / Open Multiple URLs / 沙拉查词 / User JavaScript and CSS / Wayback Machine / Memex / 一叶 / grammarly.com / Tampermonkey gitpod npmhub / screenity / ChatGPT for Google / Language Reactor
+- Chrome extensions: 一键切换(Jomic) 搜索拐杖 下一页(空格键自动翻到下一页) XSwitch Tamper / Disable Content-Security-Policy / Talend API Tester / Web Developer / Neat URL / Copy Tab Info / Open Multiple URLs / 沙拉查词 / User JavaScript and CSS / Wayback Machine / Memex / 一叶 / grammarly.com / Tampermonkey gitpod npmhub / screenity / ChatGPT for Google / Language Reactor /
+Side Browser / Sidebar Tab
 
 
 ## 代理
@@ -115,6 +99,7 @@ Subtitle Edit / Aegisub / Subtitle Workshop / HandBrake / FFmpeg / adobe PR
 - 手机当网关路由 https://www.youtube.com/watch?v=H4g1y3ZMWaw
 https://www.youtube.com/watch?v=r6nXCgYkXTQ
 
+https://how-did-i-get-here.net/
 
 ## oh-my-zsh & iTerm2(不需要)
 
@@ -183,25 +168,20 @@ ruby -v   # 在 .zshrc 里加入 ruby@3 的 bin 路径，新打开 terminal 查�
 which ruby / gem  # 查看目录
 gem env # 查看更详细信息
 
-gem install jekyll bundler  # 安装在 /opt/homebrew/lib/ruby/gems 目录
-gem install --user-install bundler jekyll  # 安装在 ~/.gem 目录
+# 关闭sip (System Integrity Protection in macOS v10.11)
+# https://jekyllrb.com/docs/troubleshooting/
+gem install -n /usr/local/bin jekyll
 
-# jekyll 是在 /opt/homebrew/opt/ruby/bin/ 不是在 /usr/local/bin 里
-# jekyll 是在 /opt/homebrew/lib/ruby/gems/3.1.0/gems/jekyll-4.2.2
-jekyll serve   # 启动报错 缺少 webrick
-bundle add webrick   # 报错 Could not locate Gemfile
-bundle init  # 生成 Gemfile 之后再运行 bundle add webrick 随后 jekyll serve 成功
-
-gem install jekyll-feed / jekyll-paginate  # 安装 jekyll plugins
+jekyll serve   # 启动
+gem install jekyll-feed jekyll-paginate jekyll-redirect-from jekyll-seo-tag  # 安装 jekyll plugins
 ```
 
 
 
 ## vs code
 
-- 安装 code 命令：`cmd + shift + p` Shell Command: Install 'code' command in PATH
-- 在查找(替换)框里按 ctrl + enter 支持多行
-- 设置 [tab group](https://github.com/microsoft/vscode/issues/100335#issuecomment-964358943)
+按`cmd shift p` 输入 code、zoom 等命令。 在查找(替换)框里按 ctrl + enter 支持多行。
+[tab group 建议](https://github.com/microsoft/vscode/issues/100335#issuecomment-964358943)
 
 ```js
 // 快捷键
@@ -258,14 +238,41 @@ plantuml(设置指定server) / Auto Hide / Live Preview / Markdown All in One / 
 
 ------
 
+## 手机和Windows
+
+```sh
+# https://github.com/Genymobile/scrcpy/blob/master/doc/shortcuts.md
+# 第一次电脑和手机需要usb线链接，手机打开“开发者选项和usb调试”。
+# 手机开发者选项: 建议打开 停用adb授权超时功能(disable ADB authorization timeout)。
+# scrcpy --tcpip  # 插入usb线时、设置无线连接。
+# scrcpy --tcpip=10.94.62.181  # 通过具体ip地址链接、不用插入usb线。如果ip正确但也连不上 删掉ip 插上线。
+# 如下添加更多其他选项。
+scrcpy --shortcut-mod=lctrl --stay-awake --turn-screen-off -m1024 -b2M --tcpip=10.94.62.181
+
+# 其他选项 --select-usb  --max-fps 15 --max-size 960
+# 快捷键: ctrl p(开电源) o(关屏幕) h(主屏幕) ↑(音量) nn(通知/设置)
+```
+
+- 手机软件: Touch-Helper, MX播放器(VLC不能播放加密文件), 开发助手, IP Widget(能看到VPN的地址)。
+- 安卓自动化: 微动手势(允许后台弹出界面和显示悬浮窗), automate, quick cursor, kwgt, popup widget, macrodroid, tasker(收费), easytouch, anywhere。
+
+- 电脑控制手机 https://www.zhihu.com/question/46795475 、 anydesk 体验不错、但不能远程操作iPhone，国产抄袭版 todesk 会卡死，Wormhole虫洞 利用 iPhone 的辅助功能-触控 能被三方控制功能实现远程操作、但体验很差。
+- iOS快捷指令 朗读的 声音大小和siri一样，不受设置里声音大小的控制，通过设置 Siri 的声音来控制。
+
+- 小米应用设置，右上角三个点，显示所有应用。搜索应用，搜小米画报，点进去，卸载。 可使用 adb 卸载。 第三方充电器都不支持小米私有协议快充。
+- 小米多看电纸书[一代](https://item.jd.com/100010633100.html)、安装app[方法](https://www.bilibili.com/video/av893445949/)
+- 支持 Mac + Win 读写的U盘格式: exFAT FAT32 NTFS(软件 ntfstool / ParagonNTFS )。
+- 2024-04 [Win系统安装盘](https://zhuanlan.zhihu.com/p/273305963)、系统[下载地址](https://hellowindows.cn/)，电脑开机(按F12)设置U盘优先启动。
+
+
+------
+
 ## Apache
 
 ```sh
 httpd -v  # find the Apache version
 sudo apachectl restart / start / stop   # 开关重启
 code /etc/apache2/httpd.conf  # 编辑 Apche 的配置文件
-
-改变 localhost 目录指向：
 
 #DocumentRoot "/Library/WebServer/Documents"
 # 在 index template 里插入自定义 meta. http://httpd.apache.org/docs/2.4/mod/mod_autoindex.html

@@ -11,3 +11,11 @@ Webpack 5 module federationtion 联邦模块 [介绍](https://juejin.cn/post/684
 
 [qiankun 子应用嵌套](https://github.com/umijs/qiankun/issues/960)、[umi-plugin-qiankun 嵌套子应用](https://umijs.org/plugins/plugin-qiankun#%E5%B5%8C%E5%A5%97%E5%AD%90%E5%BA%94%E7%94%A8)
 
+
+## lint 配置
+
+vscode Multi-root Workspaces 时 eslint 插件会报错，在工作区(不是用户)设置文件 .vscode/settings.json 里加入：
+
+```json
+"eslint.workingDirectories": [{"mode": "auto"}]
+```

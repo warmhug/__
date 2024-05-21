@@ -1,6 +1,9 @@
 
 # misc
 
+https://earthworm.cuixueshe.com/
+https://gitblog.io/
+
 Excel 模糊匹配 <http://club.excelhome.net/thread-1048885-1-1.html>
 
 - [GitHub search?q=stars](https://github.com/search?q=stars:%3E1&s=stars&type=Repositories)、[GitHub topics/javascript](https://github.com/topics/javascript)
@@ -10,6 +13,22 @@ Excel 模糊匹配 <http://club.excelhome.net/thread-1048885-1-1.html>
   - 搜索“某人”创建的在“body”里包含“某个词”的 issue: [warmhug + xx](https://github.com/search?utf8=%E2%9C%93&q=xx+in%3Abody+author%3Awarmhug&type=Issues)
 
 
+## Charles 抓包
+> 2019 2024
+- 注意
+  - 公司里默认安装的vpn软件、公司wifi的代理选项默认会打开“自动发现代理”的配置，需要关闭后、才能使用Charles代理。
+  - 使用没有 被设置代理的 浏览器（比如 Chrome **翻墙代理需要关掉**）
+- HTTPs 支持：
+   - Help -> SSL Proxying -> Install Charles Root Certificate (挨着的 **模拟器** / **手机 **证书都装)
+      - 注意：**手机上安装的 证书 和 连接的 mac 电脑要匹配。使用新电脑需要重新给手机安装证书。**
+   - 在 macOS 钥匙串访问 里信任证书，iOS 设置里信任证书。
+   - 在 Charles 里菜单 Proxy -> “Proxy Setting” Port: 8888 / “SSL Proxying Settings - SSL Proxying - add” 内容 Host:* 、Port:443
+   - 在 iOS (**不用连数据线**) WiFi 设置 HTTP 代理，服务器输入 电脑 ip、端口 8888
+- 其他：
+   - 关闭 mac 端包的抓取：菜单 Proxy 将 maxOS Proxy 取消选中 （这样 iOS 模拟器里也抓不了）
+   - 抓取支付宝 RPC 请求：支付宝 可切换环境包 设置关闭 mmtp 开关
+   - 映射本地 js 文件、调试代码：菜单 Tools -> Map Remote / Map Local…
+   - 为请求配置跨域CORS：菜单 Tools -> Rewrite -> 勾选 Enable Rewrite -> Add -> Add -> Rewrite Rule -> Type 选 URL, Where 勾选 Request, Match Value 填 `http(s?):\/\/pintu.testxx.xx\/(?!(service)\/)`勾选Regex , Replace value 填 `https://127.0.0.1:28064/` 勾选 Replace all
 
 
 ## Git / Npm
