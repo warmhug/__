@@ -242,10 +242,11 @@ plantuml(设置指定server) / Auto Hide / Live Preview / Markdown All in One / 
 
 ```sh
 # https://github.com/Genymobile/scrcpy/blob/master/doc/shortcuts.md
+# https://github.com/Genymobile/scrcpy/blob/master/doc/connection.md#tcpip-wireless
 # 第一次电脑和手机需要usb线链接，手机打开“开发者选项和usb调试”。
 # 手机开发者选项: 建议打开 停用adb授权超时功能(disable ADB authorization timeout)。
-# scrcpy --tcpip  # 插入usb线时、设置无线连接。
-# scrcpy --tcpip=10.94.62.181  # 通过具体ip地址链接、不用插入usb线。如果ip正确但也连不上 删掉ip 插上线。
+# scrcpy --tcpip  # 插入usb线时、先设置无线连接，之后不用插入usb线、通过具体ip地址链接。
+# scrcpy --tcpip=10.94.62.181  # 如果ip正确但也连不上 删掉ip 插上线。
 # 如下添加更多其他选项。
 scrcpy --shortcut-mod=lctrl --stay-awake --turn-screen-off -m1024 -b2M --tcpip=10.94.62.181
 

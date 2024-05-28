@@ -1,12 +1,67 @@
 
 
-## 2022~2023
+
+
+------
+# WebGL
+
+## WebGL 图像查看器
+
+能支持超大图 不卡顿。 https://www.photopea.com/ (Facebook [私信](https://www.facebook.com/photopea))
+
+- [sketch demo](https://www.sketch.com/s/a00a5b36-d81a-4a55-8e78-ffac2894d292)
+- [figma demo](https://www.figma.com/design/dknmxVeJpnOq5aD0K9WvUa/test?node-id=0-1&t=qfDYyfOJPjQe4SDo-0)
+
+figma 不支持插入 大于 4096px 的图片，会被裁剪和降低清晰度，参考[文档](https://help.figma.com/hc/en-us/articles/360040028034-Add-images-and-videos-to-design-files)。
+
+参考
+- https://webglfundamentals.org/webgl/lessons/webgl-image-processing.html
+- https://webglfundamentals.org/webgl/lessons/webgl-2d-drawimage.html
+- https://css-tricks.com/building-an-images-gallery-using-pixijs-and-webgl/
+- https://github.com/ademi/webgl_js_image_viewer
+- https://github.com/openseadragon/openseadragon
+- 360 viewer https://github.com/y-fujii/zuho
+- 360 viewer https://github.com/Experience-Monks/360-image-viewer
+- 医学图像查看 https://github.com/niivue/niivue
+- https://www.wenjiangs.com/docs/webgl-docs-zh
+- https://stackoverflow.com/questions/21603350/is-there-any-reason-for-using-webgl-instead-of-2d-canvas-for-2d-games-apps
 
 
 
-### 2024
+
+------
+# compile & build & deploy
+
+[gulp 手册1](http://p.tb.cn/rmsportal_127_gulp_E6_89_8B_E5_86_8C1.pdf) / [gulp 手册2](http://p.tb.cn/rmsportal_127_gulp_E6_89_8B_E5_86_8C2.pdf)
+
+[lerna](https://github.com/lerna/lerna)：适合多个 package 有互相引用、代码规范一致、统一管理 issue 的项目。示例 [practices](https://github.com/LittleBreak/lerna-best-practices) / [dva](https://github.com/dvajs/dva)
+
+[webpack 配置文件生成工具](https://webpack.jakoblind.no/)
+
+Webpack 5 module federationtion 联邦模块 [介绍](https://juejin.cn/post/6844904187147321352)
+[示例](https://github.com/xff1874/w5mf)
+
+[qiankun 子应用嵌套](https://github.com/umijs/qiankun/issues/960)、[umi-plugin-qiankun 嵌套子应用](https://umijs.org/plugins/plugin-qiankun#%E5%B5%8C%E5%A5%97%E5%AD%90%E5%BA%94%E7%94%A8)
+
+## lint 配置
+
+vscode Multi-root Workspaces 时 eslint 插件会报错，在工作区(不是用户)设置文件 .vscode/settings.json 里加入：
+
+```json
+"eslint.workingDirectories": [{"mode": "auto"}]
+```
+
+
+
+
+------
+# suffer
+
+## 2024
 
 vscode 里 eslint 报错、找不到报错原因，使用 cmd+shift+p 输入 reload window 重启 vscode 即可。
+
+## 2022~2023
 
 ### 2023
 
@@ -73,7 +128,6 @@ dashboard 数据边界细节很多。
 一次性复制进去、还是会弹出事项选择框。导入上一篇 事项匹配错误。
 断网再连上、报标题不能为空。新版日志编辑器：选中报错、任务样式问题。
 
-
 - beforeunload 事件里有 ajax 等不到返回、页面就会关闭，怎么解决？
 - 使用 `DOMParser().parseFromString(xml, 'text/xml');`解析 xml 时、需要把 xml 里的 `&` 等特殊符号 转义为 `&amp;` 不然会解析错误；参考 解答[一](https://stackoverflow.com/questions/17423495/how-to-solve-ampersand-conversion-issue-in-xml)、[二](https://stackoverflow.com/questions/11555890/how-to-parse-xml-with-special-character-specifically-for-ampersand)。
 - 使用 `https://localhost` 或 umi 报 Disconnected from the devServer, trying to reconnect... 提示、设置 `chrome://flags/#allow-insecure-localhost` 能暂时解决。
@@ -81,15 +135,12 @@ dashboard 数据边界细节很多。
 - blocked:mixed-content 在 HTTPS 页面上有 HTTP 的请求，会被 Chrome 阻止、统一改为 HTTPS 即可。参考 [fixing-mixed-content](https://developers.google.com/web/fundamentals/security/prevent-mixed-content/fixing-mixed-content?hl=zh-cn)
 - 绑定 host 访问 https 时 (`https://localhost`)、Chrome 可能会有 ERR_CERT_AUTHORITY_INVALID 证书错误，解决 [方法一](https://segmentfault.com/a/1190000021843971)、[方法二](https://blog.csdn.net/xujing19920814/article/details/53966948)。
 
-
 - react 不会触发 keydown 事件，需要设置 focus 或 tabIndex="1"
 - web excel 缺点：数据量大时页面死掉。
 - 下载文件不能直接可点击下载，需要设置 csrf token 来避免安全问题。
 - [大规格文件的上传优化](https://aotu.io/notes/2020/05/12/file-upload/index.html)
 
-
 #### antd
-
 - Table 伸缩列 [bug多](https://github.com/ant-design/ant-design/commit/84c65582c71c66df9744177d337cfd3d4ce1a713)、性能[差](https://github.com/ant-design/ant-design/issues/28214)。
 - Menu 和 Modal `<Menu.Item onClick={doSth} />` 里放子组件、子组件里有 `<Modal onCancel={cancel} />` 弹窗，cancel 事件会触发 menu item 的 click 事件；弹窗里嵌套弹窗问题。
 - Select 组件
@@ -113,7 +164,6 @@ dashboard 数据边界细节很多。
 - Popover 和 Tooltip 组件，children 如果不是元素、而是 {props.children} 不起作用。
 
 #### redux / dva / umi
-
 - umi 某个 router 多处复用方案 [umi/1830](https://github.com/umijs/umi/issues/1830)、[umi/4569](https://github.com/umijs/umi/issues/4569)
 - subscriptions 怎么获取到 model 中的 state [issues/1600](https://github.com/dvajs/dva/issues/1600)
 - 多个请求并行发起 [redux-saga/issues/1800](https://github.com/redux-saga/redux-saga/issues/1800)、[redux-saga/pull/759](https://github.com/redux-saga/redux-saga/pull/759)、[dva/issues/1009](https://github.com/dvajs/dva/issues/1009)
