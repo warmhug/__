@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大图查看器</title>
+  <script src="https://pixijs.download/release/pixi.js"></script>
+  <style></style>
+</head>
+<body>
+<div id="imgs" style="max-width: 1000px; overflow: scroll;"></div>
+<script type="module">
+  const app = new PIXI.Application();
+  await app.init({ width: window.innerWidth, height: window.innerHeight, background: '#f0f2f5' });
+  document.body.appendChild(app.canvas);
+
+  // pixi 加载完图片后，会自动裁切图片最大尺寸到
+  const image = await PIXI.Assets.load('./default.jpg');
+  // let sprite = PIXI.Sprite.from('default1.jpg');
+  const container = new PIXI.Container();
+  // container.setSize(1000,1000);
+  // container.updateTransform({ scaleX: 100, scaleY: 50 });
+  container.eventMode = 'static';
+  app.stage.addChild(container);
+
+  // const tiles = [];
+  const tileSize = 200;
+  const numCols = Math.ceil(image.width / tileSize);
+  const numRows = Math.ceil(image.height / tileSize);
+
+  // const offscreen = new OffscreenCanvas(tileSize, tileSize);
+  // const ctx = offscreen.getContext('2d');
+
+  const createCanvasFromImage = (img) => {
+    const canvas = document.createElement('canvas');
+    // 如果是原生 image 使用 naturalWidth naturalHeight
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(img, 0,0, canvas.width, canvas.height, 0,0, canvas.width, canvas.height);
+    return ctx;
+  };
+  const ctx = createCanvasFromImage(image.source.resource);
+
+  const createTileImage = (tileSize, x, y) => {
+    const imgData = ctx.getImageData(x, y, tileSize, tileSize);
+    const croppedCanvas = document.createElement('canvas');
+    const croppedCtx = croppedCanvas.getContext('2d');
+    croppedCanvas.width = imgData.width;
+    croppedCanvas.height = imgData.height;
+    croppedCtx.putImageData(imgData, 0, 0);
+    return croppedCanvas;
+  };
+
+  let tempDiv = document.createElement('div');
+  const imgs = document.getElementById('imgs');
+  const testImg = (croppedCanvas) => {
+    const newImg = document.createElement('img');
+    newImg.style.maxWidth = '300px';
+    newImg.src = croppedCanvas.toDataURL();
+    return newImg;
+  }
+  // createTileImage(tileSize, 5110, 3110);
+
+  // 文心一言: js big image to wegl Tile
+  for (let row = 0; row < numRows; row++) {
+    tempDiv = document.createElement('div');
+    // imgs.appendChild(tempDiv);
+    for (let col = 0; col < numCols; col++) {
+      const x = col * tileSize;
+      const y = row * tileSize;
+      // tempDiv.appendChild(testImg(createTileImage(tileSize, x, y)));
+      // const bunny = new PIXI.Sprite(createTileImage(tileSize, x, y).toDataURL());
+      const bunny = PIXI.Sprite.from(createTileImage(tileSize, x, y));
+      bunny.x = x;
+      bunny.y = y;
+      container.addChild(bunny);
+    }
+  }
+  console.log(container.width, container.height, container.position.x, container.getSize());
+
+  let scaleRate = 2
+  let moveRate = 1
+
+  // 缩放支点
+  // container.pivot.set(container.width/2, container.height/2);
+  // container.pivot.set(app.screen.width/2, app.screen.height/2);
+  container.scale.set(scaleRate, scaleRate);
+
+  const point = new PIXI.Point();
+  container.on('wheel', (evt) => {
+    // console.log(evt.deltaY, evt.deltaX, scaleRate, moveRate);
+    console.log(container.position, container.getGlobalPosition(), point);
+    if (evt.deltaY > 2) {
+      scaleRate += 0.01;
+    } else if (evt.deltaY < -2) {
+      scaleRate -= 0.01;
+    }
+    if (evt.deltaX > 2) {
+      moveRate += 50;
+    } else if (evt.deltaX < -2) {
+      moveRate -= 50;
+    }
+    container.scale.set(scaleRate, scaleRate);
+    container.position.set(moveRate, moveRate);
+  });
+
+  // 测试拖动
+  const canvas = app.canvas;
+  const offset = { x: 0, y: 0 };
+  const onDragMove = (evt) => {
+    // console.log('pointermove', evt.clientX, evt.clientY);
+    // 拖出窗口后调用 end 事件
+    if (evt.clientX <= 10 || evt.clientY <= 10) {
+      // eslint-disable-next-line
+      onDragEnd();
+      return;
+    }
+    container.position.x = evt.clientX - offset.x + container.position.x;
+    container.position.y = evt.clientY - offset.y + container.position.y;
+    offset.x = evt.clientX;
+    offset.y = evt.clientY;
+  };
+  const onDragStart = (evt) => {
+    // dragTarget.toLocal(evt.global, null, offset);
+    // console.log('onglobalpointermove', evt.global, app.stage.toLocal(evt.global));
+    offset.x = evt.clientX;
+    offset.y = evt.clientY;
+    canvas.addEventListener('pointermove', onDragMove);
+  };
+  const onDragEnd = () => {
+    canvas.removeEventListener('pointermove', onDragMove);
+  };
+  canvas.addEventListener('pointerdown', onDragStart);
+  canvas.addEventListener('pointerup', onDragEnd);
+</script>
+</body>
+</html>

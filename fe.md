@@ -16,16 +16,21 @@ figma 不支持插入 大于 4096px 的图片，会被裁剪和降低清晰度�
 
 参考
 - https://webglfundamentals.org/webgl/lessons/webgl-image-processing.html
-- https://webglfundamentals.org/webgl/lessons/webgl-2d-drawimage.html
+- https://webglfundamentals.org/webgl/lessons/webgl-2d-scale.html
+- https://webgl2fundamentals.org/webgl/lessons/webgl-cross-platform-issues.html
+- https://pettor.github.io/app-pixi-image-editor
+- https://github.com/pixijs/pixijs/issues/6372
 - https://css-tricks.com/building-an-images-gallery-using-pixijs-and-webgl/
-- https://github.com/ademi/webgl_js_image_viewer
 - https://github.com/openseadragon/openseadragon
+- https://elhigu.github.io/canvas-image-tiles/
+
 - 360 viewer https://github.com/y-fujii/zuho
 - 360 viewer https://github.com/Experience-Monks/360-image-viewer
 - 医学图像查看 https://github.com/niivue/niivue
 - https://www.wenjiangs.com/docs/webgl-docs-zh
 - https://stackoverflow.com/questions/21603350/is-there-any-reason-for-using-webgl-instead-of-2d-canvas-for-2d-games-apps
 
+不是 webgl 实现的 https://github.com/konvajs/konva
 
 
 
