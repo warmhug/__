@@ -18,12 +18,15 @@ figma 不支持插入 大于 4096px 的图片，会被裁剪和降低清晰度�
 - https://webglfundamentals.org/webgl/lessons/webgl-image-processing.html
 - https://webglfundamentals.org/webgl/lessons/webgl-2d-scale.html
 - https://webgl2fundamentals.org/webgl/lessons/webgl-cross-platform-issues.html
+- https://elhigu.github.io/canvas-image-tiles/
+- https://fengyuanchen.github.io/cropperjs/
 - https://pettor.github.io/app-pixi-image-editor
 - https://github.com/pixijs/pixijs/issues/6372
 - https://css-tricks.com/building-an-images-gallery-using-pixijs-and-webgl/
 - https://github.com/openseadragon/openseadragon
-- https://elhigu.github.io/canvas-image-tiles/
 
+- canvas engines 性能测试 https://benchmarks.slaylines.io/webgl.html
+- WebGL vs WebGPU https://www.infoq.cn/article/QwAwharqAwdrAgtCoXQv
 - 360 viewer https://github.com/y-fujii/zuho
 - 360 viewer https://github.com/Experience-Monks/360-image-viewer
 - 医学图像查看 https://github.com/niivue/niivue
@@ -198,6 +201,51 @@ dashboard 数据边界细节很多。
 - Android 4 白屏: `Set``Promise``Symbol` 未定义错误
 - iOS webview 里 https 页面引入 http 的 js/css 不能加载？需要统一使用 https 协议。
 - iOS 9 不支持 箭头函数
+
+
+## 2021 navigator.geolocation
+
+> gts周日报需求，需要定位功能。
+
+定位技术：GPS定位技术、基站定位技术、利用Wifi在小范围内定位。
+GPS定位搜索卫星初次定位时间过长而略显不便。另外，卫星信号覆盖不好时，比如室内，会导致无法定位。
+手机定位的原理 https://www.sohu.com/a/76257016_335896
+
+问题：
+2021-09 Chrome 浏览器在 4G 热点和家里 WiFi 环境下，不会执行 getCurrentPosition 公司 WiFi 可以。网络翻墙问题。
+如图 https://gw.alicdn.com/imgextra/i4/O1CN01c6wdMl1OuPlbjec3c_!!6000000001765-2-tps-1112-518.png
+最优方案、使用 高德或百度 封装的定位功能，避开 googleapis 被墙的问题。
+
+2012-01 三星gt-i9003(安卓2.3.5)、中兴ZTE-U880(安卓2.2.2) 浏览器不执行 getCurrentPosition 也没有是否允许定位的提示框弹出。
+
+```js
+if ("geolocation" in navigator) {
+navigator.geolocation.getCurrentPosition((position) => {
+   console.log('geolocation', position);
+},
+(error) => {
+   console.log('geolocation error', error);
+   if (error.PERMISSION_DENIED) {
+      console.log('未开启定位权限');
+   }
+   if (error.POSITION_UNAVAILABLE) {
+      // 在 Chrome 浏览器里，因为被墙、会返回 Network location provider at 'https://www.googleapis.com/ :ERR_TIMED_OUT.
+      console.log('至少有一个内部位置源返回一个内部错误');
+   }
+   if (error.TIMEOUT) {
+      console.log('超时');
+   }
+},
+{
+   timeout: 1000 * 15,
+   // enableHighAccuracy: true, // 设为 true 移动端通过 gps 定位、费电
+   // maximumAge: 1000 * 15, // 返回 15 秒内的 缓存位置，默认为 0
+}
+);
+} else {
+/* geolocation IS NOT available */
+}
+```
 
 
 ## 2018-2019 G2/G6 问题

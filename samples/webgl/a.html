@@ -1,343 +1,235 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>WebGL image viewer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
   <style>
-    h1 {
-      font-size: 1.0rem;
-    }
-    .container {
-      margin: 0 auto 0 auto;
-      width: 80%;
-    }
-    .container canvas{
-      width:100%;
-      height:900px;
-      border:1px solid #000;
+    canvas {
+      background-color: #fff;
+      border: 1px solid black;
+      /* NOTE: This size is changed if in iframe - see below '.iframe canvas' */
+      width: 1400px;
+      height: 700px;
+      display: block;
     }
   </style>
 </head>
 <body>
-  <div class = "container">
-    <h1>WebGl image Viewer: drag and drop an image to view, use mouse to control</h1>
-    修改自 https://github.com/ademi/webgl_js_image_viewer/
-    <canvas id="glcanvas"></canvas>
-  </div>
-</body>
-<script type="module">
-  class app {
-    constructor(viewer) {
-      this.zoom_factor = 1.0;
-      this.canvas = document.getElementById('glcanvas');
+  <canvas id="canvas"></canvas>
+<!-- vertex shader -->
+<script  id="vertex-shader-2d" type="x-shader/x-vertex">
+attribute vec2 a_position;
+attribute vec2 a_texCoord;
 
-      //setting up the canvas events
-      this.setup_mousewheel();
-      this.setup_mouse_events();
-      this.setup_drag();
-      this.setup_drop();
+uniform vec2 u_resolution;
+uniform vec2 u_translation;
+uniform vec2 u_rotation;
+uniform vec2 u_scale;
 
-      //Setting up the viewer
-      this.viewer = viewer;
-      this.viewer.init(this.canvas);
+varying vec2 v_texCoord;
 
-      // Attempt to display default image
-      // for development purposes
-      //In case there is an image with name default.jpg open it
-      this.img = new Image();
-      this.img.src = './default.jpg';
+void main() {
+  // Scale the position
+  vec2 scaledPosition = a_position * u_scale;
 
-      // successfully found a default image
-      this.img.onload = (function () {
+  // Rotate the position
+  vec2 rotatedPosition = vec2(
+     scaledPosition.x * u_rotation.y + scaledPosition.y * u_rotation.x,
+     scaledPosition.y * u_rotation.y - scaledPosition.x * u_rotation.x);
+  // Add in the translation.
+  vec2 position = rotatedPosition + u_translation;
 
-        this.viewer.load_img(this.img);
-        this.viewer.refresh();
-      }).bind(this)
+  // convert the position from pixels to 0.0 to 1.0
+  vec2 zeroToOne = position / u_resolution;
 
-      // No default image
-      this.img.onerror = (function () {
-        return
-      })
+   // convert the rectangle from pixels to 0.0 to 1.0
+   // vec2 zeroToOne = a_position / u_resolution;
 
-    }
+   // convert from 0->1 to 0->2
+   vec2 zeroToTwo = zeroToOne * 2.0;
 
-    // zoom in and zoom out of the image
-    setup_mousewheel() {
-      this.canvas.onwheel = (function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-        const delta = Math.max(-1, Math.min(1, -event.deltaY));
-        this.zoom_factor = Math.min(2.0, Math.max(0.1, this.zoom_factor + delta * 0.1)); /// constrain zooming factor between 10% and 200%
-        this.viewer.refresh({ zoom: this.zoom_factor });
-      }).bind(this);
-    }
+   // convert from 0->2 to -1->+1 (clipspace)
+   vec2 clipSpace = zeroToTwo - 1.0;
 
-    // controls the movement of the image with the mouse
-    setup_mouse_events() {
-      let init_coord = null;
-      let being_clicked = false;
-      this.canvas.onmousedown = (function (event) {
-        // registers the initial mouse location
-        init_coord = {
-          x: event.pageX,
-          y: event.pageY
-        }
-        being_clicked = true;
-      })
-      this.canvas.onmousemove = (function (event) {
-        if (being_clicked) {
-          let displacement = {
-            delta_x: (event.pageX - init_coord.x),
-            delta_y: (event.pageY - init_coord.y)
-          }
-          // Reset the initial coordination
-          init_coord = {
-            x: event.pageX,
-            y: event.pageY
-          }
-          this.viewer.refresh(displacement);
-        }
-      }).bind(this)
+   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 
-      this.canvas.onmouseup = (function (event) {
-        being_clicked = false;
-      })
-      this.canvas.onmouseout = (function (event) {
-        being_clicked = false;
-      })
-      this.canvas.ondblclick = (function (event) {
-        this.viewer.reset_placement()
-        this.viewer.refresh();
-      }).bind(this)
-    }
-
-    // Display image using drag and drop
-    setup_drag() {
-      document.ondragover = (function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-        event.dataTransfer.dropEffect = 'copy';
-      });
-    }
-
-    setup_drop() {
-      document.ondrop = (function (event) {
-        event.stopPropagation();
-        event.preventDefault();
-        const files = event.dataTransfer.files;
-        if (files && files.length === 1 && files[0].type.match('image.*')) {
-          const fileReader = new FileReader();
-          fileReader.onloadend = (function (event) {
-            this.img = new Image();
-            this.img.src = event.target.result;
-            this.img.onload = (function () {
-              this.viewer.load_img(this.img);
-              this.viewer.refresh();
-            }).bind(this)
-          }).bind(this)
-
-          fileReader.onerror = () => {
-            console.error('Unable to read file ' + file.name + '.');
-          };
-          fileReader.readAsDataURL(files[0]);
-        } else {
-          console.error('Unsupported files or content dropped.');
-        }
-      }).bind(this)
-    }
-  }
-
-  class viewer {
-    init(canvas) {
-      this.canvas = canvas;
-    }
-    load_img(img) {
-      this.img = img;
-      this.gl = this.canvas.getContext("webgl");
-      if (!this.gl) {
-        return;
-      }
-
-      /*Shaders*/
-      let vertex_shader = `
-            attribute vec2 a_position ;
-            uniform vec2 u_displacement;
-            uniform float u_aspect;
-            uniform float u_zoom_factor;
-            varying vec2 v_tex_coord;
-            void main(){
-                vec2 _position = a_position;//  + u_displacement;
-                gl_Position = vec4(
-                        _position.x*u_zoom_factor +u_displacement.x,
-                        (_position.y*u_zoom_factor*u_aspect - u_displacement.y),
-                        0.0,1.0);
-
-                v_tex_coord = vec2((_position.x+1.0)/2.0,(1.0-_position.y)/2.0);
-            }
-            `
-      let frag_shader =
-        `precision mediump float;
-            // our texture
-            uniform sampler2D u_image;
-            // the texCoords passed in from the vertex shader.
-            varying vec2  v_tex_coord;
-            void main() {
-            gl_FragColor = texture2D(u_image, v_tex_coord);
-            }
-            `
-      const gl = this.gl;
-      const shaders_src = {
-        'VERTEX_SHADER': vertex_shader,
-        'FRAGMENT_SHADER': frag_shader
-      };
-      const shaders = []
-      for (const [shaderType, shaderSrc] of Object.entries(shaders_src)) {
-        let type, res;
-        if (shaderType == 'VERTEX_SHADER') type = gl.VERTEX_SHADER;
-        else if (shaderType == 'FRAGMENT_SHADER') type = gl.FRAGMENT_SHADER;
-        else {
-          throw ("Uknown Shader Type");
-        }
-        const shader = gl.createShader(type);
-        gl.shaderSource(shader, shaderSrc);
-        gl.compileShader(shader);
-        const compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-        if (!compiled) {
-          const err_msg = gl.getShaderInfoLog(shader);
-          console.error('Error While Compiling Shader of type: \'' + shader + '\':' + err_msg)
-          gl.deleteShader(shader);
-          res = null;
-        }
-        res = shader;
-        shaders.push(res);
-      }
-
-      const program = this.program = gl.createProgram();
-      shaders.forEach(function (shader) {
-        gl.attachShader(program, shader);
-      });
-      gl.linkProgram(program);
-
-      const linked = gl.getProgramParameter(program, gl.LINK_STATUS);
-      if (!linked) {
-        const err_msg = gl.getProgramInfoLog(program);
-        console.error('Error In Program Linking:' + err_msg);
-        gl.deleteProgram(program);
-        return null;
-      }
-
-      this.position_handler = this.gl.getAttribLocation(program, 'a_position');
-      //this.texture_hadnler = this.gl.getAttribLocation(program,'a_tex_coord');
-
-      this.displacement_handler = this.gl.getUniformLocation(program, 'u_displacement');
-      this.aspect_handler = this.gl.getUniformLocation(program, 'u_aspect');
-      this.zooming_handler = this.gl.getUniformLocation(program, 'u_zoom_factor');
-
-      this.position_buffer = this.gl.createBuffer();
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.position_buffer);
-      this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
-        -1.0, -1.0,
-        1.0, -1.0,
-        -1.0, 1.0,
-
-        -1.0, 1.0,
-        1.0, -1.0,
-        1.0, 1.0,
-      ]), this.gl.STATIC_DRAW);
-
-      let texture = this.gl.createTexture();
-      this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
-
-      // Upload the image into the texture.
-      this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.img);
-      // this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, 20000, 20000, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.img);
-
-      //initiate displacement configureations to defaults
-      this.config = {
-        delta_x: 0.0,
-        delta_y: 0.0,
-        zoom: 1.0,
-      }
-    }
-    reset_placement() {
-      this.config = {
-        delta_x: 0.0,
-        delta_y: 0.0,
-        zoom: 1.0,
-      }
-    }
-    update_placement(config) {
-      //fill up all unspecified configs previous config
-      let concrete_config = null;
-
-      if (config)
-        concrete_config = {
-          delta_x: config.delta_x || this.config.delta_x,
-          delta_y: config.delta_y || this.config.delta_y,
-          zoom: config.zoom || this.config.zoom,
-        }
-      else
-        return;
-
-      this.config = {
-        delta_x: Math.max(-1.0, Math.min(1.0, this.config.delta_x + (concrete_config.delta_x / this.gl.canvas.width))),
-        delta_y: Math.max(-1.0, Math.min(1.0, this.config.delta_y + (concrete_config.delta_y / this.gl.canvas.height))),
-        zoom: Math.max(0.0, Math.min(2.0, concrete_config.zoom || this.config.zoom)),
-      }
-    }
-    refresh(config) {
-      function resize_canvas (canvas, ratio) {
-        let multiplier = ratio || 1;
-
-        const new_width = canvas.clientWidth * multiplier | 0;
-        const new_height = canvas.clientHeight * multiplier | 0;
-
-        if (canvas.width != new_width || canvas.height != new_height) {
-          canvas.width = new_width;
-          canvas.height = new_height;
-          return true;
-        }
-        return false;
-      }
-      if (resize_canvas(this.gl.canvas)) {
-        this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
-        //reset configuration
-        this.reset_placement();
-      }
-
-      this.update_placement(config);
-
-      this.gl.useProgram(this.program);
-
-      // Set Position info
-      this.gl.enableVertexAttribArray(this.position_handler);
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.position_buffer);
-      this.gl.vertexAttribPointer(
-        this.position_handler, // the pointer
-        2,                // coordinate size
-        this.gl.FLOAT,         // Type
-        false,            // Normalize
-        0,                // Stride
-        0,                //offset
-      );
-
-      //Set aspect
-      const aspect = (this.img.height / this.img.width) * (this.canvas.width / this.canvas.height)
-      this.gl.uniform1f(this.aspect_handler, aspect);
-      // set zooming factor
-      this.gl.uniform1f(this.zooming_handler, this.config.zoom);
-      // set up displacement
-      this.gl.uniform2f(this.displacement_handler, this.config.delta_x, this.config.delta_y)
-      //draw the Rectanthis.gle:
-      this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
-    }
-  }
-  const v = new viewer();
-  new app(v);
+   // pass the texCoord to the fragment shader
+   // The GPU will interpolate this value between points.
+   v_texCoord = a_texCoord;
+}
 </script>
+<!-- fragment shader -->
+<script  id="fragment-shader-2d" type="x-shader/x-fragment">
+precision mediump float;
+
+// our texture
+uniform sampler2D u_image;
+
+// the texCoords passed in from the vertex shader.
+varying vec2 v_texCoord;
+
+void main() {
+   gl_FragColor = texture2D(u_image, v_texCoord);
+}
+</script><!--
+for most samples webgl-utils only provides shader compiling/linking and
+canvas resizing because why clutter the examples with code that's the same in every sample.
+See https://webglfundamentals.org/webgl/lessons/webgl-boilerplate.html
+and https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+for webgl-utils, m3, m4, and webgl-lessons-ui.
+-->
+<!-- <script src="https://webglfundamentals.org/webgl/resources/webgl-utils.js"></script> -->
+<script src="./webgl-utils.js"></script>
+<script>
+  "use strict";
+
+function main() {
+  var image = new Image();
+  image.src = "./default.jpg";
+  image.onload = function() {
+    render(image);
+  };
+}
+main();
+
+function render(image) {
+  // Get A WebGL context
+  /** @type {HTMLCanvasElement} */
+  var canvas = document.querySelector("#canvas");
+  var gl = canvas.getContext("webgl");
+  if (!gl) {
+    return;
+  }
+
+  // setup GLSL program
+  var program = webglUtils.createProgramFromScripts(gl, ["vertex-shader-2d", "fragment-shader-2d"]);
+
+  // look up where the vertex data needs to go.
+  var positionLocation = gl.getAttribLocation(program, "a_position");
+  var texcoordLocation = gl.getAttribLocation(program, "a_texCoord");
+
+  // lookup uniforms
+  var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+  var colorLocation = gl.getUniformLocation(program, "u_color");
+  var translationLocation = gl.getUniformLocation(program, "u_translation");
+  var rotationLocation = gl.getUniformLocation(program, "u_rotation");
+  var scaleLocation = gl.getUniformLocation(program, "u_scale");
+
+  // Create a buffer to put three 2d clip space points in
+  var positionBuffer = gl.createBuffer();
+
+  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+  // Set a rectangle the same size as the image.
+  setRectangle(gl, 0, 0, image.width, image.height);
+
+  var translation = [10, 10];
+  var scale = [1 * image.width / image.height, 1];
+  var rotation = [0, 1];
+
+  // provide texture coordinates for the rectangle.
+  var texcoordBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+      0.0,  0.0,
+      1.0,  0.0,
+      0.0,  1.0,
+      0.0,  1.0,
+      1.0,  0.0,
+      1.0,  1.0,
+  ]), gl.STATIC_DRAW);
+
+  // Create a texture.
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+
+  // Set the parameters so we can render any size image.
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+  // Upload the image into the texture.
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+
+  // lookup uniforms
+  var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+
+  webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
+  // Tell WebGL how to convert from clip space to pixels
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+  // Clear the canvas
+  gl.clearColor(0, 0, 0, 0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  // Tell it to use our program (pair of shaders)
+  gl.useProgram(program);
+
+  // Turn on the position attribute
+  gl.enableVertexAttribArray(positionLocation);
+
+  // Bind the position buffer.
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+  // Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+  var size = 2;          // 2 components per iteration
+  var type = gl.FLOAT;   // the data is 32bit floats
+  var normalize = false; // don't normalize the data
+  var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+  var offset = 0;        // start at the beginning of the buffer
+  gl.vertexAttribPointer(
+      positionLocation, size, type, normalize, stride, offset);
+
+  // Turn on the texcoord attribute
+  gl.enableVertexAttribArray(texcoordLocation);
+
+  // bind the texcoord buffer.
+  gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
+
+  // Tell the texcoord attribute how to get data out of texcoordBuffer (ARRAY_BUFFER)
+  var size = 2;          // 2 components per iteration
+  var type = gl.FLOAT;   // the data is 32bit floats
+  var normalize = false; // don't normalize the data
+  var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+  var offset = 0;        // start at the beginning of the buffer
+  gl.vertexAttribPointer(
+      texcoordLocation, size, type, normalize, stride, offset);
+
+  // set the resolution
+  gl.uniform2f(resolutionLocation, gl.canvas.width, gl.canvas.height);
+
+  // Set the translation.
+  gl.uniform2fv(translationLocation, translation);
+  // Set the rotation.
+  gl.uniform2fv(rotationLocation, rotation);
+  // Set the scale.
+  gl.uniform2fv(scaleLocation, scale);
+
+  // Draw the rectangle.
+  var primitiveType = gl.TRIANGLES;
+  var offset = 0;
+  var count = 6;
+  gl.drawArrays(primitiveType, offset, count);
+}
+
+function setRectangle(gl, x, y, width, height) {
+  var x1 = x;
+  var x2 = x + width;
+  var y1 = y;
+  var y2 = y + height;
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+     x1, y1,
+     x2, y1,
+     x1, y2,
+     x1, y2,
+     x2, y1,
+     x2, y2,
+  ]), gl.STATIC_DRAW);
+}
+
+</script>
+</body>
 </html>

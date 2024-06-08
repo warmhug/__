@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet/less" type="text/css" href="./_css.less" />
+  <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js" ></script>
+  <title></title>
+</head>
+<body>
+  <div class="holygrail">
+    <!-- 圣杯布局 http://www.alistapart.com/articles/holygrail -->
+    <div class="center column">
+      <h1>This is the main content.</h1>
+    </div>
+    <div class="left column">
+      <h2>This is the left sidebar.</h2>
+    </div>
+    <div class="right column">
+      <h2>This is the right sidebar.</h2>
+    </div>
+  </div>
+
+  <section class="flex-container" >
+    <header class="header">This is a header</header>
+    <article class="content" >
+      This is the content that can scroll!
+      必须设置 html 的 height: 100%;
+      <br />2<br />3<br />4<br />5<br />6<br />2<br />3<br />4<br />5<br />6<br />2<br />3<br />4
+      <br />5<br />6<br />2<br />3<br />4<br />5<br />6<br />2<br />3<br />4<br />5<br />6
+      <br />5<br />6<br />2<br />3<br />4<br />5<br />6<br />2<br />3<br />4<br />5<br />6
+      <br />5<br />6<br />2<br />3<br />4<br />5<br />6<br />2<br />3<br />4<br />5<br />6
+      <br />5<br />6<br />2<br />3<br />4<br />5<br />6<br />2<br />3<br />4<br />5<br />6
+    </article>
+    <footer class="footer" >This is a footer</footer>
+  </section>
+
+  <div class="aspect-container">
+    <div class="aspect">
+      <div>我的宽高比为750:210，不管屏幕有多宽</div>
+    </div>
+    <div class="aspect1">
+      <div class="text">Aspect ratio 使用 vw calc 计算结果精确</div>
+    </div>
+    <div class="aspect2">
+      <div class="text">Aspect ratio 计算结果不太精确</div>
+    </div>
+  </div>
+
+  <div class="steps-horizontal">
+    <div class="steps-item step1">
+      <div class="steps-item-line"></div>
+      <div class="steps-item-icon">
+        <img src="https://zos.alipayobjects.com/rmsportal/dWPGltvdjaanrRd.png" alt="">
+      </div>
+    </div>
+    <div class="steps-item step2">
+      <div class="steps-item-line"></div>
+      <div class="steps-item-icon">
+        <img src="https://zos.alipayobjects.com/rmsportal/dWPGltvdjaanrRd.png" alt="">
+      </div>
+    </div>
+    <div class="steps-item step3">
+      <div class="steps-item-line"></div>
+      <div class="steps-item-icon">
+        <img src="https://zos.alipayobjects.com/rmsportal/KkwxfwZGLDeWrWN.png" alt="">
+      </div>
+    </div>
+  </div>
+  <div class="steps-vertical">
+    <div class="steps-item step1">
+      <div class="steps-item-line"></div>
+      <div class="steps-item-icon">
+        <img src="https://zos.alipayobjects.com/rmsportal/dWPGltvdjaanrRd.png" alt="">
+      </div>
+      <div class="steps-item-content">
+        我是标题 <br>
+        <small>如果去掉 border-box 设置，我左边的 竖线 上下留的缝隙、将实现不了！</small>
+      </div>
+    </div>
+    <div class="steps-item step2">
+      <div class="steps-item-icon">
+        <img src="https://zos.alipayobjects.com/rmsportal/KkwxfwZGLDeWrWN.png" alt="">
+      </div>
+      <div class="steps-item-content">
+        步骤 <br> <small>this is summary text</small>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

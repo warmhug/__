@@ -144,6 +144,9 @@ git revert -n commit_id..  #  把从 commit_id 到 head 的所有提交 revert �
 
 ## 增加某个 commit 方法 cherry-pick
 git cherry-pick 62ecb3 # 一般用于将 bugfix commit pick 到不同版本上
+# 如果需要从另一个仓库的分支cherry-pick，先fetch其他仓库
+git fetch <other-repo-url> <other-branch>
+git cherry-pick <other-repo-commit-hash>
 
 ## 修改提交信息 修改注释 https://help.github.com/articles/changing-a-commit-message/
 git commit --amend  # 修改 most recently commit 比如加 --reset-author

@@ -3,6 +3,11 @@
 <head>
   <meta charset="utf-8" />
 
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+
   <!-- 以下设置都可以 (需要更多设置)
   <meta name="viewport" content="width=750" />
   <meta name="viewport" content="width=device-width" />
@@ -18,13 +23,13 @@
 
   <!--
     部分 vivo, 云os 等非主流设备，无法改变默认 980 viewport 宽度，
-    即 document.documentElement.clientWidth == 980 
+    即 document.documentElement.clientWidth == 980
     对此，设置 width=device-width, scale=1 不应用高清方案
   <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1,maximum-scale=1, minimum-scale=1, user-scalable=no" />
   -->
 
   <!--
-    Taobao 高清脚本 效果 https://m.taobao.com , 
+    Taobao 高清脚本 效果 https://m.taobao.com ,
     以下分别是在 Android / iOS dpr=2 / iOS dpr=3 设备下结果
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
   <meta name="viewport" content="initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no">
@@ -35,15 +40,15 @@
   <!-- <script src="http://g.tbcdn.cn/mtb/lib-flexible/0.3.2/??flexible_css.js,flexible.js"></script> -->
 
   <!-- Alipay 高清脚本 -->
-  <!-- 
+  <!--
     vl模式; 不带viewport缩放, 用rem兼容了vw的单位, 用px做flex适配, 0.5px的单位做高清!
     vl是iOS上最完美的适配, 既能flex, 又能vw, 又能高清. 缺点是安卓完全不支持高清!
   <script src="https://as.alipayobjects.com/g/animajs/anima-hd/4.1.1/vl.js"></script>
-  <script>vl(100, 750);</script> 
+  <script>vl(100, 750);</script>
   -->
   <!-- vw 模式 是最简单的, 全部自动拉伸, 做页面无视屏幕适配，适合活动页开发。
   <script src="https://as.alipayobjects.com/g/animajs/anima-hd/4.1.1/vw.js"></script>
-  <script>vw(100, 750);</script> 
+  <script>vw(100, 750);</script>
   -->
   <!-- flex 模式，高清兼容好. 安卓UC内核也兼容，当下项目开发最佳的选择。
     antd-mobile@1 采用此方案。https://1x.mobile.ant.design/kitchen-sink/?lang=en-US

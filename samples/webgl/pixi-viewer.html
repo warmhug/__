@@ -8,105 +8,197 @@
   <style></style>
 </head>
 <body>
-<div id="imgs" style="max-width: 1000px; overflow: scroll;"></div>
+<script>
+  // for big image upload
+  const uploadImage = () => {
+    const handleFileSelect = (evt, resolve) => {
+      var files = evt.target.files;
+      var file = files[0]; // just read the first selected file
+      var image = document.createElement('img');
+      image.onload = () => {
+        resolve(image)
+      };
+      image.src = URL.createObjectURL(file);
+    }
+    const div = document.createElement('div');
+    div.style.cssText = 'position: absolute; z-index: 9999; top: 1px; left: 1px;'
+    document.body.appendChild(div);
+    const description = document.createElement('div');
+    description.innerHTML = `
+    支持 双指拖动、鼠标滚轮或捏合手势缩放、滚动查看，双击不缩放。(选择的文件一直存在本机、不会上传到服务器，放心选择)
+    <br/> scale <b id="scaleValue"></b>
+    `;
+    div.appendChild(description);
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    div.appendChild(fileInput);
+    return new Promise((resolve, reject) => {
+      fileInput.addEventListener('change', (evt) => handleFileSelect(evt, resolve), false);
+    });
+  }
+  // for tile image test
+  const testBigImg = () => {
+    const imgsContainer = document.createElement('div');
+    imgsContainer.style.cssText = 'position: absolute; z-index: 9999; top: 1px; left: 1px; max-width: 1000px; overflow: scroll;';
+    document.body.appendChild(imgsContainer);
+    const createRow = () => document.createElement('div');
+    return {
+      imgsContainer,
+      createRow,
+      createTile: (croppedCanvas) => {
+        const newImg = document.createElement('img');
+        newImg.style.maxWidth = '300px';
+        newImg.src = croppedCanvas.toDataURL();
+        return newImg;
+      },
+    };
+  };
+
+</script>
 <script type="module">
+  function getMaxTextureSize() {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (!gl) {
+      console.log('WebGL not supported');
+    } else {
+      const maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+      // console.log('Maximum texture size: ' + maxTextureSize);
+      return maxTextureSize;
+    }
+  }
+
+  // https://www.w3school.com.cn/tags/html_ref_canvas.asp
+  const createTileImage = (image, x, y, width, height, scaleRate = 1) => {
+    const croppedCanvas = document.createElement('canvas');
+    const croppedCtx = croppedCanvas.getContext('2d');
+    // 注意：在浏览器中测试 canvas width height 设为 18000 时，显示不出来、原因未知。
+    const hei = height || width;
+    croppedCanvas.width = width * scaleRate;
+    croppedCanvas.height = hei * scaleRate;
+    // scale 不会改变画布大小 只改变画到上边元素的大小
+    // croppedCtx.scale(scaleRate, scaleRate);
+    croppedCtx.translate(-x * scaleRate, -y * scaleRate);
+    croppedCtx.drawImage(image, 0, 0, image.width * scaleRate, image.height * scaleRate);
+    // croppedCtx.fillText(x * scaleRate, -x * scaleRate + 100, -y * scaleRate - 100);
+
+    // 单纯改变 canvas 尺寸，其上的内容会丢失
+    // https://stackoverflow.com/questions/3543358/resizing-a-html-canvas-blanks-its-contents
+    // croppedCanvas.width *= scaleRate * 0.2;
+    // croppedCanvas.height *= scaleRate * 0.2;
+    // croppedCanvas.style.width = croppedCanvas.width * scaleRate + 'px';
+    console.log('tile image width height', croppedCanvas.width, croppedCanvas.height, croppedCanvas.style.height);
+    return croppedCanvas;
+  };
+  const createImage = (image, container, scaleRate = 1) => {
+    const maxTextureSize = getMaxTextureSize();
+    // 更保险做法：不管图片是不是大于 maxTextureSize、都进行切图
+    if (maxTextureSize && image.width < maxTextureSize && image.height < maxTextureSize) {
+      container.addChild(PIXI.Sprite.from(createTileImage(image, 0, 0, image.width, image.height)));
+      return;
+    }
+    const tileSize = 2048;
+    const numCols = Math.ceil(image.width / tileSize);
+    const numRows = Math.ceil(image.height / tileSize);
+    // let tempDiv;
+    // const { imgsContainer, createRow, createTile } = testBigImg();
+    // imgsContainer.appendChild(image);  return;
+    // 文心一言: js big image to wegl Tile
+    for (let row = 0; row < numRows; row++) {
+      // tempDiv = createRow();
+      // imgsContainer.appendChild(tempDiv);
+      for (let col = 0; col < numCols; col++) {
+        const x = col * tileSize;
+        const y = row * tileSize;
+        // tempDiv.appendChild(createTile(createTileImage(x, y, tileSize)));
+        const bunny = PIXI.Sprite.from(createTileImage(image, x, y, tileSize, tileSize, scaleRate));
+        bunny.x = x * scaleRate;
+        bunny.y = y * scaleRate;
+        container.addChild(bunny);
+      }
+    }
+    // container 的宽高 受到 scale 值的影响
+    console.log('container width height', container.width, container.height, container.position.x);
+  };
+
+  // 使用 pixi@8 版本
   const app = new PIXI.Application();
   await app.init({ width: window.innerWidth, height: window.innerHeight, background: '#f0f2f5' });
   document.body.appendChild(app.canvas);
 
-  // pixi 加载完图片后，会自动裁切图片最大尺寸到
-  const image = await PIXI.Assets.load('./default.jpg');
-  // let sprite = PIXI.Sprite.from('default1.jpg');
-  const container = new PIXI.Container();
+  const imgUrl = 'http://localhost/-/19x12%e5%8d%83%e5%b0%ba%e5%af%b8.jpeg'
+  // const imgUrl = './default.jpg';
+  const img = await PIXI.Assets.load(imgUrl);
+  const canvas = app.canvas;
+  const container = app.stage;
+  // const container = new PIXI.Container();
+  // app.stage.addChild(container);
   // container.setSize(1000,1000);
   // container.updateTransform({ scaleX: 100, scaleY: 50 });
-  container.eventMode = 'static';
-  app.stage.addChild(container);
-
-  // const tiles = [];
-  const tileSize = 200;
-  const numCols = Math.ceil(image.width / tileSize);
-  const numRows = Math.ceil(image.height / tileSize);
-
-  // const offscreen = new OffscreenCanvas(tileSize, tileSize);
-  // const ctx = offscreen.getContext('2d');
-
-  const createCanvasFromImage = (img) => {
-    const canvas = document.createElement('canvas');
-    // 如果是原生 image 使用 naturalWidth naturalHeight
-    canvas.width = img.width;
-    canvas.height = img.height;
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    ctx.drawImage(img, 0,0, canvas.width, canvas.height, 0,0, canvas.width, canvas.height);
-    return ctx;
-  };
-  const ctx = createCanvasFromImage(image.source.resource);
-
-  const createTileImage = (tileSize, x, y) => {
-    const imgData = ctx.getImageData(x, y, tileSize, tileSize);
-    const croppedCanvas = document.createElement('canvas');
-    const croppedCtx = croppedCanvas.getContext('2d');
-    croppedCanvas.width = imgData.width;
-    croppedCanvas.height = imgData.height;
-    croppedCtx.putImageData(imgData, 0, 0);
-    return croppedCanvas;
-  };
-
-  let tempDiv = document.createElement('div');
-  const imgs = document.getElementById('imgs');
-  const testImg = (croppedCanvas) => {
-    const newImg = document.createElement('img');
-    newImg.style.maxWidth = '300px';
-    newImg.src = croppedCanvas.toDataURL();
-    return newImg;
-  }
-  // createTileImage(tileSize, 5110, 3110);
-
-  // 文心一言: js big image to wegl Tile
-  for (let row = 0; row < numRows; row++) {
-    tempDiv = document.createElement('div');
-    // imgs.appendChild(tempDiv);
-    for (let col = 0; col < numCols; col++) {
-      const x = col * tileSize;
-      const y = row * tileSize;
-      // tempDiv.appendChild(testImg(createTileImage(tileSize, x, y)));
-      // const bunny = new PIXI.Sprite(createTileImage(tileSize, x, y).toDataURL());
-      const bunny = PIXI.Sprite.from(createTileImage(tileSize, x, y));
-      bunny.x = x;
-      bunny.y = y;
-      container.addChild(bunny);
-    }
-  }
-  console.log(container.width, container.height, container.position.x, container.getSize());
-
-  let scaleRate = 2
-  let moveRate = 1
-
   // 缩放支点
   // container.pivot.set(container.width/2, container.height/2);
   // container.pivot.set(app.screen.width/2, app.screen.height/2);
-  container.scale.set(scaleRate, scaleRate);
-
-  const point = new PIXI.Point();
-  container.on('wheel', (evt) => {
-    // console.log(evt.deltaY, evt.deltaX, scaleRate, moveRate);
-    console.log(container.position, container.getGlobalPosition(), point);
-    if (evt.deltaY > 2) {
-      scaleRate += 0.01;
-    } else if (evt.deltaY < -2) {
-      scaleRate -= 0.01;
-    }
-    if (evt.deltaX > 2) {
-      moveRate += 50;
-    } else if (evt.deltaX < -2) {
-      moveRate -= 50;
-    }
-    container.scale.set(scaleRate, scaleRate);
-    container.position.set(moveRate, moveRate);
+  container.eventMode = 'static';
+  container.position.set(300, 100);
+  createImage(img.source.resource, container);
+  uploadImage().then(loadImg => {
+    // 加载新图片前 清除老图片
+    container?.removeChildren();
+    createImage(loadImg, container);
   });
 
-  // 测试拖动
-  const canvas = app.canvas;
+  const defaultScale = 0.2;
+  const scaleValue = document.getElementById('scaleValue');
+  const setScale = (val = defaultScale) => {
+    container.scale.set(val, val);
+    scaleValue.innerHTML = val;
+    console.log('container width height', container.width, container.height, container.position.x);
+  };
+  setScale();
+  canvas.addEventListener('dblclick', () => setScale(1));
+
+  // 滚动和缩放
+  const windowWheelEvent = (evt) => {
+    evt.preventDefault();
+    evt.stopPropagation();
+    // console.log('evt', evt.ctrlKey);
+    // 双指捏合时 ctrlKey 为 true
+    if (evt.ctrlKey || evt.metaKey) {
+      const scaleRange = [0.05, 4];
+      let newScale;
+      const oldScale = container.scale.x;
+      newScale = oldScale - evt.deltaY * (oldScale / 70);
+      if (scaleRange) {
+        if (newScale < scaleRange[0]) {
+          [newScale] = scaleRange;
+        }
+        if (newScale > scaleRange[1]) {
+          [, newScale] = scaleRange;
+        }
+      }
+      if (oldScale === newScale) {
+        return;
+      }
+      const oldPosition = { x: container.position.x, y: container.position.y };
+      const { x: pX, y: pY } = { x: evt.clientX, y: evt.clientY };
+      const mousePointTo = {
+        x: pX / oldScale - oldPosition.x / oldScale,
+        y: pY / oldScale - oldPosition.y / oldScale,
+      };
+      const newPos = {
+        x: -(mousePointTo.x - pX / newScale) * newScale,
+        y: -(mousePointTo.y - pY / newScale) * newScale,
+      };
+      container.position.set(newPos.x, newPos.y);
+      // container.scale.set(newScale, newScale);
+      setScale(newScale);
+    } else {
+      container.position.set(container.position.x - evt.deltaX, container.position.y - evt.deltaY);
+    }
+  };
+  window.addEventListener("wheel", windowWheelEvent, { passive: false });
+
+  // 拖动
   const offset = { x: 0, y: 0 };
   const onDragMove = (evt) => {
     // console.log('pointermove', evt.clientX, evt.clientY);

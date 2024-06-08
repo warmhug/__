@@ -1,6 +1,8 @@
 /* eslint no-unused-vars: 0, no-mixed-operators: 0, no-redeclare: 0  */
 
-// [codesandbox.io](https://codesandbox.io/s/zpjo211yp) ([codepen.io](https://codepen.io/))
+// GitHub 登录
+// https://codesandbox.io/s/zpjo211yp
+// https://codepen.io/
 
 /*
 - 从输入URL到页面加载完成 http://fex.baidu.com/blog/2014/05/what-happen/
@@ -66,7 +68,9 @@
 - react hooks useEffect 及其 return 函数的执行时机？子组件先执行？多个时执行顺序？怎么确保 dom 先增加成功 (setTimeout)？
 - React-Fiber 并发模式、区分任务优先级、调度协调 中断/恢复任务，浏览器60fps渲染 10毫秒自己执行 5毫秒空闲时间。
 
-- 内存泄漏的情况？ html head 里的 js css 如何放置？
+- 内存泄漏的几种情况？ https://blog.logrocket.com/escape-memory-leaks-javascript/
+- WeakRef 的用处 https://www.reddit.com/r/Frontend/comments/1ato11w/will_the_event_listeners_be_removed_automatically/
+- html head 里的 js css 如何放置？
 - iframe 带来哪些问题？高度改变麻烦、弹框、iframe 里再嵌套 ifr。
 - JSONP 的原理以及 cors 怎么设置？跨域的方法有哪些？jsonp、 iframe、window.name、window.postMessage、服务器上设置代理页面。
 - xss/csrf 原理和防御方法。CORS 的 POST 跨域如何带cookie？ https://www.jianshu.com/p/13d53acc124f
@@ -290,6 +294,24 @@ function isBlank(str) {
 
 // dom 节点包含 https://segmentfault.com/q/1010000007159611
 
+// 跨浏览器的 addEventListener 实现
+function addEventListener(target, eventType, callback) {
+  if (target.addEventListener) {
+    target.addEventListener(eventType, callback, false);
+    return {
+      remove: function() {
+        target.removeEventListener(eventType, callback, false);
+      }
+    };
+  } else if (target.attachEvent) {
+    target.attachEvent("on" + eventType, callback);
+    return {
+      remove: function() {
+        target.detachEvent("on" + eventType, callback);
+      }
+    };
+  }
+}
 
 // 改变 url 而不刷新页面的方法：location.hash(hashchange 事件)，history api。
 // history 模式需要后端的配合，不然刷新页面会 404 https://developer.mozilla.org/en-US/docs/Web/API/History_API
@@ -347,7 +369,6 @@ window.addEventListener('keydown', function showKeyCode(e) {
   console.log('keyCode', keyCode);
 }, false);
 
-
 // 注意：fetch-api 是流式操作，在处理「非utf-8」的编码（如 gbk ）的数据时会出错，可改用 xhr 代替。
 fetch('./users', {
   mode: 'no-cors', // 会把设置的 application/json 改变为 content-type:text/plain;charset=UTF-8
@@ -390,24 +411,48 @@ function ajax(url, success, fail) {
   xhr.send();
 }
 
-// 跨浏览器的 addEventListener 实现
-function addEventListener(target, eventType, callback) {
-  if (target.addEventListener) {
-    target.addEventListener(eventType, callback, false);
-    return {
-      remove: function() {
-        target.removeEventListener(eventType, callback, false);
-      }
+// 读取 json 文件内容
+const readJsonFile = (file) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = (event) => {
+      resolve(JSON.parse(event.target.result));
     };
-  } else if (target.attachEvent) {
-    target.attachEvent("on" + eventType, callback);
-    return {
-      remove: function() {
-        target.detachEvent("on" + eventType, callback);
-      }
-    };
+  });
+};
+
+// 下载字符串为 json 文件
+import fileSaver from 'file-saver';
+const downloadJson = (jsonData, { filename }) => {
+  if (!jsonData) {
+    return;
   }
+  try {
+    fileSaver.saveAs(
+      new Blob([JSON.stringify(jsonData, null, 4)], { type: 'application/json;charset=utf-8' }),
+      `${filename}.json`
+    );
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+function loger() {
+  if (typeof console !== "undefined" && console.log) {
+    try {
+      console.log.apply(null, arguments);
+    } catch (error) {
+      // on Mobile maybe throw "TypeError: Illegal invocation"
+    }
+  }
+  var args = Array.prototype.slice.call(arguments);
+  var ele = document.getElementById("loger");
+  ele.style.cssText =
+    "position:fixed;z-index:99999;left:0;top:0;background:rgba(0,0,0,.5);color:#fff;padding:5px";
+  ele.innerHTML += "<br /><br />" + args.join(" ");
 }
+
 
 
 

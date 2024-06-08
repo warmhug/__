@@ -31,6 +31,8 @@ https://httparchive.org/reports/page-weight [chromestatus](https://www.chromesta
 html 规则检测 https://validator.w3.org 、 http://infohound.net/tidy
 head 里能放什么 https://github.com/joshbuchea/HEAD
 33-js-concepts https://github.com/leonardomso/33-js-concepts
+tailwindcss https://tailwindcss.com/
+语言性能 jsperf / benchmarks
 - css 时间函数 http://www.smashingmagazine.com/2014/04/15/understanding-css-timing-functions
 - css 长度 https://css-tricks.com/the-lengths-of-css
   - 绝对长度: px inch cm mm。 rem: 相对 root 的 font-size 大小  em: 基于大写字母 M 的尺寸  ex: 基于 x 字母高度  1vh 等于 1/100 的视口高度
@@ -67,7 +69,7 @@ antd, [react-data-grid](https://github.com/adazzle/react-data-grid)、[moveable]
 [material-design-lite](https://github.com/google/material-design-lite)、[jQuery miniui](http://www.miniui.com/)、[toast ui](https://ui.toast.com/)、[goodui](https://goodui.org/)
 
 数据 mock
-[postman](https://www.getpostman.com/) ([paw](https://paw.cloud/) [hoppscotch](https://hoppscotch.io/))。 oneapi / dummy-mock / dip。
+[postman](https://www.getpostman.com/) ([paw](https://paw.cloud/) [hoppscotch](https://hoppscotch.io/))。 [mockjs](https://github.com/nuysoft/Mock) oneapi / dummy-mock / dip。
 Mock工具在产品“初始化/初版”时比较有用，但之后“非常”容易腐烂，原因：API 接口名称、内容结构“很容易”会改变。 接口之间有依赖性、比如 修改/保存之后、再重新获取，数据不会变动。 mock 的数据、对不同人权限问题。 迭代中，绝大多数接口线上都有、少部分是新接口 mock 可直接在相应接口初临时 mock 即可。
 
 前后端
@@ -89,7 +91,8 @@ IDE
 [eclipse-theia](https://github.com/eclipse-theia/theia)、[coding.腾讯、](https://coding.net/)[stackblitz](https://stackblitz.com/)、[gitpod](https://www.gitpod.io/) (蚂蚁 cloudIDE)。
 
 编辑器
-web-Excel、[slate](https://github.com/ianstormtaylor/slate)、[trix](https://github.com/basecamp/trix)、[braft-editor](https://github.com/margox/braft-editor)、[edtr-io](https://github.com/edtr-io)、[svg-editors](https://css-tricks.com/browser-based-svg-editors/)、[各种编辑器](https://github.com/JefMari/awesome-wysiwyg)、数学公式[编辑器](https://www.mathcha.io/)、[zebra-editor-core](https://github.com/acccco/zebra-editor-core)、[tui-editor](https://ui.toast.com/tui-editor/)、[craft.js](https://github.com/prevwong/craft.js)、[react-visual-editor](https://github.com/anye931123/react-visual-editor)、[stylojs](https://stylojs.com/)。
+[sheetjs Excel 解析](https://sheetjs.com/)、web-Excel
+[slate](https://github.com/ianstormtaylor/slate)、[trix](https://github.com/basecamp/trix)、[braft-editor](https://github.com/margox/braft-editor)、[edtr-io](https://github.com/edtr-io)、[svg-editors](https://css-tricks.com/browser-based-svg-editors/)、[各种编辑器](https://github.com/JefMari/awesome-wysiwyg)、数学公式[编辑器](https://www.mathcha.io/)、[zebra-editor-core](https://github.com/acccco/zebra-editor-core)、[tui-editor](https://ui.toast.com/tui-editor/)、[craft.js](https://github.com/prevwong/craft.js)、[react-visual-editor](https://github.com/anye931123/react-visual-editor)、[stylojs](https://stylojs.com/)。
 
 截图
 [dom-to-image和html2canvas原理](https://github.com/zhangyu0414/notebook-to-record-learning)、[各设备截图服务](https://screendump.techulus.com/)、录制回放 [rrweb](https://github.com/rrweb-io/rrweb) (内网 xreplay)、[screen-share-party](https://ba.net/screen-share-party/#9730179072993984)。
@@ -246,7 +249,6 @@ Google: [gsuite](https://gsuite.google.com/) ([google-forms](https://docs.google
 
 [SVG-to-Canvas (canvas-to-SVG) Parser](https://github.com/fabricjs/fabric.js)
 
-[Pixi Image Editor](https://pettor.github.io/app-pixi-image-editor)
 [skeditor](https://github.com/skeditor/skeditor) [canvaskit-wasm](https://zhuanlan.zhihu.com/p/432454443)
 
 [figma](https://www.figma.com/) ([FigmaToCode](https://github.com/bernaferrari/FigmaToCode))
