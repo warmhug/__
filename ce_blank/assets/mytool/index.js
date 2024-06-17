@@ -64,12 +64,13 @@ $(async function () {
   const newlValue = await getStorageNote();
   tuiEditor.setMarkdown(newlValue);
   // 点击打开链接
-  el.addEventListener('click', (evt) => {
+  el.addEventListener('dblclick', (evt) => {
     // 把 .toastui-editor-contents 元素的 contenteditable 设为 false ，内部的 链接 就能自动跳转
     // console.log('tar', evt.target.tagName, editor.isWysiwygMode());
     if (evt?.target?.tagName === 'A' && evt?.target?.href && tuiEditor.isWysiwygMode()) {
       // 因为 evt?.target?.href 里的 & 号被转义、导致跳转不对，所以用 innerText
-      window.open(evt?.target?.innerText);
+      // window.open(evt?.target?.innerText);
+      window.top.location.href = evt?.target?.innerText;
     }
   });
 });

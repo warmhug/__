@@ -14,7 +14,7 @@ getFiles('./samples/').then(results => {
   const html = `<ul>` +
   results.filter(item => extname(item) === '.html').map(fileOrDirectory =>
     `<li style="margin: 5px 0;">
-      <a href="https://warmhug.github.io/__${fileOrDirectory.replace(__dirname, '')}">
+      <a href="https://warmhug.github.io/__${fileOrDirectory.replace(__dirname, '')}" target="_top">
         https://warmhug.github.io/__${fileOrDirectory.replace(__dirname, '')}
       </a>
     </li>
