@@ -126,8 +126,8 @@
   await app.init({ width: window.innerWidth, height: window.innerHeight, background: '#f0f2f5' });
   document.body.appendChild(app.canvas);
 
-  const imgUrl = 'http://localhost/-/19x12%e5%8d%83%e5%b0%ba%e5%af%b8.jpeg'
-  // const imgUrl = './default.jpg';
+  // const imgUrl = 'http://localhost/-/19x12%e5%8d%83%e5%b0%ba%e5%af%b8.jpeg'
+  const imgUrl = './default.jpg';
   const img = await PIXI.Assets.load(imgUrl);
   const canvas = app.canvas;
   const container = app.stage;

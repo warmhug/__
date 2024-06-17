@@ -289,7 +289,7 @@ function isBlank(str) {
 
 
 
-// ====================== DOM BOM
+// ====== DOM BOM
 // DOM和BOM的解释分析 https://juejin.cn/post/6844903939008102413
 
 // dom 节点包含 https://segmentfault.com/q/1010000007159611
@@ -411,6 +411,17 @@ function ajax(url, success, fail) {
   xhr.send();
 }
 
+const uploadImage = async (imgSrc) => {
+  const imgObj = await new Promise((resolve) => {
+    const image = document.createElement('img');
+    image.onload = () => {
+      resolve(image);
+    };
+    image.src = imgSrc;
+  });
+  console.log('img', imgObj);
+}
+
 // 读取 json 文件内容
 const readJsonFile = (file) => {
   return new Promise((resolve) => {
@@ -453,11 +464,46 @@ function loger() {
   ele.innerHTML += "<br /><br />" + args.join(" ");
 }
 
+// 用于 Chrome 浏览器插件里，检测并等待飞书文档的标题出现
+const feishuDocsJs = () => {
+  const checkEle = (selector, cb = () => {}) => {
+    let ele, timeout = 8000, startTime = Date.now();
+    const check = () => {
+      ele = document.querySelector(selector);
+      if (!ele && Date.now() - startTime < timeout) {
+        setTimeout(check, 200);
+      } else if (ele) {
+        cb(ele);
+      }
+    };
+    check();
+  };
+  if (window !== top) {
+    checkEle('.suite-title-input', (ele) => {
+      window.postMessage(JSON.stringify({
+        _ext: true,
+        _url: location.href,
+        title: ele.innerHTML,
+      }), '*');
+    });
+  }
+};
+// 用于 Chrome 浏览器插件里，给飞书 drive/me 页面里所有 a 标签加 target 使之能在当前 tab 里打开页面
+const openInCurrentTab = () => {
+  document.querySelectorAll('a').forEach((item) => {
+    item.target = '_parent';
+    item.addEventListener('click', (evt) => {
+      evt.stopPropagation();
+      evt.stopImmediatePropagation();
+    });
+  });
+}
 
 
 
 
-// ====================== 数组
+
+// ====== 数组
 
 
 // 数组去重
@@ -624,7 +670,7 @@ var genArr = Array(10).fill(0).map((e, i) => i + 1);
 
 
 
-// ====================== 基本数据类型、对象、函数、原型、正则
+// ====== 基本数据类型、对象、函数、原型、正则
 
 
 

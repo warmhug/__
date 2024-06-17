@@ -76,8 +76,7 @@ https://github.com/schollz/croc
 - Chrome cmd+t在右侧标签打开 https://superuser.com/a/1260437
 - Chrome tab卡死: 菜单 - 窗口 - 任务管理器 - 找到相应tab名 查看内存占用空间排序为空 - 结束进程。
 - Chrome 地址栏搜索 无法在新标签页打开结果 https://www.runningcheese.com/tabs
-- Chrome extensions: 一键切换(Jomic) 搜索拐杖 下一页(空格键自动翻到下一页) XSwitch Tamper / Disable Content-Security-Policy / Talend API Tester / Web Developer / Neat URL / Copy Tab Info / Open Multiple URLs / 沙拉查词 / User JavaScript and CSS / Wayback Machine / Memex / 一叶 / grammarly.com / Tampermonkey gitpod npmhub / screenity / ChatGPT for Google / Language Reactor /
-Side Browser / Sidebar Tab
+- Chrome extensions: 一键切换(Jomic) 搜索拐杖 下一页(空格键自动翻到下一页) XSwitch Tamper / Disable Content-Security-Policy / Talend API Tester / Web Developer / Neat URL / Copy Tab Info / Open Multiple URLs / 沙拉查词 / User JavaScript and CSS / Wayback Machine / Memex / 一叶 / grammarly.com / Tampermonkey gitpod npmhub / screenity / ChatGPT for Google / Language Reactor / Side Browser / Sidebar Tab
 
 
 ## 代理
@@ -275,6 +274,7 @@ httpd -v  # find the Apache version
 sudo apachectl restart / start / stop   # 开关重启
 code /etc/apache2/httpd.conf  # 编辑 Apche 的配置文件
 
+# 在 Indexes 前，加 + 代表允许目录浏览；加 – 代表禁止目录浏览。
 #DocumentRoot "/Library/WebServer/Documents"
 # 在 index template 里插入自定义 meta. http://httpd.apache.org/docs/2.4/mod/mod_autoindex.html
 IndexHeadInsert "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />"

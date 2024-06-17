@@ -1,6 +1,6 @@
 {
-  "name": "chrome extension new",
-  "description": "Test new features",
+  "name": "sidepanel extension",
+  "description": "Test sidepanel",
   "version": "1.0",
   "manifest_version": 3,
   "icons": {

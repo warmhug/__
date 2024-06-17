@@ -31,7 +31,7 @@ https://httparchive.org/reports/page-weight [chromestatus](https://www.chromesta
 html 规则检测 https://validator.w3.org 、 http://infohound.net/tidy
 head 里能放什么 https://github.com/joshbuchea/HEAD
 33-js-concepts https://github.com/leonardomso/33-js-concepts
-tailwindcss https://tailwindcss.com/
+tailwindcss https://tailwindcss.com/  https://www.iconfont.cn/
 语言性能 jsperf / benchmarks
 - css 时间函数 http://www.smashingmagazine.com/2014/04/15/understanding-css-timing-functions
 - css 长度 https://css-tricks.com/the-lengths-of-css
@@ -264,6 +264,7 @@ Google: [gsuite](https://gsuite.google.com/) ([google-forms](https://docs.google
 
 系统: [drawio-aws-cloudcraft](https://www.diagrams.net/blog/drawio-aws-cloudcraft)、([placeholder](https://www.diagrams.net/blog/placeholder-scope)、[mermaid](https://www.diagrams.net/blog/mermaid-diagrams)、[network](https://www.diagrams.net/blog/network-diagrams)、[org](https://www.diagrams.net/blog/org-charts))
 
+其他: [tinypng](https://tinypng.com/) [favicon-generator](https://favicon.inbrowser.app/tools/favicon-generator) [moonvy](https://moonvy.com/) [changeDPI](https://github.com/shutterstock/changeDPI)
 
 
 ## h5 or 小程序

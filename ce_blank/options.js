@@ -1,4 +1,4 @@
-console.log('options.js running');
+// console.log('options.js running');
 
 const bdJs = `;(() => {
   const showSpecialEle = (ele) => {
@@ -23,66 +23,13 @@ const bdJs = `;(() => {
   }), '*');
 })();`
 
-const feishuDocsJs = `;(() => {
-  const checkEle = (selector, cb = () => {}) => {
-    let ele, timeout = 8000, startTime = Date.now();
-    const check = () => {
-      ele = document.querySelector(selector);
-      if (!ele && Date.now() - startTime < timeout) {
-        setTimeout(check, 200);
-      } else if (ele) {
-        cb(ele);
-      }
-    };
-    check();
-  };
-  if (window !== top) {
-    checkEle('.suite-title-input', (ele) => {
-      window.postMessage(JSON.stringify({
-        _ext: true,
-        _url: location.href,
-        title: ele.innerHTML,
-      }), '*');
-    });
-  }
-})();`
-
-
 // 如果 URL 中含有多个 中文字符 解码可能会错误。统一用 decodeURIComponent 解码、再对比
 const injectSites = {
-  'https://bytedance.larkoffice.com/drive/me/': {
-    sideOfPage: true,
-    css: `
-      .sidebar-mouse-in-out, .file-list-meta {
-        display: none!important;
-      }
-    `,
-    js: `;(() => {
-      /*
-      给 drive/me 页面里所有 a 标签加 target 使之能替换当前 tab 页面
-      document.querySelectorAll('a').forEach((item) => {
-        item.target = '_parent';
-        item.addEventListener('click', (evt) => {
-          evt.stopPropagation();
-          evt.stopImmediatePropagation();
-        });
-      });
-      */
-    })();`
-  },
-  'https://bytedance.larkoffice.com': {
+  'https://www.zhihu.com': {
     allPage: true,
     css: `
-      .list-filler {
-        width: 540px !important;
-      }
-    `,
-  },
-  'https://zhuanlan.zhihu.com': {
-    allPage: true,
-    css: `
-      .ColumnPageHeader-Wrapper {
-        display: none!important;
+      .AppHeader.is-fixed {
+        position: static;
       }
     `,
   },
@@ -93,72 +40,75 @@ const injectSites = {
       }
     `,
   },
-  'https://bytedance.larkoffice.com/docx/PmUMdEzWhovDajxojqDcIQwpn8f': {
-    tabIdx: '0.0',
+  [chrome.runtime.getURL('assets/mytool/index.html')]: {
+    sideOfPage: true,
+  },
+  'https://i.mi.com/note/h5#/': {
+    allPage: true,
     css: `
-      .navigation-bar-wrapper, .bidirection-link-list, .global-like-wrap, .docx-global-comment,
-      .page-block-header .page-block-content, .docx-comment__first-comment-btn, .gpf-biz-help-center__button-group {
-        display: none;
+      #folderList {
+        width: 100px;
       }
     `,
+    js: `;(() => {
+      setTimeout(() => {
+        const linkEle = document.getElementById('pm-container')?.querySelectorAll('.ltr-element');
+        linkEle?.forEach((item) => {
+          // console.log('linkele', linkEle);
+          item.addEventListener('dblclick', (evt) => {
+            var text = evt.target.innerText;
+            console.log(text);
+            text.split(' ').forEach(http => {
+              if (http.startsWith('http')) {
+                window.open(http);
+              }
+            });
+          });
+        });
+      }, 800);
+    })();`
+  },
+  'https://note.temu.team': {
+    allPage: true,
+    css: `
+      #main-root [data-testid="beast-core-resize-area"] {
+        overflow: scroll !important;
+      }
+      #main-root [data-testid="beast-core-resize-area"] div:last-child {
+        width: 540px !important;
+      }
+    `,
+  },
+  'https://warmhug.github.io/__/': {
+    tabIdx: '0.0',
+    tabName: 'Samples',
     js: `;(() => {
       window.postMessage(JSON.stringify({
         _ext: true,
         _url: location.href,
+        // title: ,
         scrollHeight: 1300,
       }), '*');
     })();`
   },
-  // 'https://translate.google.com/?sl=zh-CN&tl=en&op=translate': {
-  //   tabIdx: '0.1',
-  //   js: `;(() => {
-  //     window.postMessage(JSON.stringify({
-  //       _ext: true,
-  //       _url: location.href,
-  //       scrollHeight: document.body.scrollHeight * 0.6,
-  //     }), '*');
-  //   })();`,
-  //   css: `
-  //     body {
-  //       overflow: hidden!important;
-  //     }
-  //   `,
-  // },
-  [chrome.runtime.getURL('assets/mytool/index.html')]: {
-    tabIdx: '0.2',
-    min: 1,
-  },
   [decodeURIComponent(`https://www.baidu.com/s?wd=%E6%97%A5%E5%8E%86`)]: {
-    tabIdx: '0.3.0',
+    tabIdx: '0.2.0',
     min: 1,
     js: bdJs,
   },
   [decodeURIComponent(`https://www.baidu.com/s?wd=%E8%AE%A1%E7%AE%97%E5%99%A8`)]: {
-    tabIdx: '0.3.1',
+    tabIdx: '0.2.1',
     min: 1,
     js: bdJs,
   },
-  'https://bytedance.larkoffice.com/docx/doxcn2EDJtEmqNmb6uVnJ5MTUbc': {
+  'https://ai-bot.cn/': {
     tabIdx: '1',
-    js: feishuDocsJs,
+    tabName: 'AI工具'
   },
-  // 'https://i.mi.com/note/h5#/': {
-  //   tabIdx: '2',
-  //   tabName: '笔记',
-  //   tabLiStyle: 'float: right;',
-  //   allPage: true,
-  //   js: `;(() => {
-  //     setTimeout(() => {
-  //       const linkEle = document.getElementById('pm-container')?.querySelectorAll('.ltr-element');
-  //       linkEle?.forEach((item) => {
-  //         // console.log('linkele', linkEle, item.querySelector('.pm-match-url'));
-  //         if (!item.querySelector('.pm-match-url')) {
-  //           return;
-  //         }
-  //       });
-  //     }, 800);
-  //   })();`
-  // },
+  'https://www.en998.com/sentence/': {
+    tabIdx: '2',
+    tabName: '句解霸'
+  },
 };
 
 async function setOpt(ele, key, val) {

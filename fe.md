@@ -14,6 +14,13 @@
 
 figma 不支持插入 大于 4096px 的图片，会被裁剪和降低清晰度，参考[文档](https://help.figma.com/hc/en-us/articles/360040028034-Add-images-and-videos-to-design-files)。
 
+查看支持度: chrome://gpu  chrome://settings/system (图形加速)  https://get.webgl.org/
+
+注意：
+- 如果电脑只有一个显卡，比如 mac mini（m系列芯片）、Windows台式机、部分低配笔记本电脑，需要在 Chrome 浏览器设置里开启“图形加速”功能。
+- Chrome 图形加速开启方法：手动打开“设置-系统”、或在浏览器地址栏输入`chrome://settings/system`，勾选“使用图形加速功能”，重启浏览器。
+- Intel 电脑一般都有双显卡。
+
 参考
 - https://webglfundamentals.org/webgl/lessons/webgl-image-processing.html
 - https://webglfundamentals.org/webgl/lessons/webgl-2d-scale.html

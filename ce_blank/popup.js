@@ -1,6 +1,5 @@
-
 // 在 popup 页面右键 查看元素 看控制台
-console.log('when exec?');
+// console.log('when exec?');
 // alert('每次打开都会执行');
 
 // 防止休眠或屏幕关闭
@@ -11,7 +10,8 @@ $(async function() {
 
   const manifest = chrome.runtime.getManifest()
   // console.log('getManifest', chrome.runtime.getManifest());
-  $('#cmds').html(JSON.stringify(manifest.commands, null, 2).replaceAll('\n', '<br/>'));
+  // $('#cmds').html(JSON.stringify(manifest.commands, null, 4).replaceAll('\n', '<br/>'));
+  $('#cmds').html(JSON.stringify(manifest.commands, null, 4));
 
   // 显示插入到当前页面的 js css 内容
   const injectSites = JSON.parse(localData.hl_injectSites) || {};

@@ -35,7 +35,7 @@ setTimeout(() => {
   window.removeEventListener("message", hl_handleMsg);
 }, 8000);
 
-// 处理来自 background.js 里的消息
+// 处理来自 service-worker 里的消息
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // console.log('msg bg', request, sender, location.href);
   if (request._bg && location.href.indexOf(request._url) === 0) {

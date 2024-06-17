@@ -15,6 +15,16 @@
 # fi
 
 printf "\n"
+echo "\033[32m MY_INFO: create samples index.html (y/n)?  \033[0m"
+read create_op
+[[ $create_op = "n" ]] && exit
+echo "\033[32m node ./_createIndex.js \033[0m"
+node ./_createIndex.js
+
+sleep 2
+# exit 1
+
+printf "\n"
 echo "\033[32m MY_INFO: git op (y/n)?  \033[0m"
 read git_op
 [[ $git_op = "n" ]] && exit
