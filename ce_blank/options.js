@@ -74,7 +74,7 @@ const injectSites = {
       #main-root [data-testid="beast-core-resize-area"] {
         overflow: scroll !important;
       }
-      #main-root [data-testid="beast-core-resize-area"] div:last-child {
+      #main-root [data-testid="beast-core-resize-area"] > div:last-child {
         width: 540px !important;
       }
     `,
