@@ -30,7 +30,7 @@ getFiles('./samples/').then(results => {
 </head>
 <body>
   <div style="margin: 5px;">
-    GitHub 地址 <a href="https://github.com/warmhug/__">https://github.com/warmhug/__</a>
+    GitHub 地址 <a href="https://github.com/warmhug/__" target="_top">https://github.com/warmhug/__</a>
   </div>
   ${html}
 </body>
