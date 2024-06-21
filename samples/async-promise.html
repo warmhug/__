@@ -5,8 +5,27 @@
   <title></title>
 </head>
 <body>
+  https://zh.javascript.info/promise-error-handling
+
   <script>
-    // https://zh.javascript.info/promise-error-handling
+
+    const fetchSth = async () => {
+      const [res1, res2] = await Promise.all([getPa(), getPb()]);
+      console.log('fetch something')
+    };
+    const login = () => new Promise((resolve, reject) => {
+      req.post('/url').then((res) => {
+        resolve();
+      }).catch((e) => {
+        console.log(e);
+        reject();
+      });
+    });
+    useEffect(() => {
+      setState({ loading: true });
+      login().then(fetchSth).then(() => setState({ loading: false }));
+    }, []);
+
 
     var getA = cb => cb('a');
     var getB = cb => cb('b');

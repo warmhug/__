@@ -15,6 +15,7 @@ chrome.runtime.onStartup.addListener(() => {
   console.log('when exec onStartup');
 });
 chrome.runtime.onInstalled.addListener(function(details){
+  console.log('details', details);
   if(details.reason == "install"){
     console.log("This is a first install!");
   } else if(details.reason == "update"){

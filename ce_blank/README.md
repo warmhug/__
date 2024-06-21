@@ -1,9 +1,7 @@
 # chrome 扩展
 
 安装：Chrome输入`chrome://extensions`打开扩展页面，把`ce_blank`目录拖拽进去，即可安装。
-
-查看安装位置：勾选扩展页面右上角的 `开发者模式`，扩展会显示各自的`extension ID`，进入 mac 的
-`~/Library/Application Support/Google/Chrome/Default/Extensions` 目录，根据想要的 id 搜索。
+查看安装位置：勾选扩展页面右上角的 `开发者模式`，扩展会显示各自的`extension ID`。
 
 调试方法
 
@@ -11,7 +9,7 @@
 2. manifest -> background -> scripts 打开 `chrome://extensions/` 相应的插件名、点“背景页”。
 3. manifest -> content_scripts 设置的 js 位置：“控制台 -> Sources -> Content scripts”
 
-[开发教程](https://developer.chrome.com/extensions/getstarted)
+获取 Chrome 本地存储 `await chrome.storage.sync.get(null)`
 
 
 ## 记录
@@ -29,6 +27,19 @@
 
 
 rules.json 里的 modifyHeaders 修改 responseHeaders 会生效，但是不显示在 Chrome DevTools 里。ref [issue](https://bugs.chromium.org/p/chromium/issues/detail?id=258064)
+
+
+### 2024-06 Native messaging
+
+先 `chmod a+x nm_sh/nm_python` 再放到 `~/Applications` 目录里。
+json 配置文件放到 `~/Library/Application Support/Google/Chrome/NativeMessagingHosts` 里。
+
+Google 搜索 chrome extension native message nodejs
+https://developer.chrome.com/docs/extensions/develop/concepts/native-messaging?hl=zh-cn
+https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging
+https://github.com/GoogleChrome/chrome-extensions-samples/tree/main/api-samples/nativeMessaging
+
+https://stackoverflow.com/questions/22222624/how-can-we-execute-a-shell-command-from-a-chrome-extension-is-there-a-provided
 
 
 ### 2022-09-17

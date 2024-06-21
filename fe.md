@@ -1,11 +1,12 @@
+# fe suffer
 
 
+## 2024
+
+https://developer.sketch.com/plugins/debugging
 
 
-------
-# WebGL
-
-## WebGL 图像查看器
+### 2024-06 WebGL 图像查看器
 
 能支持超大图 不卡顿。 https://www.photopea.com/ (Facebook [私信](https://www.facebook.com/photopea))
 
@@ -14,8 +15,16 @@
 
 figma 不支持插入 大于 4096px 的图片，会被裁剪和降低清晰度，参考[文档](https://help.figma.com/hc/en-us/articles/360040028034-Add-images-and-videos-to-design-files)。
 
-查看支持度: chrome://gpu  chrome://settings/system (图形加速)  https://get.webgl.org/
+canvas 模糊问题：
+[antialiasing](https://stackoverflow.com/questions/17861447/html5-canvas-drawimage-how-to-apply-antialiasing)
+[canvas-blur](https://medium.com/wdstack/fixing-html5-2d-canvas-blur-8ebe27db07da)
+[lines-are-blurry](https://stackoverflow.com/questions/8696631/canvas-drawings-like-lines-are-blurry)
+[canvas drawimage blurry](https://stackoverflow.com/questions/31910043/html5-canvas-drawimage-draws-image-blurry)
+[higher-dpi-graphics-with-html5-canvas](https://stackoverflow.com/questions/14488849/higher-dpi-graphics-with-html5-canvas)
+[sketch points-vs-pixels](https://www.sketch.com/support/sketch-features/mac-app/points-vs-pixels/)
+[Optimizing_canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas)
 
+查看支持度: chrome://gpu  chrome://settings/system (图形加速)  https://get.webgl.org/
 注意：
 - 如果电脑只有一个显卡，比如 mac mini（m系列芯片）、Windows台式机、部分低配笔记本电脑，需要在 Chrome 浏览器设置里开启“图形加速”功能。
 - Chrome 图形加速开启方法：手动打开“设置-系统”、或在浏览器地址栏输入`chrome://settings/system`，勾选“使用图形加速功能”，重启浏览器。
@@ -43,38 +52,11 @@ figma 不支持插入 大于 4096px 的图片，会被裁剪和降低清晰度�
 不是 webgl 实现的 https://github.com/konvajs/konva
 
 
-
-------
-# compile & build & deploy
-
-[gulp 手册1](http://p.tb.cn/rmsportal_127_gulp_E6_89_8B_E5_86_8C1.pdf) / [gulp 手册2](http://p.tb.cn/rmsportal_127_gulp_E6_89_8B_E5_86_8C2.pdf)
-
-[lerna](https://github.com/lerna/lerna)：适合多个 package 有互相引用、代码规范一致、统一管理 issue 的项目。示例 [practices](https://github.com/LittleBreak/lerna-best-practices) / [dva](https://github.com/dvajs/dva)
-
-[webpack 配置文件生成工具](https://webpack.jakoblind.no/)
-
-Webpack 5 module federationtion 联邦模块 [介绍](https://juejin.cn/post/6844904187147321352)
-[示例](https://github.com/xff1874/w5mf)
-
-[qiankun 子应用嵌套](https://github.com/umijs/qiankun/issues/960)、[umi-plugin-qiankun 嵌套子应用](https://umijs.org/plugins/plugin-qiankun#%E5%B5%8C%E5%A5%97%E5%AD%90%E5%BA%94%E7%94%A8)
-
-## lint 配置
-
-vscode Multi-root Workspaces 时 eslint 插件会报错，在工作区(不是用户)设置文件 .vscode/settings.json 里加入：
-
-```json
-"eslint.workingDirectories": [{"mode": "auto"}]
-```
-
-
-
-
-------
-# suffer
-
-## 2024
-
+### 2024-05
 vscode 里 eslint 报错、找不到报错原因，使用 cmd+shift+p 输入 reload window 重启 vscode 即可。
+
+lint 配置: vscode Multi-root Workspaces 时 eslint 插件会报错，在工作区(不是用户)设置文件 .vscode/settings.json 里加入：`"eslint.workingDirectories": [{"mode": "auto"}]`
+
 
 ## 2022~2023
 
@@ -253,6 +235,12 @@ navigator.geolocation.getCurrentPosition((position) => {
 /* geolocation IS NOT available */
 }
 ```
+
+## 2020
+
+- waterfall 瀑布流 内容顺序 难保证 https://segmentfault.com/q/1010000009117246/
+- flex 顺序正确的 布局 https://jessieji.com/2019/pure-css-masonry
+- 多列 https://segmentfault.com/a/1190000017866549
 
 
 ## 2018-2019 G2/G6 问题

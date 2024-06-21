@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# 自动打开
+# networksetup -setproxyautodiscovery Wi-Fi on
+# 打开设置
+open "x-apple.systempreferences:com.apple.Network-Settings.extension?Proxies"

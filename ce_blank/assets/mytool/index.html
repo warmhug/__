@@ -6,27 +6,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MyTool</title>
   <link rel="stylesheet" href="./toastui-editor.min.css">
-  <link rel="stylesheet" href="./index.css">
+  <style>
+    body {
+      margin: 0;
+    }
+    .main .notes {
+      position: relative;
+      background-color: rgba(255,255,255,0.1);
+      font-size: 14px;
+      padding: 0 10px;
+    }
+    .main .notes a {
+      color: blue;
+      cursor: pointer;
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+    }
+    #notesText {
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
   <div class="main">
     <div id="tuiEditor"></div>
     <div class="notes">
       <small>
-        <a id="notesLoad">load</a>
-        <a id="changeNote">换一个</a>
-        <!-- <br> -->
         <a id="ip" target="_blank"></a>
         <a id="syncInter" href="chrome://sync-internals/">chrome://sync</a>
-        await chrome.storage.sync.get(null)
+        <a id="notesLoad">load</a>
+        <a id="changeNote">换一个</a>
       </small>
       <div id="notesTxt">notesContent</div>
-      <div id="notesImg" class="small">
-        <img src="https://gw.alipayobjects.com/zos/rmsportal/RxMbdtGwmMUIVsXRiLyJ.jpg">
-      </div>
     </div>
   </div>
-  <script src="../jquery.min.js"></script>
   <script src="./idb-keyval@5.0.2.js"></script>
   <script src="./toastui-editor-all.js"></script>
   <script src="../../common.js"></script>

@@ -15,6 +15,12 @@
 
 - [WebAssembly](https://juejin.im/entry/5b20d09d6fb9a01e242490b1) 不是一门编程语言，而是一份字节码标准。 各种复杂的计算：图像处理、3D运算(大型 3D 网页游戏)、语音识别、音视频编码解码。区块链合约。 [madewithwebassembly](https://madewithwebassembly.com/)、eBay 的[条形码扫描](https://www.infoq.cn/article/vc*q7psQqWMaVU8igJeD)、[Google earth web](https://earth.google.com/web/) 版、[autocad](https://web.autocad.com/login) web 版
 - [PWA](https://developers.google.com/web/progressive-web-apps/) Service Worker 需要运行于 HTTPS 或本地 localhost 环境，是继 Web Worker 后又一个新的线程。来实现离线页面功能。 Service Worker 是独立于页面的一个运行环境，它在页面关闭后仍可以运行。Web Worker 在页面关闭后不再运行。
+
+gulp 手册
+http://p.tb.cn/rmsportal_127_gulp_E6_89_8B_E5_86_8C1.pdf
+http://p.tb.cn/rmsportal_127_gulp_E6_89_8B_E5_86_8C2.pdf
+Webpack 5 module federationtion 联邦模块 https://juejin.cn/post/6844904187147321352
+qiankun 子应用嵌套 https://github.com/umijs/qiankun/issues/960
 */
 
 /*
@@ -430,6 +436,22 @@ const readJsonFile = (file) => {
     reader.onload = (event) => {
       resolve(JSON.parse(event.target.result));
     };
+  });
+};
+
+// 异步确认
+const asyncConfirm = (content) => {
+  return new Promise((resolve, reject) => {
+    Modal.confirm({
+      title: '以下模块的文案未填写',
+      content,
+      onOk: () => {
+        resolve();
+      },
+      onCancel: () => {
+        reject();
+      },
+    });
   });
 };
 

@@ -4,7 +4,7 @@ document.addEventListener('hl_extension_message', (event) => {
   // 这里的 window 和 content_script.js 里的 window 不是同一个。
   // console.log('hl_extension_util', window.hl_extension_data?.tabId, window.hl_extension_util);
 
-  console.log('pass obj', event.detail);
+  // console.log('pass obj', event.detail);
   window.hl_extension_data = event.detail?.hl_extension_data;
 
   eval(event.detail?.js || '');

@@ -26,7 +26,7 @@
     const description = document.createElement('div');
     description.innerHTML = `
     支持 双指拖动、鼠标滚轮或捏合手势缩放、滚动查看，双击不缩放。(选择的文件一直存在本机、不会上传到服务器，放心选择)
-    <br/> scale <b id="scaleValue"></b>
+    <br/> scale <b id="scaleVal"></b>
     `;
     div.appendChild(description);
     const fileInput = document.createElement('input');
@@ -68,25 +68,31 @@
     }
   }
 
+  const dpr = window.devicePixelRatio || 1;
+
   // https://www.w3school.com.cn/tags/html_ref_canvas.asp
-  const createTileImage = (image, x, y, width, height, scaleRate = 1) => {
+  // https://jsfiddle.net/ufjm50p9/2/
+  const createTileImage = (image, x, y, width, height, scaleVal = 1) => {
+    // 如果 scaleVal 为 0.5 则图片不清晰
+    scaleVal *= dpr;
     const croppedCanvas = document.createElement('canvas');
-    const croppedCtx = croppedCanvas.getContext('2d');
+    const croppedCtx = croppedCanvas.getContext('2d', { antialias: false });
+    croppedCtx.imageSmoothingEnabled = false;
     // 注意：在浏览器中测试 canvas width height 设为 18000 时，显示不出来、原因未知。
     const hei = height || width;
-    croppedCanvas.width = width * scaleRate;
-    croppedCanvas.height = hei * scaleRate;
+    croppedCanvas.width = width * scaleVal;
+    croppedCanvas.height = hei * scaleVal;
     // scale 不会改变画布大小 只改变画到上边元素的大小
-    // croppedCtx.scale(scaleRate, scaleRate);
-    croppedCtx.translate(-x * scaleRate, -y * scaleRate);
-    croppedCtx.drawImage(image, 0, 0, image.width * scaleRate, image.height * scaleRate);
-    // croppedCtx.fillText(x * scaleRate, -x * scaleRate + 100, -y * scaleRate - 100);
+    // croppedCtx.scale(scaleVal, scaleVal);
+    croppedCtx.translate(-x * scaleVal, -y * scaleVal);
+    croppedCtx.drawImage(image, 0, 0, image.width * scaleVal, image.height * scaleVal);
+    // croppedCtx.fillText(x * scaleVal, -x * scaleVal + 100, -y * scaleVal - 100);
 
     // 单纯改变 canvas 尺寸，其上的内容会丢失
     // https://stackoverflow.com/questions/3543358/resizing-a-html-canvas-blanks-its-contents
-    // croppedCanvas.width *= scaleRate * 0.2;
-    // croppedCanvas.height *= scaleRate * 0.2;
-    // croppedCanvas.style.width = croppedCanvas.width * scaleRate + 'px';
+    // croppedCanvas.width *= scaleVal * 0.2;
+    // croppedCanvas.height *= scaleVal * 0.2;
+    // croppedCanvas.style.width = croppedCanvas.width * scaleVal + 'px';
     console.log('tile image width height', croppedCanvas.width, croppedCanvas.height, croppedCanvas.style.height);
     return croppedCanvas;
   };
@@ -148,10 +154,10 @@
   });
 
   const defaultScale = 0.2;
-  const scaleValue = document.getElementById('scaleValue');
+  const scaleVal = document.getElementById('scaleVal');
   const setScale = (val = defaultScale) => {
     container.scale.set(val, val);
-    scaleValue.innerHTML = val;
+    scaleVal.innerHTML = val;
     console.log('container width height', container.width, container.height, container.position.x);
   };
   setScale();

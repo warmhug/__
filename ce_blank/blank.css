@@ -1,8 +1,182 @@
 body {
+  margin: 0;
   /* background-image: url(https://gw.alipayobjects.com/zos/rmsportal/RxMbdtGwmMUIVsXRiLyJ.jpg); */
   background-size: cover;
   /* background-color: #EFFACE; */
 }
+* {
+  box-sizing: border-box;
+}
+
+/* 拷贝自 Bootstrap v3.3.7 */
+a {
+  text-decoration: none;
+}
+.nav {
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+.nav:before, .nav:after {
+  display: table;
+  content: ' ';
+}
+.nav:after {
+  clear: both;
+}
+.nav > li {
+  position: relative;
+  display: block;
+}
+.nav > li > a {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+}
+.nav > li > a:hover,
+.nav > li > a:focus {
+  text-decoration: none;
+  background-color: #eee;
+}
+.nav > li.disabled > a {
+  color: #777;
+}
+.nav > li.disabled > a:hover,
+.nav > li.disabled > a:focus {
+  color: #777;
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+}
+.nav .open > a,
+.nav .open > a:hover,
+.nav .open > a:focus {
+  background-color: #eee;
+  border-color: #337ab7;
+}
+.nav .nav-divider {
+  height: 1px;
+  margin: 9px 0;
+  overflow: hidden;
+  background-color: #e5e5e5;
+}
+.nav > li > a > img {
+  max-width: none;
+}
+.nav-tabs {
+  border-bottom: 1px solid #ddd;
+}
+.nav-tabs > li {
+  float: left;
+  margin-bottom: -1px;
+}
+.nav-tabs > li > a {
+  margin-right: 2px;
+  line-height: 1.42857143;
+  border: 1px solid transparent;
+  border-radius: 4px 4px 0 0;
+}
+.nav-tabs > li > a:hover {
+  border-color: #eee #eee #ddd;
+}
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+  color: #555;
+  cursor: default;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-bottom-color: transparent;
+}
+.tab-content > .tab-pane {
+  display: none;
+}
+.tab-content > .active {
+  display: block;
+}
+
+
+.fade {
+  opacity: 0;
+  -webkit-transition: opacity .15s linear;
+       -o-transition: opacity .15s linear;
+          transition: opacity .15s linear;
+}
+.fade.in {
+  opacity: 1;
+}
+.modal-open {
+  overflow: hidden;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1050;
+  display: none;
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+  outline: 0;
+}
+.modal.fade .modal-dialog {
+  -webkit-transition: -webkit-transform .3s ease-out;
+       -o-transition:      -o-transform .3s ease-out;
+          transition:         transform .3s ease-out;
+  -webkit-transform: translate(0, -25%);
+      -ms-transform: translate(0, -25%);
+       -o-transform: translate(0, -25%);
+          transform: translate(0, -25%);
+}
+.modal.in .modal-dialog {
+  -webkit-transform: translate(0, 0);
+      -ms-transform: translate(0, 0);
+       -o-transform: translate(0, 0);
+          transform: translate(0, 0);
+}
+.modal-open .modal {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 30px auto;
+}
+.modal-content {
+  position: relative;
+  background-color: #fff;
+  -webkit-background-clip: padding-box;
+          background-clip: padding-box;
+  border: 1px solid #999;
+  border: 1px solid rgba(0, 0, 0, .2);
+  border-radius: 6px;
+  outline: 0;
+  -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+          box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+}
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1040;
+  background-color: #000;
+}
+.modal-backdrop.fade {
+  filter: alpha(opacity=0);
+  opacity: 0;
+}
+.modal-backdrop.in {
+  filter: alpha(opacity=50);
+  opacity: .5;
+}
+.modal-lg {
+  width: 900px;
+}
+
 
 .pageBgImg {
   position: fixed;
@@ -13,9 +187,8 @@ body {
   filter: opacity(90%);
 }
 .ce-wrapper {
+  display: flex;
   position: relative;
-  /* flex 跟  jquery ui resizable 搭配不正常  */
-  display: table;
   margin: 4px;
   width: calc(100% - 8px);
   height: calc(100% - 32px);
@@ -59,14 +232,12 @@ body {
 }
 
 .ce-wrapper > .iframe-wrap {
-  display: table-cell;
   height: 100%;
   padding-right: 4px;
 }
 
 .ce-wrapper .major {
-  display: table-cell;
-  vertical-align: top;
+  flex: 1;
   background-color: #fff;
 }
 .ce-wrapper .major .nav {
@@ -106,22 +277,6 @@ body {
   font-size: 12px;
   padding: 0 8px;
 }
-#bookmarks .left,
-#bookmarks .right {
-  display: flex;
-  align-items: center;
-}
-#bookmarks .left > ul li {
-  margin-left: 10px;
-}
-#bookmarks .left > ul,
-#bookmarks .right > ul {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  border: none;
-}
 #bookmarks .other {
   flex: none;
 }
@@ -130,6 +285,12 @@ body {
 }
 #bookmarks .other a {
   margin-right: 5px;
+}
+#bookmarks ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: none;
 }
 #bookmarks ul li a {
   display: flex;
@@ -141,11 +302,37 @@ body {
   max-width: 16px;
   margin-right: 4px;
 }
-#bookmarks .ui-menu .ui-icon {
-  top: -4px;
-}
-#bookmarks .ui-state-active {
-  border: none;
+#bookmarks .active {
   background-color: #e8f0fe;
   color: #333;
+}
+
+#bookmarks .left,
+#bookmarks .right {
+  display: flex;
+  align-items: center;
+}
+#bookmarks .left > ul {
+  display: flex;
+}
+#bookmarks .left > ul li {
+  margin-left: 10px;
+}
+#bookmarks .right > ul ul {
+  display: none;
+  position: absolute;
+  z-index: 10;
+  background-color: #fff;
+  box-shadow: 1px -1px 0px 2px rgba(0, 0, 0, 0.2);
+}
+#bookmarks .right > ul li {
+  position: relative;
+  padding: 5px 10px;
+  border-bottom: 1px solid #eee;
+}
+#bookmarks .right > ul li:last-child {
+  border-bottom: none;
+}
+#bookmarks .right > ul li:hover > ul {
+  display: block;
 }

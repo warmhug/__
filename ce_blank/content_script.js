@@ -1,4 +1,4 @@
-console.log('this is injected to all pages (ISOLATED window object)', window, chrome);
+// console.log('this is injected to all pages (ISOLATED window object)', window, chrome);
 
 // for test
 window.hl_extension_util = hl_extension_util;

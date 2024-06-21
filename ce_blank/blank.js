@@ -2,11 +2,13 @@
 
 // console.log('cb', chrome.bookmarks);
 
+const folderIcon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0iIzQyODVGNCI+PHBhdGggZD0iTTIwIDZoLThsLTItMkg0Yy0xLjEgMC0xLjk5LjktMS45OSAyTDIgMThjMCAxLjEuOSAyIDIgMmgxNmMxLjEgMCAyLS45IDItMlY4YzAtMS4xLS45LTItMi0yem0wIDEySDRWOGgxNnYxMHoiLz48L3N2Zz4=';
+
 function dumpNode(bookmarkNode, query) {
   if (bookmarkNode.title) {
     if (query && !bookmarkNode.children) {
       if (String(bookmarkNode.title).indexOf(query) == -1) {
-        return $('<span></span>');
+        return document.createElement('span');
       }
     }
     // html 0宽字符: U+200B  U+200C  U+200D   U+FEFF  &zwnj;&ZeroWidthSpace;&#xFEFF
@@ -14,7 +16,6 @@ function dumpNode(bookmarkNode, query) {
     let formatTitle = bookmarkNode.title
       // .replace(/[\u200B-\u200D\uFEFF]/g, '')
     // console.log('unicode', formatTitle, formatTitle.length, formatTitle.charAt(0));
-    // formatTitle = $('<div />').html(formatTitle).text();
     // formatTitle = $('<div />').html(formatTitle).html().replace(/\u200C/g, '');
     // formatTitle.split('').forEach(console.log);
     formatTitle = [...formatTitle].map((item, idx) => {
@@ -29,37 +30,32 @@ function dumpNode(bookmarkNode, query) {
     if (formatTitle.length > 60) {
       formatTitle = formatTitle.substring(0, 60) + '...';
     }
-    var anchor = $('<a>');
-    anchor.attr('data-href', bookmarkNode.url);
-    anchor.attr('title', bookmarkNode.title);
-    // anchor.attr('target', '_blank');
-    anchor.text(formatTitle);
-    /*
-     * When clicking on a bookmark in the extension, a new tab is fired with
-     * the bookmark url.
-     */
-    // anchor.on('click', () => { });
-    // https://github.com/GoogleChrome/chrome-extensions-samples/blob/main/api/favicon/content.js
-    // console.log('rt', chrome.runtime.getURL('_favicon/?page_url=https://www.google.com&size=64'));
-    // chrome://bookmarks 打开控制台 查找文件夹图标 chrome://bookmarks/images/folder_open.svg
-    const iconUrl = bookmarkNode.url ?
-      chrome.runtime.getURL(`_favicon/?pageUrl=${bookmarkNode.url}`) : 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0iIzQyODVGNCI+PHBhdGggZD0iTTIwIDZoLThsLTItMkg0Yy0xLjEgMC0xLjk5LjktMS45OSAyTDIgMThjMCAxLjEuOSAyIDIgMmgxNmMxLjEgMCAyLS45IDItMlY4YzAtMS4xLS45LTItMi0yem0wIDEySDRWOGgxNnYxMHoiLz48L3N2Zz4=';
-    anchor.prepend(`<img src="${iconUrl}" />`);
+    var anchor = document.createElement('a');
+    let iconUrl = folderIcon;
+    if (bookmarkNode.url) {
+      anchor.setAttribute('data-href', bookmarkNode.url);
+      // chrome://bookmarks 打开控制台 查找文件夹图标 chrome://bookmarks/images/folder_open.svg
+      iconUrl = chrome.runtime.getURL(`_favicon/?pageUrl=${bookmarkNode.url}`);
+    }
+    anchor.setAttribute('title', bookmarkNode.title);
+    // anchor.setAttribute('target', '_blank');
+    anchor.innerHTML = `<img src="${iconUrl}" />${formatTitle}`;
   }
   // console.log('bookmarkNode.title', bookmarkNode.title, bookmarkNode.children);
-  var li = $(bookmarkNode.title ? '<li>' : '<div>').append(anchor);
+  var li = document.createElement(bookmarkNode.title ? 'li' : 'div');
+  li.append(anchor);
   if (bookmarkNode.children && bookmarkNode.children.length > 0) {
     li.append(dumpTreeNodes(bookmarkNode.children, query));
   }
   return li;
 }
 function dumpTreeNodes(bookmarkNodes, query) {
-  var list = $('<ul>');
+  var ulEle = document.createElement('ul');
   var i;
   for (i = 0; i < bookmarkNodes.length; i++) {
-    list.append(dumpNode(bookmarkNodes[i], query));
+    ulEle.append(dumpNode(bookmarkNodes[i], query));
   }
-  return list;
+  return ulEle;
 }
 function dumpBookmarks(query) {
   chrome.bookmarks.getTree(function(bookmarkTreeNodes) {
@@ -80,14 +76,7 @@ function dumpBookmarks(query) {
         bmFolds.push(item);
       }
     });
-    // for back
-    // const bms = dumpTreeNodes(newChilds, query);
-    // $('#bookmarks').prepend(bms);
-    // // https://api.jqueryui.com/menu/
-    // bms.menu({
-    //   // position: { my: "left top", at: "right-5 top+5" }
-    // });
-    $('#bookmarks').html(`
+    document.querySelector('#bookmarks').innerHTML = (`
       <div class="left">
         <div class="other">
           <a data-href="chrome://extensions/">扩展</a>
@@ -95,11 +84,12 @@ function dumpBookmarks(query) {
         </div>
       </div>
       <div class="right"></div>
-    `).click(async (e) => {
+    `)
+    document.querySelector('#bookmarks .left').append(dumpTreeNodes(bmLinks, query));
+    document.querySelector('#bookmarks .right').prepend(dumpTreeNodes(bmFolds, query));
+    document.querySelector('#bookmarks').addEventListener('click', async (e) => {
       const [curTab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
       // chrome.tabs.create({ index: curTab.index + 1, url: e.target.href });
-      // alert(`curTab: ${curTab.index}, ${curTab.url}`);
-      console.log('ttt', curTab, e.target, e.target.getAttribute('data-href'));
       // return;
       e.preventDefault();
       const targetUrl = e.target.getAttribute('data-href') || e.target.href;
@@ -107,14 +97,55 @@ function dumpBookmarks(query) {
         curTab.index === 0 ? chrome.tabs.create({ index: curTab.index + 1, url: targetUrl }) : chrome.tabs.update({ url: targetUrl });
       }
     });
-    $('#bookmarks .left').append(dumpTreeNodes(bmLinks, query));
-    $('#bookmarks .right').prepend(dumpTreeNodes(bmFolds, query).menu());
+    document.querySelector('#bookmarks .right li').addEventListener('mouseover', (evt) => {
+      const targetLi = evt.currentTarget;
+      const submenu = targetLi.querySelector('ul');
+      submenu.style.left = `-${Math.round(targetLi.offsetWidth * 1.3)}px`;
+      submenu.style.top = '0px';
+    })
   });
 }
 
 dumpBookmarks();
 
 
+// https://stackoverflow.com/a/58965134/2190503
+// https://stackoverflow.com/a/33523184/2190503
+function resizer() {
+  var resizer = document.querySelector('#resizerX');
+  var sideIframe = document.getElementById('sideIframe');
+  const mousemove = (evt) => {
+    // return;
+    sideIframe.style.width = `${evt.pageX}px`;
+  };
+
+  resizer.onmousedown = function () {
+    document.documentElement.addEventListener('mousemove', doDrag, false);
+    document.documentElement.addEventListener('mouseup', stopDrag, false);
+  }
+  const doDrag = function (evt) {
+    if (evt.which != 1) {
+      console.log("mouseup");
+      stopDrag(evt);
+      return;
+    }
+    // 解决内部有 iframe 时 拖动卡顿 问题
+    document.querySelectorAll('iframe').forEach(item => {
+      item.style.pointerEvents = 'none';
+    });
+    mousemove(evt);
+  }
+  const stopDrag = async function (evt) {
+    // console.log("stopDrag(evt)");
+    document.documentElement.removeEventListener('mousemove', doDrag, false);
+    document.documentElement.removeEventListener('mouseup', stopDrag, false);
+    document.querySelectorAll('iframe').forEach(item => {
+      item.style.pointerEvents = 'auto';
+    });
+    const saveWidth = `${sideIframe.offsetWidth / (window.innerWidth - 12) * 100}%`;
+    await hl_extension_util.setStorage({ hl_sideWidth: saveWidth });
+  }
+}
 
 const getSetStorage = {
   getInjectSites: async () => {
@@ -134,11 +165,11 @@ const createIfr = (src, min) => `
 </div>
 `;
 
-console.log('new tab page', chrome);
+// console.log('new tab page', chrome);
 
-$(async function () {
+async function init () {
   const _injectSites = await getSetStorage.getInjectSites();
-  const sideIfrUrl = Object.keys(_injectSites).find(url => _injectSites[url].sideOfPage);
+  const sideIframeUrl = Object.keys(_injectSites).find(url => _injectSites[url].sideOfPage);
 
   const [curTab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
 
@@ -163,59 +194,91 @@ $(async function () {
     // console.log('injectionResults', injectionResults);
   });
 
-  if (sideIfrUrl) {
-    $('#sideIframe').find('iframe').attr('src', sideIfrUrl);
-    $('#sideIframe').find('a').attr('href', sideIfrUrl).html(sideIfrUrl);
+  const sideIframe = document.querySelector('#sideIframe');
+  if (sideIframeUrl) {
+    sideIframe.querySelector('iframe').setAttribute('src', sideIframeUrl);
+    sideIframe.querySelector('a').setAttribute('href', sideIframeUrl);
+    sideIframe.querySelector('a').innerHTML = sideIframeUrl;
   }
 
+  resizer()
+
+  const { hl_sideWidth } = await hl_extension_util.getStorage();
+  sideIframe.style.width = hl_sideWidth ?? '40%';
+
+  const eTabContent = document.querySelector('#eTabContent');
   Object.entries(_injectSites).filter(([key, val]) => val.tabIdx).forEach(([url, urlProps]) => {
     const { tabIdx, tabName, tabLiStyle, min } = urlProps;
     const tArr = tabIdx.split('.');
     // 构造 bootstrap 需要的 tabs html 基本结构
-    if (!$('#eTabs').find(`[data-idx="${tArr[0]}"]`).length) {
-      $('#eTabs').append(`<li role="presentation" data-idx="${tArr[0]}" style="${tabLiStyle}">
+    const eTabs = document.querySelector('#eTabs');
+    if (!eTabs.querySelector(`[data-idx="${tArr[0]}"]`)) {
+      eTabs.insertAdjacentHTML('beforeend', `<li role="presentation" data-idx="${tArr[0]}" style="${tabLiStyle}">
       <a href="#tabContent${tArr[0]}" data-toggle="tab">${tabName || '-'}</a>
       </li>`);
     }
-    if (!$('#eTabContent').find(`#tabContent${tArr[0]}`).length) {
-      $('#eTabContent').append(`<div class="tab-pane" id="tabContent${tArr[0]}" role="tabpanel"></div>`);
+    if (!eTabContent.querySelector(`#tabContent${tArr[0]}`)) {
+      eTabContent.insertAdjacentHTML('beforeend', `<div class="tab-pane" id="tabContent${tArr[0]}" role="tabpanel"></div>`);
     }
+    const tab0 = document.querySelector(`#tabContent${tArr[0]}`)
     if (tArr.length === 1) {
-      $(`#tabContent${tArr[0]}`).append(createIfr(url, min));
+      tab0.insertAdjacentHTML('beforeend', createIfr(url, min));
     } else if (tArr.length === 2) {
-      $(`#tabContent${tArr[0]}`).append(`<div class="tp-row" data-idx="${tabIdx}">${createIfr(url, min)}</div>`);
+      tab0.insertAdjacentHTML('beforeend', `<div class="tp-row" data-idx="${tabIdx}">${createIfr(url, min)}</div>`);
     } else if (tArr.length === 3) {
-      const targetEle = () => $(`#tabContent${tArr[0]}`).find(`[data-idx="${tArr[0]}.${tArr[1]}"]`);
-      if (!targetEle().length) {
-        $(`#tabContent${tArr[0]}`).append(`<div class="tp-row" data-idx="${tArr[0]}.${tArr[1]}"></div>`);
+      const targetEle = () => tab0.querySelector(`[data-idx="${tArr[0]}.${tArr[1]}"]`);
+      if (!targetEle()) {
+        tab0.insertAdjacentHTML('beforeend', `<div class="tp-row" data-idx="${tArr[0]}.${tArr[1]}"></div>`);
       }
-      targetEle().append(createIfr(url, min));
+      targetEle().insertAdjacentHTML('beforeend', createIfr(url, min));
     }
   });
 
   const { hl_tabIndex } = await hl_extension_util.getStorage();
-  $('#eTabs li').click(async e => {
-    const ele = $(e.currentTarget);
-    ele.find('a').tab('show');
-    const idx = ele.data('idx');
+  const lis = document.querySelectorAll('#eTabs li');
+  lis.forEach(item => item.addEventListener('click', async evt => {
+    const ele = evt.currentTarget;
+    const idx = ele.getAttribute('data-idx');
+    const tabContent = document.querySelector(`#tabContent${idx}`);
     await hl_extension_util.setStorage({ hl_tabIndex: idx });
-    const ifrs = $(`#tabContent${idx}`).find('iframe');
-    ifrs.attr('src', (ind, val) => val ? undefined : $(ifrs[ind]).attr('data-src'));
-  }).eq(parseInt(hl_tabIndex ?? 0)).trigger("click");
-
-  $('.iframe-wrap b').click(async e => {
-    const curUrl = $(e.target).siblings('a').attr('href');
-    const iframeWrap = $(e.target).parent('.iframe-wrap');
     const injectSites = await getSetStorage.getInjectSites();
-    const { scrollHeight, min } = injectSites[curUrl] || {};
-    if (!min) {
-      injectSites[curUrl].min = 1;
-      iframeWrap.addClass('min');
-    } else if (scrollHeight) {
-      injectSites[curUrl].min = 0;
-      iframeWrap.removeClass('min').height(scrollHeight);
-    }
-    await getSetStorage.setInjectSites(injectSites);
+    tabContent.querySelectorAll('iframe').forEach((item) => {
+      const curUrl = item.getAttribute('data-src');
+      if (!injectSites[curUrl].min) {
+        item.setAttribute('src', curUrl);
+      }
+    });
+    ele.parentNode.querySelectorAll('li').forEach((item, index) => {
+      item.classList.remove('active');
+      document.querySelector(`#tabContent${index}`).classList.remove('active');
+    });
+    ele.classList.add('active');
+    tabContent.classList.add('active');
+  }));
+  lis[parseInt(hl_tabIndex ?? 0)].dispatchEvent(new Event('click', { bubbles: true }));
+
+  document.querySelectorAll('.iframe-wrap b').forEach(item => {
+    item.addEventListener('click', async evt => {
+      const iframeWrap = evt.target.closest('.iframe-wrap');
+      // const curA = evt.target.closest('.iframe-wrap > a');
+      // const curA = evt.target.nextElementSibling;
+      const curA = iframeWrap.querySelector('a');
+      const curIframe = iframeWrap.querySelector('iframe');
+      const curUrl = curA.getAttribute('href');
+      const injectSites = await getSetStorage.getInjectSites();
+      const { scrollHeight } = injectSites[curUrl] || {};
+      injectSites[curUrl].min = !injectSites[curUrl]?.min;
+      if (injectSites[curUrl].min) {
+        iframeWrap.classList.add('min');
+      } else {
+        iframeWrap.classList.remove('min');
+        curIframe.setAttribute('src', curUrl);
+        if (scrollHeight) {
+          iframeWrap.style.height = scrollHeight;
+        }
+      }
+      await getSetStorage.setInjectSites(injectSites);
+    });
   });
 
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -224,10 +287,10 @@ $(async function () {
       void (async () => {
         const dUrl = decodeURIComponent(request._url);
         const injectSites = await getSetStorage.getInjectSites();
-        const tabIdx = injectSites[dUrl].tabIdx.split('.')[0];
+        const tabIdx = injectSites[dUrl].tabIdx?.split('.')[0];
         // 不改变第一个 tab 的名字
         if (Number(tabIdx) > 0 && request.title) {
-          $('#eTabs li').eq(tabIdx).find('a').html(request.title);
+          lis[Number(tabIdx)].querySelector('a').innerHTML = request.title;
           injectSites[dUrl].tabName = request.title;
         }
         if (request.scrollHeight != null) {
@@ -238,10 +301,10 @@ $(async function () {
         }
         await getSetStorage.setInjectSites(injectSites);
 
-        const iframeTitleEle = $('#eTabContent').find(`[href="${dUrl}"]`);
+        const iframeTitleEle = eTabContent.querySelector(`[href="${dUrl}"]`);
         // 只给 工具tab 内的 iframe 设置高度
         if (tabIdx === '0' && request.scrollHeight != null && iframeTitleEle) {
-          iframeTitleEle.parent().height(request.scrollHeight);
+          iframeTitleEle.parentNode.style.height = request.scrollHeight;
         }
         // 没有 res 会报错吗 Unchecked runtime.lastError: The message port closed before a response was received.
         sendResponse({ success: true, data: injectSites });
@@ -249,54 +312,61 @@ $(async function () {
     }
     return true;
   });
-
-  $('#sideIframe').resizable({
-    handles: 'e',
-    containment: "parent",
-    start: function(event, ui) {
-      // 解决内部有 iframe 时 拖动卡顿 问题
-      $('iframe').css('pointer-events','none');
-    },
-    stop: async function(event, ui) {
-      $('iframe').css('pointer-events','auto');
-      const { width } = ui.size;
-      const saveWidth = `${width / (window.innerWidth - 12) * 100}%`;
-      await hl_extension_util.setStorage({ hl_sideWidth: saveWidth });
-    }
-  });
-
-  const { hl_sideWidth } = await hl_extension_util.getStorage();
-  $('#sideIframe').width(hl_sideWidth ?? '40%');
-});
+}
+init();
 
 
-
-$('#clipTxt').on('change', async (e) => {
-  await chrome.storage.local.set({ hl_clipTxt: e.target.value });
+const clipTxt = document.querySelector('#clipTxt');
+clipTxt.addEventListener('input', async (evt) => {
+  await chrome.storage.local.set({ hl_clipTxt: evt.target.value });
 });
 
 const manifest = chrome.runtime.getManifest()
 // console.log('getManifest', chrome.runtime.getManifest());
-$("#clipCmd").html('按 ' + manifest.commands.addNote.suggested_key + ' 粘贴剪贴板内容');
+document.querySelector("#clipCmd").innerHTML = ('按 ' + manifest.commands.addNote.suggested_key + ' 粘贴剪贴板内容');
 
 const setHtml = url => {
-  const iframeWrap = $('#translateModal').find('.iframe-wrap.google');
-  iframeWrap.find('iframe').attr('src', url);
-  iframeWrap.find('a').attr('href', url).html(url);
+  const iframeWrap = document.querySelector('#translateModal .iframe-wrap.google');
+  iframeWrap.querySelector('iframe').setAttribute('src', url);
+  iframeWrap.querySelector('a').setAttribute('href', url);
+  iframeWrap.querySelector('a').innerHTML = url;
 };
 setHtml('https://translate.google.com/?sl=zh-CN&tl=en&op=translate');
 
-$('body').dblclick(() => {
-  $("#translateModal").modal('toggle');
+const translateModal = document.querySelector('#translateModal')
+translateModal.addEventListener('click', (evt) => {
+  if (evt.target === evt.currentTarget) {
+    toggleModal(false);
+  }
 });
-$('#translateModal').on('hidden.bs.modal', function (e) {
-  setHtml('https://translate.google.com/?sl=zh-CN&tl=en&op=translate');
+let modalBackdrop;
+const toggleModal = (isOpen) => {
+  if (isOpen) {
+    modalBackdrop = document.createElement('div');
+    modalBackdrop.classList.add('modal-backdrop', 'fade', 'in');
+    translateModal.style = 'display: block;';
+    translateModal.classList.add('in');
+    document.body.classList.add('modal-open');
+    document.body.append(modalBackdrop);
+  } else {
+    translateModal.style = 'display: none;';
+    translateModal.classList.remove('in');
+    document.body.classList.remove('modal-open');
+    modalBackdrop?.remove();
+    setHtml('https://translate.google.com/?sl=zh-CN&tl=en&op=translate');
+  }
+};
+let toggleState = true;
+document.body.addEventListener('dblclick', () => {
+  toggleState = !toggleModal;
+  toggleModal(toggleModal);
+  // $("#translateModal").modal('toggle');
 });
 
 const showModal = (request, sender, sendResponse) => {
   // console.log('msg bg aa', request, sender, location.href);
   if (request._bg && request.openModal) {
-    $("#translateModal").modal('show');
+    toggleModal(true);
   }
   if (request._bg && request.newTranslateUrl) {
     // 来自 Google translate 消息
@@ -337,6 +407,6 @@ chrome.commands.onCommand.addListener(async (command) => {
     const newText = (localData.hl_clipTxt || '') + '\n' + clipText;
     // console.log('clip and new', clipText, newText);
     await chrome.storage.local.set({ hl_clipTxt: newText });
-    $('#clipTxt').val(newText);
+    clipTxt.value = newText;
   }
 });

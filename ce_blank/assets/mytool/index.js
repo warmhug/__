@@ -1,6 +1,3 @@
-function getRndInteger(min, max) {
-  return Math.floor(Math.random() * (max - min) ) + min;
-}
 // get local ip https://github.com/dlo83/local-ip-chrome-extension
 function getLocalIPs(callback) {
   var ips = [];
@@ -38,7 +35,7 @@ const getStorageNote = async (kv) => {
   return nt.hl_notesTxt;
 }
 
-$(async function () {
+async function initEditor() {
   // 压缩地址 https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js
   // api 地址 https://nhn.github.io/tui.editor/latest/  对原 js 有改动
   const el = document.querySelector('#tuiEditor');
@@ -73,83 +70,79 @@ $(async function () {
       window.top.location.href = evt?.target?.innerText;
     }
   });
-});
+}
+initEditor();
 
-$(function () {
-  const dbKey = 'ce_fileContent';
-  var resArray;
-  const getContents = async () => {
-    try {
-      // https://web.dev/file-system-access/  get set 方法来自 idb-keyval@5.0.2 操作 IndexedDB
-      const fileHandleOrUndefined = await get(dbKey);
-      if (fileHandleOrUndefined) {
-        return fileHandleOrUndefined;
-      }
-    } catch (error) { alert(error.name, error.message); }
+const dbKey = 'ce_fileContent';
+var resArray;
+const getContents = async () => {
+  try {
+    // https://web.dev/file-system-access/  get set 方法来自 idb-keyval@5.0.2 操作 IndexedDB
+    const fileHandleOrUndefined = await get(dbKey);
+    if (fileHandleOrUndefined) {
+      return fileHandleOrUndefined;
+    }
+  } catch (error) { alert(error.name, error.message); }
+}
+const loadNotes = async () => {
+  if (resArray?.length && window.confirm('使用 IndexedDB 里的内容？')) {
+    return;
   }
-  const loadNotes = async () => {
-    if (resArray?.length && window.confirm('使用 IndexedDB 里的内容？')) {
-      return;
-    }
-    const filesHandle = await window.showOpenFilePicker({
-      types: [{ description: 'Text Files', accept: { 'text/plain': ['.txt'] } }],
-      multiple: true
-    });
-    const fileContents = await Promise.all(filesHandle.map(async (fileHandle) => {
-      const file = await fileHandle.getFile();
-      const contents = await file.text();
-      // console.log('ccc', contents);
-      return contents;
-    }));
-    try {
-      await set(dbKey, fileContents.join());
-      alert('选择的内容写入 IndexedDB 成功');
-      // location.reload();
-    } catch (error) { alert(error.name, error.message); }
-  };
-
-  $('#notesLoad').click(loadNotes);
-
-  var notesTxtEle = $('#notesTxt');
-  getContents().then(res => {
-    if (res) {
-      resArray = res.split('\n').filter(item => item && item != '\r');
-      notesTxtEle.html(resArray[getRndInteger(2, resArray.length)]);
-    }
+  const filesHandle = await window.showOpenFilePicker({
+    types: [{ description: 'Text Files', accept: { 'text/plain': ['.txt'] } }],
+    multiple: true
   });
+  const fileContents = await Promise.all(filesHandle.map(async (fileHandle) => {
+    const file = await fileHandle.getFile();
+    const contents = await file.text();
+    // console.log('ccc', contents);
+    return contents;
+  }));
+  try {
+    await set(dbKey, fileContents.join());
+    alert('选择的内容写入 IndexedDB 成功');
+    // location.reload();
+  } catch (error) { alert(error.name, error.message); }
+};
 
-  $('#changeNote').click(function () {
-    const txt = resArray[getRndInteger(2, resArray.length)];
-    notesTxtEle.html(txt);
-  });
-  notesTxtEle.hide();
-  $('#notesImg').click(function () {
-    notesTxtEle.toggle();
-    $(this).toggleClass('small');
-  });
-
-  getLocalIPs(function (ips) {
-    localIP = 'http://' + ips[0] + '';
-    // console.log('localIp', localIP);
-    $('#ip').attr('href', localIP).html(localIP);
-  });
-
-  $('#syncInter').click((e) => {
-    chrome.tabs.create({url: e.target.href});
-  });
-
-  // console.log('ll', location.pathname, window.parent.document);
-  // chrome-extension 协议的链接，不能插入 content_scripts 可以直接调用 chrome api
-  // chrome-extension://kafpfdegkmheageeldelgnnkegpkbpca/assets/mytool/index.html
-  chrome?.runtime?.sendMessage({
-    _ext: true,
-    _url: location.href,
-    scrollHeight: document.body.scrollHeight,
-  }, (response) => {});
-  // window.postMessage(JSON.stringify({
-  //   _ext: true,
-  //   _url: location.href,
-  //   scrollHeight: document.body.scrollHeight,
-  // }), '*');
-
+var notesTxtEle = document.querySelector('#notesTxt');
+const renderNotes = () => {
+  const getRndInteger = (min, max) => Math.floor(Math.random() * (max - min) ) + min;
+  const randomIndex = getRndInteger(2, resArray.length - 1);
+  notesTxtEle.innerHTML = `${resArray[randomIndex]}<br>${resArray[randomIndex + 1]}`;
+};
+document.querySelector('#notesLoad').addEventListener('click', loadNotes);
+document.querySelector('#changeNote').addEventListener('click', renderNotes);
+getContents().then(res => {
+  if (res) {
+    resArray = res.split('\n').filter(item => item && item != '\r');
+    renderNotes()
+  }
 });
+
+
+getLocalIPs(function (ips) {
+  localIP = 'http://' + ips[0] + '';
+  // console.log('localIp', localIP);
+  const ipEle = document.querySelector('#ip');
+  ipEle.setAttribute('href', localIP);
+  ipEle.innerHTML = localIP;
+});
+
+document.querySelector('#syncInter').addEventListener('click', (e) => {
+  chrome.tabs.create({url: e.target.href});
+});
+
+// console.log('ll', location.pathname, window.parent.document);
+// chrome-extension 协议的链接，不能插入 content_scripts 可以直接调用 chrome api
+// chrome-extension://kafpfdegkmheageeldelgnnkegpkbpca/assets/mytool/index.html
+chrome?.runtime?.sendMessage({
+  _ext: true,
+  _url: location.href,
+  scrollHeight: document.body.scrollHeight,
+}, (response) => {});
+// window.postMessage(JSON.stringify({
+//   _ext: true,
+//   _url: location.href,
+//   scrollHeight: document.body.scrollHeight,
+// }), '*');
