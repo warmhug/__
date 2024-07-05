@@ -1,0 +1,13 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node ./server-my.js"
+  },
+  "dependencies": {
+    "fs-extra": "^0.30.0",
+    "node-static": "~0.7.9",
+    "probe-image-size": "~2.1.1",
+    "through2": "^2.0.3"
+  }
+}

@@ -121,3 +121,17 @@ chrome.tabs.onCreated.addListener(async (tabInfo) => {
     await chrome.tabs.move(tabInfo.id, { index: curTab.index + 1 });
   }
 });
+
+let destroyCurTab;
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  // if (message.destroy !== undefined) {
+  //   destroyCurTab = message;
+  //   sendResponse(message);
+  // }
+});
+chrome.tabs.onActivated.addListener((activeInfo) => {
+  // console.log('onactive', activeInfo.tabId, destroyCurTab);
+  // if (destroyCurTab.destroy) {
+  //   chrome.tabs.discard(destroyCurTab.curTabId);
+  // }
+});

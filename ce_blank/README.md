@@ -14,6 +14,8 @@
 
 ## 记录
 
+[消息通信](https://developer.chrome.com/docs/extensions/develop/concepts/messaging?hl=zh-cn)
+
 在 background.js 用 `chrome.runtime.sendMessage` 发消息、所有页面里的 content_scripts 都收不到，改为 `chrome.tabs.sendMessage` 发送、比如 `https://www.xxx` 外部正常域名的页面“可以收到”、但位于插件内部的页面比如 `chrome-extension://extension-id/xx.html` 收不到。
 位于插件内部的页面的 js 文件里，可以直接调用 `chrome.action/storage/commands/..` 等 chrome api，如果插件内部的页面处于打开运行状态、其上注册的 chrome 扩展功能 就能运行，如果关掉页面、扩展功能将不能运行。
 
@@ -31,15 +33,18 @@ rules.json 里的 modifyHeaders 修改 responseHeaders 会生效，但是不显�
 
 ### 2024-06 Native messaging
 
-先 `chmod a+x nm_sh/nm_python` 再放到 `~/Applications` 目录里。
-json 配置文件放到 `~/Library/Application Support/Google/Chrome/NativeMessagingHosts` 里。
+运行 `./assets/nm_install_host.sh` 一键安装
+
+https://github.com/GoogleChrome/chrome-extensions-samples/tree/main/api-samples/nativeMessaging
+只使用shell https://stackoverflow.com/a/24777120/2190503
 
 Google 搜索 chrome extension native message nodejs
 https://developer.chrome.com/docs/extensions/develop/concepts/native-messaging?hl=zh-cn
 https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging
-https://github.com/GoogleChrome/chrome-extensions-samples/tree/main/api-samples/nativeMessaging
 
-https://stackoverflow.com/questions/22222624/how-can-we-execute-a-shell-command-from-a-chrome-extension-is-there-a-provided
+参考
+https://github.com/guest271314/NativeMessagingHosts
+https://github.com/simov/native-messaging
 
 
 ### 2022-09-17
@@ -134,11 +139,6 @@ const res = await chrome.declarativeNetRequest.updateDynamicRules({
   ]
 });
 console.log('dnres', res);
-
-
-chrome.topSites.get(data => {
-  console.log('topSites', data);
-});
 
 chrome.tabs.onActivated.addListener(moveToFirstPosition);
 async function moveToFirstPosition(activeInfo) {

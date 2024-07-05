@@ -403,7 +403,6 @@ fetch('./users', {
     console.log('request failed', error)
   });
 
-
 function ajax(url, success, fail) {
   var xhr = new XMLHttpRequest();
   xhr.onload = function() {
@@ -417,7 +416,37 @@ function ajax(url, success, fail) {
   xhr.send();
 }
 
-const uploadImage = async (imgSrc) => {
+function ajaxUploadWithProgress(url, options) {
+  const { method, headers, credentials, body } = options;
+  return new Promise((resolve, reject) => {
+    const result = {};
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = credentials;
+    Object.keys(headers).forEach(item => {
+      xhr.setRequestHeader(item, headers[item]);
+    });
+    xhr.upload.onprogress = function(event) {
+      console.log(`Uploaded ${event.loaded} of ${event.total} bytes`);
+    };
+    xhr.upload.onload = function() {
+      console.log(`Upload finished successfully.`);
+    };
+    xhr.upload.onerror = function() {
+      console.log(`Error during the upload: ${xhr.status}`);
+    };
+    xhr.onloadend = function() {
+      console.log(`Error during the upload: ${xhr.status}`);
+    };
+    xhr.onload = function() {
+      // success: xhr.status >= 200 && xhr.status < 400
+      resolve(xhr);
+    };
+    xhr.open(method, url, true);
+    xhr.send(body);
+  });
+}
+
+const loadImage = async (imgSrc) => {
   const imgObj = await new Promise((resolve) => {
     const image = document.createElement('img');
     image.onload = () => {
@@ -426,6 +455,19 @@ const uploadImage = async (imgSrc) => {
     image.src = imgSrc;
   });
   console.log('img', imgObj);
+}
+
+// base64 图片自动下载
+// https://stackoverflow.com/questions/14011021/how-to-download-a-base64-encoded-image
+function downloadBase64File(base64String, fileName) {
+  // const linkSource = `data:${contentType};base64,${base64Data}`;
+  const now = new Date();
+  const formatNow = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}_${now.getHours()}-${now.getMinutes()}`;
+
+  const downloadLink = document.createElement("a");
+  downloadLink.href = base64String;
+  downloadLink.download = fileName || formatNow + '.jpeg';
+  downloadLink.click();
 }
 
 // 读取 json 文件内容
@@ -694,7 +736,19 @@ var genArr = Array(10).fill(0).map((e, i) => i + 1);
 
 // ====== 基本数据类型、对象、函数、原型、正则
 
-
+// switch 取巧写法
+switch (true) {
+  case location.hostname == "www.amazon.com" && !true:
+  case location.hostname == "www.reddit.com":
+  case /hbogo\./.test(location.hostname):
+    console.log('do sth');
+    break;
+  case location.hostname == "www.facebook.com":
+    console.log('do sth');
+    break;
+  default:
+    console.log('do sth default');
+}
 
 // 中间变量 值交换 https://juejin.cn/post/6844903492608327688
 var a = 1, b = 2;
@@ -1241,6 +1295,7 @@ console.log(s.len); // 查找其len属性，返回 undefined
 
 /*
   正则
+  https://regex101.com/
 */
 var urlStr = 'https://cn.bing.com:8999/search/1?query=java+regex&a=b';
 // 匹配问号前

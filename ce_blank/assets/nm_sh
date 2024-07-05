@@ -1,6 +1,85 @@
-#!/bin/sh
+#!/bin/bash
 
-# 自动打开
-# networksetup -setproxyautodiscovery Wi-Fi on
-# 打开设置
-open "x-apple.systempreferences:com.apple.Network-Settings.extension?Proxies"
+hl_input=""
+
+setProxy() {
+  if [[ "$1" == "clash" ]]; then
+  echo "clash proxy"
+  networksetup -setproxyautodiscovery Wi-Fi off
+  networksetup -setwebproxy Wi-Fi 127.0.0.1 7890
+  networksetup -setsecurewebproxy Wi-Fi 127.0.0.1 7890
+  networksetup -setsocksfirewallproxy Wi-Fi 127.0.0.1 7890
+  networksetup -setproxybypassdomains Wi-Fi 127.0.0.1,localhost
+  networksetup -setwebproxystate Wi-Fi on
+  networksetup -setsecurewebproxystate Wi-Fi on
+  networksetup -setsocksfirewallproxystate Wi-Fi on
+  elif [[ "$1" == "temu" ]]; then
+  echo "temu proxy"
+  networksetup -setproxyautodiscovery Wi-Fi on
+  networksetup -setwebproxystate Wi-Fi off
+  networksetup -setsecurewebproxystate Wi-Fi off
+  networksetup -setsocksfirewallproxystate Wi-Fi off
+  elif [[ "$1" == "whistle" ]]; then
+  echo "whistle proxy"
+  # w2 proxy
+  # sleep 5
+  networksetup -setproxyautodiscovery Wi-Fi off
+  networksetup -setwebproxy Wi-Fi 127.0.0.1 8899
+  networksetup -setsecurewebproxy Wi-Fi 127.0.0.1 8899
+  networksetup -setwebproxystate Wi-Fi on
+  networksetup -setsecurewebproxystate Wi-Fi on
+  networksetup -setproxybypassdomains Wi-Fi Empty
+  elif [[ "$1" == "no" ]]; then
+  networksetup -setproxyautodiscovery Wi-Fi off
+  networksetup -setwebproxystate Wi-Fi off
+  networksetup -setsecurewebproxystate Wi-Fi off
+  networksetup -setsocksfirewallproxystate Wi-Fi off
+  else
+  echo "open proxy config"
+  open "x-apple.systempreferences:com.apple.Network-Settings.extension?Proxies"
+  # open "http://www.baidu.com?$1,$2"
+  fi
+}
+
+# 来自 https://stackoverflow.com/a/24777120/2190503
+# Loop forever, to deal with chrome.runtime.connectNative
+while IFS= read -r -n1 c; do
+    # Read the first message
+    # Assuming that the message ALWAYS ends with a },
+    # with no }s in the string. Adopt this piece of code if needed.
+    hl_input="$hl_input$c"
+    if [ "$c" != '}' ] ; then
+        continue
+    fi
+
+    message='{"message": "OK"}'
+    # message=$hl_input
+    # echo $message >> log.txt
+
+    # 提取出 message 的值
+    hl_input=${hl_input#*'{"message":"'}
+    hl_input=${hl_input%'"}'}
+    echo $hl_input >> log.txt
+    setProxy $hl_input
+
+    # Calculate the byte size of the string.
+    # NOTE: This assumes that byte length is identical to the string length!
+    # Do not use multibyte (unicode) characters, escape them instead, e.g.
+    # message='"Some unicode character:\u1234"'
+    messagelen=${#message}
+
+    # Convert to an integer in native byte order.
+    # If you see an error message in Chrome's stdout with
+    # "Native Messaging host tried sending a message that is ... bytes long.",
+    # then just swap the order, i.e. messagelen1 <-> messagelen4 and
+    # messagelen2 <-> messagelen3
+    messagelen1=$(( ($messagelen      ) & 0xFF ))
+    messagelen2=$(( ($messagelen >>  8) & 0xFF ))
+    messagelen3=$(( ($messagelen >> 16) & 0xFF ))
+    messagelen4=$(( ($messagelen >> 24) & 0xFF ))
+
+    # Print the message byte length followed by the actual message.
+    printf "$(printf '\\x%x\\x%x\\x%x\\x%x' \
+        $messagelen1 $messagelen2 $messagelen3 $messagelen4)%s" "$message"
+
+done

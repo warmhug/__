@@ -48,7 +48,7 @@ async function initEditor() {
     linkAttributes: {
       target: '_blank',
     },
-    toolbarItems: [['italic', 'strike', 'hr', 'ol'], ['table', 'image', 'link']],
+    toolbarItems: [['italic', 'strike', 'hr', 'ul', 'ol'], ['table', 'image', 'link']],
     initialValue: '',
     events: {
       // change keyup 区别

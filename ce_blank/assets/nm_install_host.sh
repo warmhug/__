@@ -9,29 +9,29 @@ DIR="$( cd "$( dirname "$0" )" && pwd )"
 if [ $(uname -s) == 'Darwin' ]; then
   if [ "$(whoami)" == "root" ]; then
     # Due to macOS permission changes we need to put the host in /Applications
-    HOST_PATH="/Applications/nm_nodejs.mjs"
-    cp "$DIR/nm_nodejs.mjs" $HOST_PATH
+    HOST_PATH="/Applications/nm_sh"
+    cp "$DIR/nm_sh" $HOST_PATH
 
     TARGET_DIR="/Library/Google/Chrome/NativeMessagingHosts"
-    chmod a+x "$DIR/nm_nodejs.mjs"
   else
     # Due to macOS permission changes we need to put the host in ~/Applications
-    HOST_PATH="/Users/$USER/Applications/nm_nodejs.mjs"
-    cp "$DIR/nm_nodejs.mjs" $HOST_PATH
+    HOST_PATH="/Users/$USER/Applications/nm_sh"
+    cp "$DIR/nm_sh" $HOST_PATH
 
     TARGET_DIR="$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts"
   fi
 else
-  HOST_PATH="$DIR/nm_nodejs.mjs"
+  HOST_PATH="$DIR/nm_sh"
   if [ "$(whoami)" == "root" ]; then
     TARGET_DIR="/etc/opt/chrome/native-messaging-hosts"
-    chmod a+x "$DIR/nm_nodejs.mjs"
   else
     TARGET_DIR="$HOME/.config/google-chrome/NativeMessagingHosts"
   fi
 fi
 
-HOST_NAME=nm_nodejs
+chmod a+x "$DIR/nm_sh"
+
+HOST_NAME=nm_sh
 
 # Create directory to store native messaging host.
 mkdir -p "$TARGET_DIR"

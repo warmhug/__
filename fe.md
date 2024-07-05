@@ -1,12 +1,70 @@
 # fe suffer
 
 
-## 2024
-
-https://developer.sketch.com/plugins/debugging
+## 2024-07 组件 pro-components
 
 
-### 2024-06 WebGL 图像查看器
+[father 2.x](https://github.com/umijs/father/tree/v2.9.0) 基于 [rollupjs](https://rollupjs.org/) 构建，采用 babel插件 编译 js/ts、采用 [rollup-plugin-postcss](https://github.com/egoist/rollup-plugin-postcss) 编译 less/css (不支持less配置项)。利用 [docz](https://www.docz.site/) 生成网站。
+
+- [postcss](https://github.com/postcss/postcss): 处在 css 预处理器 less scss 等流程之后，解析 css 为 ast，并有 Autoprefixer 等知名插件。
+
+[rollup，vite以及webpack比较与介绍](https://juejin.cn/post/7097493230572273700)
+- rollup 与 webpack 都是基于JavaScript依赖系统的一个打包构建工具，他们的共同点很多。 Rollup 默认打包为 ES6 格式、依靠插件生成 CommonJS 和 AMD 代码，静态分析代码中的 import 并排除任何未实际使用的代码。 Rollup 构建速度明显快于 webpack，生成的代码量很小。
+- 不过在应用开发层面讲，如果开发一个Web应用webpack要比rollup有更大的优势，因为其天然继承了devServer以及hmr，这使得开发者可以快速的对应用进行调试开发。 Rollup 更加适合插件开发，而webpack更加适合应用开发。
+- vite 号称是下一代的打包构建工具，主要体现在他从开发环境到生产环境的构建速度都能比webpack提升很多倍，原因就在于基于 rollup 和 esbuild 两个基础构建工具上。利用浏览器对ESM模块的支持，通过babel解决兼容性。将应用中的模块区分为 依赖 和 源码 两类，Vite使用esbuild预构建依赖、构建速度快 10-100 倍。在浏览器请求源码时、根据 router 按需以 原生 ESM方式提供 源码。利用 HTTP 头来加速整个页面的重新加载，源码模块的请求会根据 304 Not Modified 进行协商缓存，而依赖模块请求则会通过 Cache-Control: max-age=31536000,immutable 进行强缓存，因此一旦被缓存它们将不需要再次请求。
+- esbuild 使用 go 编写，发挥多线程多核优势，不使用 AST。所以一些通过 AST 处理代码的 babel插件没有很好的方法过渡到 esbuild 中。
+
+
+## 2024-06 pintu
+
+体验问题: avi 对图的大小限制、下载大图时进度提示、重复点击和并发问题、下载低质量(宽高和分辨率不变)图片。
+
+设计稿 设计倍率:
+[摹客](https://help.mockplus.cn/p/504) 插件，可以自动匹配特定的尺寸为 2x 倍率、其他尺寸为 1x 倍率，可以手动修改指定。[摹客demo](https://app.mockplus.cn/app/z1pw7JNhn/develop/design/mmHsUz9q0)
+蓝湖 待调研。
+
+相关:
+- [蓝湖](https://lanhuapp.com/)、[摹客](https://www.mockplus.cn/)、[moonvy](https://moonvy.com/)
+- [缩小png](https://tinypng.com/) [changeDPI](https://github.com/shutterstock/changeDPI)
+
+### sketch 插件
+
+https://developer.sketch.com/plugins
+[Sketch 插件开发实践](https://segmentfault.com/a/1190000020920371)
+
+Sketch 和 Figma 插件都不支持 XMLHttpRequest 导致上传图片时 无法监听上传进度
+fetch 只能监听下载进度 https://juejin.cn/post/7253969759191023675
+https://forum.figma.com/t/cannot-make-a-post-request-in-figma-plugin/25039
+
+[skpm](https://github.com/skpm/skpm) 通过 polyfill 方式支持 fetch FormData 如下代码
+https://github.com/skpm/skpm/blob/master/packages/builder/src/utils/webpackConfig.js
+```js
+new webpack.ProvidePlugin({
+   fetch: require.resolve('sketch-polyfill-fetch'),
+   FormData: require.resolve('sketch-polyfill-fetch/lib/form-data'),
+   Promise: require.resolve('@skpm/promise'),
+}),
+```
+
+浏览器/node等环境的 宿主 判断如下，但 sketch 插件的宿主跟这些都不同
+```js
+// https://github.com/ladjs/superagent/blob/master/src/client.js
+let root;
+if (typeof window !== 'undefined') {
+  // Browser window
+  root = window;
+} else if (typeof self === 'undefined') {
+  // Other environments
+  console.warn('Using browser-only version of superagent in non-browser environment');
+  root = this;
+} else {
+  // Web Worker
+  root = self;
+}
+```
+
+
+## 2024-06 pintu WebGL 图像查看器
 
 能支持超大图 不卡顿。 https://www.photopea.com/ (Facebook [私信](https://www.facebook.com/photopea))
 
@@ -29,6 +87,8 @@ canvas 模糊问题：
 - 如果电脑只有一个显卡，比如 mac mini（m系列芯片）、Windows台式机、部分低配笔记本电脑，需要在 Chrome 浏览器设置里开启“图形加速”功能。
 - Chrome 图形加速开启方法：手动打开“设置-系统”、或在浏览器地址栏输入`chrome://settings/system`，勾选“使用图形加速功能”，重启浏览器。
 - Intel 电脑一般都有双显卡。
+- 外接显示器没有GPU。因此，图形渲染由主 CPU 完成。
+- 开启图形加速，可能使 Chrome cpu 占用一直高于 100%、风扇噪音大。
 
 参考
 - https://webglfundamentals.org/webgl/lessons/webgl-image-processing.html
@@ -52,15 +112,7 @@ canvas 模糊问题：
 不是 webgl 实现的 https://github.com/konvajs/konva
 
 
-### 2024-05
-vscode 里 eslint 报错、找不到报错原因，使用 cmd+shift+p 输入 reload window 重启 vscode 即可。
-
-lint 配置: vscode Multi-root Workspaces 时 eslint 插件会报错，在工作区(不是用户)设置文件 .vscode/settings.json 里加入：`"eslint.workingDirectories": [{"mode": "auto"}]`
-
-
-## 2022~2023
-
-### 2023
+## 2023
 
 代码写的要优美(卷)：分块用class类、赋值用lodash set。
 
@@ -69,37 +121,17 @@ lint 配置: vscode Multi-root Workspaces 时 eslint 插件会报错，在工作
 代码以前正常、现在不正常，如果前端没有改动，那就是后端数据变更导致。比如 布尔 判断这种情况、前端这么写：
 `obj.id ? update() : create()`; 后端的 id 数据变更后存在 number 0 时，前端代码逻辑即出错。这就是 js 的弱类型导致的问题。
 
-! 是 typescript 非空断言符，解决 ts 类型空提示问题。
-
-void promise 函数返回值类型 `() => Promise<void>`。
-
 tailwindcss 的 text-danger 等 className 使用。
 
-### 2023-03
 
-ts高级用法 Omit Pick
-```ts
-import { INameProps } from './Name';
-type IDashboardNameProps = {
-  className?: string;
-  style: React.CSSProperties;
-} & Pick<INameProps, 'id' | 'onSaved'>;
-```
-
-vscode 里某个 tsx 文件的 IntelliSense 报错 `which is not compatible with the one in 'tslib'`
-- 参考 [VSCode to use locally installed TypeScript](https://stackoverflow.com/questions/54810894/how-to-force-vscode-to-use-locally-installed-typescript)。 使用 `.vscode/settings.json` 本地文件配置 `"typescript.tsdk": "node_modules/typescript/lib"` （打开 vscode 设置，搜索 `tsdk` 参考）。 点击 vscode 底部状态栏右下角 `TypeScript JSX` 前的图标，找到 TypeScript Version 选择 Select Version 切换使用本地的 tsx 编译器。
-
-### 2022-04
+## 2022-01~04
 
 arm aem 对任何请求（包括图片）都做埋点，导致业务接口被阻塞，页面性能下降一倍。采用合并、延迟上报埋点方式，把所有打点请求都延迟推入单独的队列维护，当页面完全加载完成后再从队列中依次取出数据进行上报。下掉非必要埋点。
-
-### 2022-02
 
 - 一个组件里 点击触发请求、返回成功或失败，设置 isSuccess 的布尔值。另一个组件 需要监听 成功和重新点击 的状态，即 重新点击 isSuccess 不能为 true，但上次点击后 已经把它设置为了 true 怎么解决？
 - useEffect 里监听的 多个状态、互相有影响，怎么解决？分别写 useEffect。
 - antd 多层弹窗嵌套需要设置 [getPopupContainer](https://img.alicdn.com/imgextra/i3/O1CN01uK3oLs1dJyW9Y1sZJ_!!6000000003716-0-tps-1234-1166.jpg)
 
-### 2022-01
 react-big-calendar 日历组件支持自定义的 EventWrapper 子组件，业务场景中 EventWrapper 组件需要根据某个业务 prop 调用接口获取数据。但 EventWrapper 可能会被 react-big-calendar 加载卸载或重复渲染很多次(次数不可控)，而只用在“第一次加载或卸载再加载”时调用接口一次即可。此时 useEffect 的监听 该怎么写？
 
 ```js
@@ -113,7 +145,69 @@ useEffect(() => {
 }, []);
 ```
 
+
+## 2021-08 使用 remaxjs 开发小程序
+- 导入函数不能这样 import _ from 'lodash'; 而要这样 import groupBy from 'lodash/groupBy'; (踩坑0.5h+)，遇到这类错误无法定位、调试困难。
+- 样式：单位要 x2、box-sizing 要设置到相应位置，伪元素无法定位。
+- 元素：span 标签有嵌套时不起作用、样式不正确，i 标签等更多 html 标签不支持。
+- 组件：
+   - 功能不强：Picker 不支持两列，Tabs 功能和样式不好用，类似pc上 tooltip 的 Tips 组件位置难设置，有些组件 slot 必须要用 View 不灵活。
+   - 封装不完善，FlexItem 不支持设置 className、没有 Row Col 等便捷组件。
+- 图表组件 g2 不起作用，antd、react-dom 等引用内容要移除。
+- 迁移额外成本：很多地方都要修改，架构调整(找到pc各模块代码、删减/重新组织)。
+- 小程序：picker 和 optionsSelect 的使用场景区别？mobile table design patterns 用列表代替表格。
+
+
+## 2021 navigator.geolocation
+
+> gts周日报需求，需要定位功能。
+
+定位技术：GPS定位技术、基站定位技术、利用Wifi在小范围内定位。
+GPS定位搜索卫星初次定位时间过长而略显不便。另外，卫星信号覆盖不好时，比如室内，会导致无法定位。
+手机定位的原理 https://www.sohu.com/a/76257016_335896
+
+问题：
+2021-09 Chrome 浏览器在 4G 热点和家里 WiFi 环境下，不会执行 getCurrentPosition 公司 WiFi 可以。网络翻墙问题。
+如图 https://gw.alicdn.com/imgextra/i4/O1CN01c6wdMl1OuPlbjec3c_!!6000000001765-2-tps-1112-518.png
+最优方案、使用 高德或百度 封装的定位功能，避开 googleapis 被墙的问题。
+
+2012-01 三星gt-i9003(安卓2.3.5)、中兴ZTE-U880(安卓2.2.2) 浏览器不执行 getCurrentPosition 也没有是否允许定位的提示框弹出。
+
+```js
+if ("geolocation" in navigator) {
+navigator.geolocation.getCurrentPosition((position) => {
+   console.log('geolocation', position);
+},
+(error) => {
+   console.log('geolocation error', error);
+   if (error.PERMISSION_DENIED) {
+      console.log('未开启定位权限');
+   }
+   if (error.POSITION_UNAVAILABLE) {
+      // 在 Chrome 浏览器里，因为被墙、会返回 Network location provider at 'https://www.googleapis.com/ :ERR_TIMED_OUT.
+      console.log('至少有一个内部位置源返回一个内部错误');
+   }
+   if (error.TIMEOUT) {
+      console.log('超时');
+   }
+},
+{
+   timeout: 1000 * 15,
+   // enableHighAccuracy: true, // 设为 true 移动端通过 gps 定位、费电
+   // maximumAge: 1000 * 15, // 返回 15 秒内的 缓存位置，默认为 0
+}
+);
+} else {
+/* geolocation IS NOT available */
+}
+```
+
+
 ## 2020~2021
+
+- waterfall 瀑布流 内容顺序 难保证 https://segmentfault.com/q/1010000009117246/
+- flex 顺序正确的 布局 https://jessieji.com/2019/pure-css-masonry
+- 多列 https://segmentfault.com/a/1190000017866549
 
 框架的“双向绑定”意思是 view -> state -> view 变化的绑定，而不是 state1 <-> state2 变化的绑定、同样功能的 state 只用定义一个、有多个就会导致 state 变更检测的死循环。
 
@@ -167,18 +261,6 @@ dashboard 数据边界细节很多。
 - 如何请求多个数据源并渲染？如[图](https://img.alicdn.com/imgextra/i4/O1CN0150J8CS26jHFosJFF4_!!6000000007697-2-tps-476-266.png)
 
 
-## 2021-08 使用 remaxjs 开发小程序
-- 导入函数不能这样 import _ from 'lodash'; 而要这样 import groupBy from 'lodash/groupBy'; (踩坑0.5h+)，遇到这类错误无法定位、调试困难。
-- 样式：单位要 x2、box-sizing 要设置到相应位置，伪元素无法定位。
-- 元素：span 标签有嵌套时不起作用、样式不正确，i 标签等更多 html 标签不支持。
-- 组件：
-   - 功能不强：Picker 不支持两列，Tabs 功能和样式不好用，类似pc上 tooltip 的 Tips 组件位置难设置，有些组件 slot 必须要用 View 不灵活。
-   - 封装不完善，FlexItem 不支持设置 className、没有 Row Col 等便捷组件。
-- 图表组件 g2 不起作用，antd、react-dom 等引用内容要移除。
-- 迁移额外成本：很多地方都要修改，架构调整(找到pc各模块代码、删减/重新组织)。
-- 小程序：picker 和 optionsSelect 的使用场景区别？mobile table design patterns 用列表代替表格。
-
-
 ## 2019-02 大安全移动业务开发
 - 熄屏时 JS 倒计时变慢 
 - H5软键盘兼容方案 [https://segmentfault.com/a/1190000018959389](https://segmentfault.com/a/1190000018959389)
@@ -190,57 +272,6 @@ dashboard 数据边界细节很多。
 - Android 4 白屏: `Set``Promise``Symbol` 未定义错误
 - iOS webview 里 https 页面引入 http 的 js/css 不能加载？需要统一使用 https 协议。
 - iOS 9 不支持 箭头函数
-
-
-## 2021 navigator.geolocation
-
-> gts周日报需求，需要定位功能。
-
-定位技术：GPS定位技术、基站定位技术、利用Wifi在小范围内定位。
-GPS定位搜索卫星初次定位时间过长而略显不便。另外，卫星信号覆盖不好时，比如室内，会导致无法定位。
-手机定位的原理 https://www.sohu.com/a/76257016_335896
-
-问题：
-2021-09 Chrome 浏览器在 4G 热点和家里 WiFi 环境下，不会执行 getCurrentPosition 公司 WiFi 可以。网络翻墙问题。
-如图 https://gw.alicdn.com/imgextra/i4/O1CN01c6wdMl1OuPlbjec3c_!!6000000001765-2-tps-1112-518.png
-最优方案、使用 高德或百度 封装的定位功能，避开 googleapis 被墙的问题。
-
-2012-01 三星gt-i9003(安卓2.3.5)、中兴ZTE-U880(安卓2.2.2) 浏览器不执行 getCurrentPosition 也没有是否允许定位的提示框弹出。
-
-```js
-if ("geolocation" in navigator) {
-navigator.geolocation.getCurrentPosition((position) => {
-   console.log('geolocation', position);
-},
-(error) => {
-   console.log('geolocation error', error);
-   if (error.PERMISSION_DENIED) {
-      console.log('未开启定位权限');
-   }
-   if (error.POSITION_UNAVAILABLE) {
-      // 在 Chrome 浏览器里，因为被墙、会返回 Network location provider at 'https://www.googleapis.com/ :ERR_TIMED_OUT.
-      console.log('至少有一个内部位置源返回一个内部错误');
-   }
-   if (error.TIMEOUT) {
-      console.log('超时');
-   }
-},
-{
-   timeout: 1000 * 15,
-   // enableHighAccuracy: true, // 设为 true 移动端通过 gps 定位、费电
-   // maximumAge: 1000 * 15, // 返回 15 秒内的 缓存位置，默认为 0
-}
-);
-} else {
-/* geolocation IS NOT available */
-}
-```
-
-## 2020
-
-- waterfall 瀑布流 内容顺序 难保证 https://segmentfault.com/q/1010000009117246/
-- flex 顺序正确的 布局 https://jessieji.com/2019/pure-css-masonry
-- 多列 https://segmentfault.com/a/1190000017866549
 
 
 ## 2018-2019 G2/G6 问题

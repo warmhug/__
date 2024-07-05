@@ -42,6 +42,7 @@
   },
   "permissions": [
     "activeTab",
+    "alarms",
     "bookmarks",
     "cookies",
     "clipboard",
@@ -53,7 +54,10 @@
     "history",
     "management",
     "nativeMessaging",
+    "notifications",
     "power",
+    "processes",
+    "proxy",
     "scripting",
     "storage",
     "tabs",

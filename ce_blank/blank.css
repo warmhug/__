@@ -336,3 +336,12 @@ a {
 #bookmarks .right > ul li:hover > ul {
   display: block;
 }
+
+#topSites {
+  display: flex;
+  background-color: #fff;
+  padding-bottom: 6px;
+}
+#topSites a {
+  margin-left: 15px;
+}

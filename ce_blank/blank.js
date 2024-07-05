@@ -108,6 +108,13 @@ function dumpBookmarks(query) {
 
 dumpBookmarks();
 
+chrome.topSites.get(data => {
+  console.log('topSites', data);
+  document.querySelector('#topSites').innerHTML = data.map(item => (
+    `<a title="${item.title}" href="${item.url}">${new URL(item.url).host}</a>`
+  )).join('');
+});
+
 
 // https://stackoverflow.com/a/58965134/2190503
 // https://stackoverflow.com/a/33523184/2190503

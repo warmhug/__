@@ -1,21 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
-  <title>hl extension popup</title>
-  <style>
-    body {
-      width: 400px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>hl extension popup</title>
+<style>
+  body {
+    width: 400px;
+  }
+  #setProxy {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+  }
+  .process td {
+    padding: 1px 3px;
+    font-family: sans-serif;
+    font-size: 10pt;
+    margin-top: 1px;
+    white-space: nowrap;
+  }
+</style>
 </head>
 <body>
-<div id="cmds"></div>
-<div id="injectCode" style="margin: 10px 0;"></div>
-<button id="reloadPage" style="margin: 10px;">刷新页面(销毁再加载)</button>
-<button id="openProxy" style="margin-right: 10px;">proxy</button>
-<button id="openNativeApp" style="margin-right: 10px;">native</button>
+<div id="setProxy">
+  系统代理控制
+  <button style="margin: 0 10px;">no</button>
+  <button style="margin-right: 10px;">whistle</button>
+  <button style="margin-right: 10px;">clash</button>
+  <button style="margin-right: 10px;">temu</button>
+</div>
 <button id="resizeWindow">窗口尺寸</button>
+<button id="reloadPage" style="margin: 10px;">单击销毁/双击重新加载</button>
+<button id="snapshot">页面截图</button>
 <fieldset id="powerOps">
   <legend>电源模式: </legend>
   <input type="radio" id="radio-1" name="power" value="display">
@@ -25,6 +41,16 @@
   <input type="radio" id="radio-3" name="power" value="default">
   <label for="radio-3">操作系统默认</label>
 </fieldset>
+<div class="process" style="display: none;">
+  <div class="title"><b>Process Monitor</b></div>
+  <div id="process-list"><i>Loading...</i></div>
+  <div id="buttons">
+    <input type="button" value="End Process" id="killProcess" />
+  </div>
+</div>
+<div id="cmds" style="margin: 10px 0;"></div>
+<div id="injectCode" style="margin: 10px 0;"></div>
+
 <script src="./common.js"></script>
 <script src="./popup.js"></script>
 </body>

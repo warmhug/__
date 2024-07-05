@@ -1,0 +1,9 @@
+#!/bin/sh
+
+HOST_PATH="/Applications/aaa bb/dd/ee/nm_sh"
+ESCAPED_HOST_PATH=${HOST_PATH////\\/}
+echo $ESCAPED_HOST_PATH
+
+
+echo "First arg: $1"
+echo "Second arg: $2"
