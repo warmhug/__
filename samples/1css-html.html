@@ -1,128 +1,197 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>css html 基础</title>
-  <style>
-    form:invalid, input:invalid {
-      border: 1px dashed red;
-    }
-    input:invalid:required {
-      background-image: linear-gradient(to right, pink, lightgreen);
-    }
-    .error { display: none; }
-    #text:invalid + .error { display: block; }
-    #date::after {
-      content: 'text/number等input不支持伪元素';
-      display: block;
-      width: 50px;
-    }
-    input:valid {
-      border: 1px solid black;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>css html 基础</title>
+<style>
+  input::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+  }
+</style>
+<style>
+  form:invalid, input:invalid {
+    border: 1px dashed red;
+  }
+  input:invalid:required {
+    background-image: linear-gradient(to right, pink, lightgreen);
+  }
+  .error { display: none; }
+  #text:invalid + .error { display: block; }
+  #date::after {
+    content: 'text/number等input不支持伪元素';
+    display: block;
+    width: 50px;
+  }
+  input:valid {
+    border: 1px solid black;
+  }
+</style>
 </head>
 <body>
-
-  <div style="margin-bottom: 80px;">
-    <style>
-      /* https://www.w3school.com.cn/cssref/css_selectors.asp
-        :first-of-type 等同于 :nth-of-type(1) 从后往前选择用 xx-last-xx
-       */
-      .box .test:first-of-type { background:#ff0000; }
-    </style>
-    <div class="box">
-      <p>这是第1个段落。注释掉此行，选择器才会匹配！</p>
-      <p class='test'>这是第2个段落。 .test 明显是父元素.box内同类型标签元素P中的第二个元素,所以.test元素并没有被匹配标红！</p>
-      <div>这是第2个DIV。</div>
-      <p>这是第3个段落。</p>
-    </div>
+<div style="margin-bottom: 80px;">
+  html新特性
+  <video src="https://gw.alipayobjects.com/mdn/securityprod/afts/file/A*Sy4kQa3udAAAAAAAAAAAAABjAQAAAQ" controls></video>
+  <iframe width="200" src="https://www.youtube.com/embed/kLp_Hh6DKWc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <audio controls src="https://interactive-examples.mdn.mozilla.net/media/examples/t-rex-roar.mp3">
+    Your browser does not support the
+    <code>audio</code> element.
+  </audio>
+  <ol reversed>
+    <li>United Kingdom
+    <li>Switzerland
+    <li>United States
+    <li>Norway
+  </ol>
+  <div hidden id="test" style="width:100px; height:100px; border:1px solid #ccc">
+    hidden属性，用于隐藏和显示HTML元素。这与 CSS 中 display:none 属性的效果相同。HTML5标准鼓励使用 hidden 属性。 hidden 为对应的元素增加了额外的语义。设置这个属性表示元素目前不相关。例如，这可以被屏幕阅读器利用，否则它需要通过CSS的display属性来遍历整个页面。
   </div>
+  <clippy>clippy</clippy>
+  <std-toast>std-toast</std-toast>
+  <meter min="200" max="500"value="350">350 degrees</meter>.
+  <time datetime="2018-07-07T20:00:00">20:00</time>
+  <progress id="p" max=100><span>0</span>%</progress>
+  <!-- https://web.dev/native-lazy-loading -->
+  <img src="https://gw.alipayobjects.com/mdn/security_c/afts/img/A*aMagQrmTBfsAAAAAAAAAAABkARQnAQ" loading="lazy" width="200" alt="">
 
-  <div style="margin-bottom: 80px;">
-    <span style="display: block">
-      标签嵌套 演示：
-      <!-- <p><div>p 里 不可以 放 div，会导致下边元素解析都有出错！</div></p> -->
-      <p> span 里可以放 p / div </p>
-      <ul><li>span 里可以放 ul/li </li></ul>
-      <a href="#">span 里可以放 a 标签</a>
-      <div> <a href="#">span 里的 div 里可以放 a 标签</a> </div>
-      <span> <a href="#">span 里的 span 里可以放a标签</a> </span>
-    </span>
-  </div>
-
-  <div style="margin-bottom: 80px;">
-    <style>
-      .title { height: 30px; border: 1px solid red;}
-      .content { height: 100px; border: 1px solid blue; background-color: #ddd; }
-      .cm { margin-top: -20px; }
-    </style>
-    <h2>子元素的 margin-top 设置影响父元素位置</h2>
-    <div class="title">title</div>
-    <div class="content">
-      <div class="cm">
-        给父容器 .content 加上透明 border 或 padding 或 inline-block/float/absolute
-      </div>
-    </div>
-  </div>
-
-  <div style="margin-bottom: 80px; width: 200px; white-space: normal; word-break: break-all;">
-    longcharlongcharlongcharlongcharlongcharlongcharlongcharlongcharlongcharlongchar
-  </div>
-
-  <div style="margin-bottom: 80px;">
-    <style>
-      li { display: inline-block; font-size: 14px; }
-    </style>
-    <h2>设置字号 0 去掉 inline-block 末尾插入的空格</h2>
-    <ul style="font-size: 0;">
-      <li>UX Design</li>
-      <li>Front End</li>
-      <li>Photography</li>
-    </ul>
-  </div>
-
-  <a href="https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation">
-    原生 form 验证
-  </a>
-  <!-- onsubmit 的 return 不能少 -->
-  <form id="form" action="" onsubmit="return formCheck()">
-    文本 <input type="text" pattern="[A-Za-z]{3}" id="text" name="text" required />
-    <span class="error">格式不符合</span>
-    数字 <input type="number" name="number" min="0" step="0.01" value="1" id="num">
-    邮箱 <input type="email" name="email">
-    搜索 <input type="search" name="search" results="5" autosave="saved-searches">
-    <br />
-    type="range" <input type="range" id="range" name="range">
-    <output for="range" id="output"></output>
-    <br />
-    <input type="tel" name="tel">
-    <input type="url" name="url">
-    <input type="date" name="date" id="date">
-    <input type="datetime-local" name="datetime-local">
-    <input type="month" name="month">
-    <input type="time" name="time">
-    <input type="week" name="week">
-    <br /><br />
-    <input type="button" value="btn (不会触发表单验证)" onclick="formSubmit()">
-    <button onclick="formSubmit()">只有一个 button 会验证</button>
-    <input type="submit" value="Send" onclick="formSubmit()">
-  </form>
+  <button id="open">Open Dialog</button>
+  <dialog id="dialog">
+    <h2>Dialog Title</h2>
+    <p>Dialog content and other stuff will go here</p>
+  </dialog>
   <script>
-    const text = document.getElementById('text')
-    text.addEventListener('input', function (event) {
-      console.log(text.validity);
-    })
-    function formCheck(e) {
-      console.log('onsubmit', text, e);
-      return false
-      return true
-    }
-    function formSubmit(e) {
-      console.log('submit', e);
-      // document.getElementById("form").submit()
-    }
+  const dialog = document.getElementById("dialog");
+  document.getElementById("open").addEventListener("click", () => {
+    dialog.show();
+  });
   </script>
+
+  <details open>
+    <summary>Details</summary>
+    Something small enough to escape casual notice.
+  </details>
+  <form>
+    <fieldset>
+      <legend>健康信息</legend>
+      身高：<input type="text" />
+      体重：<input type="text" />
+    </fieldset>
+  </form>
+  <form onsubmit="return false" oninput="o.value = a.valueAsNumber + b.valueAsNumber">
+    <input id=a type=number step=any> +
+    <input id=b type=number step=any> =
+    <output id=o for="a b"></output>
+  </form>
+  你最喜欢的浏览器是 (datalist-autocomplete)：
+  <input list="browsers">
+  <datalist id="browsers">
+    <option value="你好 Internet Explorer">
+    <option value="好好 Firefox">
+    <option value="你好 Chrome">
+    <option value="你好 Opera">
+    <option value="你好 Safari">
+  </datalist>
+</div>
+
+<div style="margin-bottom: 80px;">
+  <style>
+    /* https://www.w3school.com.cn/cssref/css_selectors.asp
+      :first-of-type 等同于 :nth-of-type(1) 从后往前选择用 xx-last-xx
+      */
+    .box .test:first-of-type { background:#ff0000; }
+  </style>
+  <div class="box">
+    <p>这是第1个段落。注释掉此行，选择器才会匹配！</p>
+    <p class='test'>这是第2个段落。 .test 明显是父元素.box内同类型标签元素P中的第二个元素,所以.test元素并没有被匹配标红！</p>
+    <div>这是第2个DIV。</div>
+    <p>这是第3个段落。</p>
+  </div>
+</div>
+
+<div style="margin-bottom: 80px;">
+  <span style="display: block">
+    标签嵌套 演示：
+    <!-- <p><div>p 里 不可以 放 div，会导致下边元素解析都有出错！</div></p> -->
+    <p> span 里可以放 p / div </p>
+    <ul><li>span 里可以放 ul/li </li></ul>
+    <a href="#">span 里可以放 a 标签</a>
+    <div> <a href="#">span 里的 div 里可以放 a 标签</a> </div>
+    <span> <a href="#">span 里的 span 里可以放a标签</a> </span>
+  </span>
+</div>
+
+<div style="margin-bottom: 80px;">
+  <style>
+    .title { height: 30px; border: 1px solid red;}
+    .content { height: 100px; border: 1px solid blue; background-color: #ddd; }
+    .cm { margin-top: -20px; }
+  </style>
+  <h2>子元素的 margin-top 设置影响父元素位置</h2>
+  <div class="title">title</div>
+  <div class="content">
+    <div class="cm">
+      给父容器 .content 加上透明 border 或 padding 或 inline-block/float/absolute
+    </div>
+  </div>
+</div>
+
+<div style="margin-bottom: 80px; width: 200px; white-space: normal; word-break: break-all;">
+  longcharlongcharlongcharlongcharlongcharlongcharlongcharlongcharlongcharlongchar
+</div>
+
+<div style="margin-bottom: 80px;">
+  <style>
+    li { display: inline-block; font-size: 14px; }
+  </style>
+  <h2>设置字号 0 去掉 inline-block 末尾插入的空格</h2>
+  <ul style="font-size: 0;">
+    <li>UX Design</li>
+    <li>Front End</li>
+    <li>Photography</li>
+  </ul>
+</div>
+
+<a href="https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation">
+  原生 form 验证
+</a>
+<!-- onsubmit 的 return 不能少 -->
+<form id="form" action="" onsubmit="return formCheck()">
+  文本 <input type="text" pattern="[A-Za-z]{3}" id="text" name="text" required />
+  <span class="error">格式不符合</span>
+  数字 <input type="number" name="number" min="0" step="0.01" value="1" id="num">
+  邮箱 <input type="email" name="email">
+  搜索 <input type="search" name="search" results="5" autosave="saved-searches">
+  <br />
+  type="range" <input type="range" id="range" name="range">
+  <output for="range" id="output"></output>
+  <br />
+  <input type="tel" name="tel">
+  <input type="url" name="url">
+  <input type="date" name="date" id="date">
+  <input type="datetime-local" name="datetime-local">
+  <input type="month" name="month">
+  <input type="time" name="time">
+  <input type="week" name="week">
+  <br /><br />
+  <input type="button" value="btn (不会触发表单验证)" onclick="formSubmit()">
+  <button onclick="formSubmit()">只有一个 button 会验证</button>
+  <input type="submit" value="Send" onclick="formSubmit()">
+</form>
+<script>
+  const text = document.getElementById('text')
+  text.addEventListener('input', function (event) {
+    console.log(text.validity);
+  })
+  function formCheck(e) {
+    console.log('onsubmit', text, e);
+    return false
+    return true
+  }
+  function formSubmit(e) {
+    console.log('submit', e);
+    // document.getElementById("form").submit()
+  }
+</script>
 </body>
 </html>

@@ -114,7 +114,7 @@ const injectSites = {
     min: 1,
     js: bdJs,
   },
-  'https://ai-bot.cn/': {
+  'https://ai-bot.cn/daily-ai-news/': {
     tabIdx: '1',
     tabName: 'AI工具'
   },
@@ -122,7 +122,7 @@ const injectSites = {
     tabIdx: '2',
     tabName: '句解霸'
   },
-  [chrome.runtime.getURL('assets/mytool/index.html')]: {
+  [chrome.runtime.getURL('note.html')]: {
     sideOfPage: true,
   },
   'https://i.mi.com/note/h5#/': {
@@ -163,24 +163,26 @@ const injectSites = {
   },
 };
 
-async function setOpt(ele, key, val) {
-  const remoteData = await hl_extension_util.getStorage();
-  if (!remoteData[key]) {
-    hl_extension_util.setStorage({ [key]: JSON.stringify(val, null, 2) });
+async function init() {
+  const { hl_injectSites } = await hl_extension_util.getStorage(undefined, false);
+  if (!hl_injectSites) {
+    await hl_extension_util.setStorage({
+      hl_injectSites: JSON.stringify(injectSites, null, 2)
+    }, false);
   }
-  ele.value = (remoteData[key] || JSON.stringify(val, null, 2)).replace(/\\n/g, '\n');
-  ele.addEventListener('input', (e) => {
-    hl_extension_util.setStorage({ [key]: (e.target.value).replace(/\n/g, "") });
+  const ele = document.querySelector('.injectSites');
+  ele.value = (hl_injectSites || JSON.stringify(injectSites, null, 2)).replace(/\\n/g, '\n');
+  ele.addEventListener('input', async (e) => {
+    await hl_extension_util.setStorage({ hl_injectSites: (e.target.value).replace(/\n/g, "") }, false);
+  });
+
+  document.querySelector('#clearData').addEventListener('click', async () => {
+    console.log('storageData', await hl_extension_util.getStorage('hl_injectSites', false));
+    if (window.confirm('检查文本框或打开 console 确认要删除的数据')) {
+      const removeRes = await hl_extension_util.removeStorage('hl_injectSites');
+      console.log('removeRes', removeRes);
+      location.reload();
+    }
   });
 }
-setOpt(document.querySelector('.injectSites'), 'hl_injectSites', injectSites);
-
-document.querySelector('#clearData').addEventListener('click', async () => {
-  const remoteData = await hl_extension_util.getStorage();
-  console.log('remoteData', JSON.stringify(remoteData, null, 2).replace(/\\n/g, '\n'));
-  if (window.confirm('检查文本框或打开 console 确认要删除的数据')) {
-    const removeRes = await hl_extension_util.removeStorage();
-    console.log('removeRes', removeRes);
-    location.reload();
-  }
-});
+init();

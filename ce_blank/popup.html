@@ -7,10 +7,23 @@
   body {
     width: 400px;
   }
-  #setProxy {
+  #setProxy > div, .row2 {
     display: flex;
     align-items: center;
     justify-content: right;
+  }
+  #setProxy span, button {
+    margin-right: 10px;
+  }
+  #setProxy .msg {
+    margin-top: 4px;
+  }
+  #setProxy .msg button {
+    font-size: 10px;
+    padding: 1px 4px;
+  }
+  [popover]:popover-open {
+    color: red;
   }
   .process td {
     padding: 1px 3px;
@@ -22,16 +35,26 @@
 </style>
 </head>
 <body>
+<span popover>设置成功</span>
 <div id="setProxy">
-  系统代理控制
-  <button style="margin: 0 10px;">no</button>
-  <button style="margin-right: 10px;">whistle</button>
-  <button style="margin-right: 10px;">clash</button>
-  <button style="margin-right: 10px;">temu</button>
+  <div class="controls">
+    <span>系统代理控制</span>
+    <button>no</button>
+    <button>whistle</button>
+    <button>temu</button>
+    <button>clash</button>
+  </div>
+  <div class="msg"></div>
 </div>
-<button id="resizeWindow">窗口尺寸</button>
-<button id="reloadPage" style="margin: 10px;">单击销毁/双击重新加载</button>
-<button id="snapshot">页面截图</button>
+<div class="row2" style="margin: 10px 0 6px;">
+  <button id="ai">AI</button>
+  <button id="reloadPage">单击销毁/双击重新加载</button>
+  <button id="top">top</button>
+</div>
+<div style="margin: 10px 0 6px;">
+  <button id="resizeWindow" style="margin-right: 10px;">窗口尺寸</button>
+  <button id="snapshot" style="margin-right: 10px;">页面截图</button>
+</div>
 <fieldset id="powerOps">
   <legend>电源模式: </legend>
   <input type="radio" id="radio-1" name="power" value="display">
@@ -48,8 +71,15 @@
     <input type="button" value="End Process" id="killProcess" />
   </div>
 </div>
-<div id="cmds" style="margin: 10px 0;"></div>
-<div id="injectCode" style="margin: 10px 0;"></div>
+<!-- <details open> -->
+<details>
+  <summary>快捷键</summary>
+  <div id="cmds" style="margin: 10px 0;"></div>
+</details>
+<details open>
+  <summary>此页面被插入 css 或 js 如下</summary>
+  <div id="injectCode" style="margin: 10px 0; overflow-x: scroll;"></div>
+</details>
 
 <script src="./common.js"></script>
 <script src="./popup.js"></script>

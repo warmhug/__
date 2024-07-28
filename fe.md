@@ -4,9 +4,27 @@
 ## 2024-07 组件 pro-components
 
 
-[father 2.x](https://github.com/umijs/father/tree/v2.9.0) 基于 [rollupjs](https://rollupjs.org/) 构建，采用 babel插件 编译 js/ts、采用 [rollup-plugin-postcss](https://github.com/egoist/rollup-plugin-postcss) 编译 less/css (不支持less配置项)。利用 [docz](https://www.docz.site/) 生成网站。
+[less Playground](https://lesscss.org/less-preview)
+[analyze-css](https://www.projectwallace.com/analyze-css)
+```less
+// dumi dark theme
+@dark-selector: ~[data-prefers-color="dark"];
+.some-container {
+  color: #fff;
+  @{dark-selector} & {
+    color: #000;
+  }
+}
+```
 
+- dumi 设置非根目录 [publicPath](https://github.com/umijs/dumi/issues/849)
+
+- father 4 打包成 umd 产物时，lessLoader 设置 `math: 'always'` 配置项 https://github.com/umijs/father/issues/514#issuecomment-2222842879
+  - [webpack chain 用法](https://juejin.cn/post/6947851867422621733)
+- [father 2.x](https://github.com/umijs/father/tree/v2.9.0) 基于 [rollupjs](https://rollupjs.org/) 构建，采用 babel插件 编译 js/ts、采用 [rollup-plugin-postcss](https://github.com/egoist/rollup-plugin-postcss) 编译 less/css (不支持less配置项)。利用 [docz](https://www.docz.site/) 生成网站。
 - [postcss](https://github.com/postcss/postcss): 处在 css 预处理器 less scss 等流程之后，解析 css 为 ast，并有 Autoprefixer 等知名插件。
+
+- antd-style 只能和 antd@5 配合使用 https://github.com/ant-design/antd-style/issues/156
 
 [rollup，vite以及webpack比较与介绍](https://juejin.cn/post/7097493230572273700)
 - rollup 与 webpack 都是基于JavaScript依赖系统的一个打包构建工具，他们的共同点很多。 Rollup 默认打包为 ES6 格式、依靠插件生成 CommonJS 和 AMD 代码，静态分析代码中的 import 并排除任何未实际使用的代码。 Rollup 构建速度明显快于 webpack，生成的代码量很小。
@@ -108,6 +126,7 @@ canvas 模糊问题：
 - 医学图像查看 https://github.com/niivue/niivue
 - https://www.wenjiangs.com/docs/webgl-docs-zh
 - https://stackoverflow.com/questions/21603350/is-there-any-reason-for-using-webgl-instead-of-2d-canvas-for-2d-games-apps
+- https://gamedev.stackexchange.com/questions/7927/should-i-use-textures-not-sized-to-a-power-of-2
 
 不是 webgl 实现的 https://github.com/konvajs/konva
 
@@ -291,3 +310,31 @@ dashboard 数据边界细节很多。
 - input、textarea的blur事件中删改页面元素，会影响作用区域周围的元素事件处理。例如：点提交btn，先触发了blur事件，改变btn周围的元素，使得btn位置变动，此时btn的事件处理函数不会触发，再点才可触发。
 - IE8里在某个元素上设置`background: transparent;`，给此元素添加事件，并不会触发事件，像click mousedown事件
 - IE9什么原因能导致input file框点击没反应？
+
+
+## 2012
+
+[Template-Engine-Chooser!](http://garann.github.io/template-chooser/)
+模板引擎一般需要：预编译，运行时两个阶段。
+
+- [mustache](https://github.com/janl/mustache.js) --不能预编译，轻逻辑，有各种语言(eg. java)版本
+- [Hogan](https://github.com/twitter/hogan.js) -- mustache的编译器，使用基本没问题
+- [handlebars](http://handlebarsjs.com/) -- 有runtime版本，基本能保证高性能；有扩展支持if else等，
+- [artTemplate](https://github.com/aui/artTemplate?source=c) -- 国内出品，特性比较全面；有预编译工具；但是- 模板语法不通用，没有服务端语言支持。
+- [ejs](http://embeddedjs.com/) --有些古老，使用不便
+
+
+## 2011
+- https://www.cnblogs.com/huajs/
+- http://images.cnblogs.com/cnblogs_com/bluedream2009/201609/o_mm.jpg
+- https://os.alipayobjects.com/rmsportal/EylTaSCtqXQRiTK.jpg
+- 2011.5.11google首页动画 - 现代舞先驱玛莎·葛兰姆 117 周年诞辰
+- [html5 snooker club](http://www.codeproject.com/Articles/217626/Html-Snooker-Club)
+- [粒子系统](http://spielzeugz.de/html5/liquid-particles.html)
+- [simulation of a cube that rotates](http://stackoverflow.com/questions/1401311/could-someone-explain-the-math-behind-how-this-cube-rotating-script-works?tab=active#tab-top)
+- [三维旋转矩阵](http://wenku.baidu.com/view/58b1f64cf7ec4afe04a1df73.html)
+
+`$('xx').data()` 使用地方 - [jQuery.data](http://www.cnblogs.com/silin6/p/jQuery_data.html)
+在实际应用中我们要给我们的 DOM 添加数据，如果我们给一个 DOM 添加的数据太多的话，会存在循环引用的风险，例如我们添加的数据恰好引用了这个 DOM 元素，就会存在内存的泄露。
+jquery 使用了数据缓存的机制就解决或者说避免这一问题。在 DOM 上扩展了一个属性 expando，数据都存在了 $.cache 中，利用 expando 这个属性建立 DOM 和缓存对象之间的联系。无论我们添加多少的数据都会存储在缓存对象中，而不是直接挂在 DOM 上。
+es6 WeakMap 解决类似问题。

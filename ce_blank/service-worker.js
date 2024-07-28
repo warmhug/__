@@ -4,10 +4,12 @@ console.log('bg page, 注意其执行时机', chrome);
 // console.log('bg page init no window', window?.document?.title);
 
 // 点击扩展图标 触发以下事件
+// https://developer.chrome.com/docs/extensions/reference/api/action?hl=zh-cn
 chrome.action.onClicked.addListener(async (tab) => {
   // 在当前 tab 右边打开新 tab
   // const [curTab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-  // chrome.tabs.create({ index: curTab.index + 1 });
+  // await chrome.tabs.create({ index: curTab.index + 1 });
+  // await chrome.tabs.create({ url: 'chrome://settings/system' });
   // console.log('aaat', tab, curTab);
 });
 
@@ -15,6 +17,10 @@ chrome.runtime.onStartup.addListener(() => {
   console.log('when exec onStartup');
 });
 chrome.runtime.onInstalled.addListener(function(details){
+  // https://developer.chrome.com/docs/extensions/reference/api/sidePanel?hl=zh-cn
+  // chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+  // return;
+
   console.log('details', details);
   if(details.reason == "install"){
     console.log("This is a first install!");

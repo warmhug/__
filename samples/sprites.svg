@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <symbol id="icon-hamburger" viewBox="0 0 24 14">
-    <g fill="#00f" fill-rule="evenodd"> 
-      <path d="M0 0h24v2H0zM0 6h24v2H0zM6 12h18v2H6z"/>
-    </g>
-  </symbol>
-</svg>

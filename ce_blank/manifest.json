@@ -41,6 +41,7 @@
     }
   },
   "permissions": [
+    "experimental",
     "activeTab",
     "alarms",
     "bookmarks",

@@ -38,6 +38,7 @@ tailwindcss https://tailwindcss.com/  https://www.iconfont.cn/
   - 绝对长度: px inch cm mm。 rem: 相对 root 的 font-size 大小  em: 基于大写字母 M 的尺寸  ex: 基于 x 字母高度  1vh 等于 1/100 的视口高度
 - [ua 检测](https://github.com/ded/bowser) / [特性检测](https://github.com/barisaydinoglu/Detectizr)
 - https://github.com/Lissy93/web-check / [togetherjs](https://togetherjs.com/)
+- https://developer.chrome.com/blog/introducing-popover-api/   Web Authentication 在Web上使用Touch ID和Windows Hello登录
 
 monorepo
 * [monorepo.tools](https://monorepo.tools/)
@@ -412,6 +413,10 @@ IFAA 生物认证 https://tech.antfin.com/products/IFAA
 > 2024
 
 ```ts
+export type ProFormListItemProps = {
+  onAfterAdd?: (...params: any) => any;
+}
+
 // next _document.tsx example
 import Document, { Head, Main, NextScript } from "next/document";
 export default class MyDocument extends Document<{ env: string; }> {
@@ -478,12 +483,19 @@ vscode 里某个 tsx 文件的 IntelliSense 报错 `which is not compatible with
 > - antd-mobile + TypeScript move from https://github.com/warmhug/__/tree/master/_react/antd-ts > to https://github.com/ant-design/antd-mobile-samples/tree/master/web-typescript
 
 
+https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css
+http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js
+http://cdn.staticfile.org/angular.js/1.2.16/angular.js
+http://cdn.staticfile.org/angular.js/1.2.16/angular-animate.min.js
+http://cdn.staticfile.org/angular-ui-router/0.2.11/angular-ui-router.js
+
 bootstrap.css v3.3.7 https://gw.alipayobjects.com/os/rmsportal/SaEqgaEyUazqSndgTxGj.css
 bootstrap.js v3.3.7 https://gw.alipayobjects.com/os/rmsportal/MoeUXzBfoEONHwCbBvXl.js
 https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css
 https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css
 https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js
 
+https://a.alipayobjects.com/jquery/jquery/1.11.1/jquery-debug.js
 jQuery v1.12.4 https://gw.alipayobjects.com/os/rmsportal/YbGjMuYEbXdIGJRsqOSA.js
 https://gw.alipayobjects.com/os/lib/jquery/3.6.0/dist/jquery.min.js
 https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js

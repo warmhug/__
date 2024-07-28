@@ -13,8 +13,19 @@
 - a 伪类需遵循 css2 规范中的 L-V-H-A (a:link visited hover active) 顺序。
 - 没有 css-parent-selector 。 BEM命名方式。  如何提升 CSS 选择器性能 http://www.jianshu.com/p/268c7f3dd7a6
 
-- [WebAssembly](https://juejin.im/entry/5b20d09d6fb9a01e242490b1) 不是一门编程语言，而是一份字节码标准。 各种复杂的计算：图像处理、3D运算(大型 3D 网页游戏)、语音识别、音视频编码解码。区块链合约。 [madewithwebassembly](https://madewithwebassembly.com/)、eBay 的[条形码扫描](https://www.infoq.cn/article/vc*q7psQqWMaVU8igJeD)、[Google earth web](https://earth.google.com/web/) 版、[autocad](https://web.autocad.com/login) web 版
-- [PWA](https://developers.google.com/web/progressive-web-apps/) Service Worker 需要运行于 HTTPS 或本地 localhost 环境，是继 Web Worker 后又一个新的线程。来实现离线页面功能。 Service Worker 是独立于页面的一个运行环境，它在页面关闭后仍可以运行。Web Worker 在页面关闭后不再运行。
+- js处理本地文件
+https://stackoverflow.com/questions/14446447/how-to-read-a-local-text-file-in-the-browser
+https://developer.chrome.com/docs/capabilities/web-apis/file-system-access
+
+- [WebAssembly](https://juejin.im/entry/5b20d09d6fb9a01e242490b1)
+不是一门编程语言，而是一份字节码标准。 各种复杂的计算：图像处理、3D运算(大型 3D 网页游戏)、语音识别、音视频编码解码。区块链合约。
+[madewithwebassembly](https://madewithwebassembly.com/)、
+eBay 的[条形码扫描](https://www.infoq.cn/article/vc*q7psQqWMaVU8igJeD)、
+[Google earth web](https://earth.google.com/web/) 版、
+[autocad](https://web.autocad.com/login) web 版
+
+- [PWA](https://developers.google.com/web/progressive-web-apps/)
+Service Worker 需要运行于 HTTPS 或本地 localhost 环境，是继 Web Worker 后又一个新的线程。来实现离线页面功能。 Service Worker 是独立于页面的一个运行环境，它在页面关闭后仍可以运行。Web Worker 在页面关闭后不再运行。
 
 gulp 手册
 http://p.tb.cn/rmsportal_127_gulp_E6_89_8B_E5_86_8C1.pdf
@@ -563,6 +574,32 @@ const openInCurrentTab = () => {
   });
 }
 
+// WebComponents Shadow DOM
+
+/*
+当用户没有与网页进行任何交互 并且也没有动画 requestIdleCallback 执行的时间最长可达到50ms。
+屏幕是 60hz 有渲染时、每帧执行时间16ms（1000ms / 16），剩余空闲时间小于它。
+requestAnimationFrame 的回调会在每一帧确定执行，属于高优先级任务，而 requestIdleCallback 的回调则不一定，属于低优先级任务。
+不能在 requestIdleCallback 里再操作 DOM，因为它发生在一帧的最后，这样会导致页面再次重绘。DOM 操作建议在 rAF 中进行。
+Promise的resolve(reject)操作也不建议放在里面，会拉长当前帧的耗时。
+能做 数据的分析和上报 预加载资源 检测卡顿 拆分耗时任务(React 中的调度器 Scheduler)
+*/
+requestIdleCallback(myNonEssentialWork, { timeout: 2000 });
+// 任务队列
+const tasks = ['1', '2', '3'];
+function myNonEssentialWork (deadline) {
+  console.log('dl', deadline.timeRemaining());
+  // 如果帧内有富余的时间，或者超时
+  while ((deadline.timeRemaining() > 0 || deadline.didTimeout) && tasks.length > 0) {
+    console.log('dl1', deadline.timeRemaining(), deadline.didTimeout);
+    console.log('执行任务', tasks.shift());
+  }
+  console.log('dl2', deadline.timeRemaining());
+  if (tasks.length > 0) {
+    console.log('dl3', deadline.timeRemaining());
+    requestIdleCallback(myNonEssentialWork);
+  }
+}
 
 
 
@@ -1387,7 +1424,60 @@ s.replace(/-([a-z])/ig, function(letter){ return letter.toUpperCase(); });
 
 
 
-
+/*
+2012 阿拉蕾 arale
+Widget , UI 组件的抽象类，进行生命周期管理。
+jQuery 时代的 UI 管理，做的不够好，一定程度上不能称之为 component 组件管理。
+*/
+// Widget 抽象类
+function Widget () {
+  this.ele = null
+}
+Widget.prototype = {
+  on: function (type, handler) {
+    if (this.handlers[type] == undefined) {
+      this.handlers[type] = []
+    }
+    this.handlers[type].push(handler)
+    return this
+  },
+  fire: function (type, data) {
+    if (Array.isArray(this.handlers[type])) {
+      this.handlers[type].forEach(function (handler) {
+        handler(data)
+      })
+    }
+  },
+  off: function (type) {
+    if (type) {
+    }
+  },
+  init: function (config) {
+    var def = {};
+    this.options = Object.assign(config, def);
+  },
+  render: function (container) {
+    this.renderUI()
+    this.handlers = {}
+    this.bindUI()
+    this.syncUI()
+    $(container || document.body).append(this.ele)
+  },
+  //由子类具体实现 画ui界面
+  renderUI: function () {},
+  //由子类具体实现 为UI绑定dom事件，及组件的自定义事件
+  bindUI: function () {},
+  //由子类具体实现 根据config设置ui动态变化的部分，如宽、高、样式名等
+  syncUI: function () {},
+  destroy: function () {
+    this.destructor()
+    this.ele.off()
+    this.ele.remove()
+  },
+  //由子类具体实现
+  destructor: function () {}
+}
+Widget.prototype.constructor = Widget
 
 
 /*

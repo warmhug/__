@@ -156,11 +156,11 @@ function resizer() {
 
 const getSetStorage = {
   getInjectSites: async () => {
-    const { hl_injectSites } = await hl_extension_util.getStorage();
+    const { hl_injectSites } = await hl_extension_util.getStorage(undefined, false);
     return hl_injectSites ? JSON.parse(hl_injectSites) : {};
   },
   setInjectSites: async (data) => {
-    await hl_extension_util.setStorage({ hl_injectSites: JSON.stringify(data) });
+    await hl_extension_util.setStorage({ hl_injectSites: JSON.stringify(data) }, false);
   },
 };
 
@@ -262,7 +262,7 @@ async function init () {
     ele.classList.add('active');
     tabContent.classList.add('active');
   }));
-  lis[parseInt(hl_tabIndex ?? 0)].dispatchEvent(new Event('click', { bubbles: true }));
+  lis[parseInt(hl_tabIndex ?? 0)]?.dispatchEvent(new Event('click', { bubbles: true }));
 
   document.querySelectorAll('.iframe-wrap b').forEach(item => {
     item.addEventListener('click', async evt => {

@@ -4,15 +4,37 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Observer</title>
+  <title>experiments</title>
   <style>
-    body {
+    /* body {
       height: 10000px;
+    } */
+    .editor {
+      height: 200px;
+      border: 1px solid gray;
     }
   </style>
 </head>
 <body>
+  <div class="toolbar">
+    <button class="select">选择</button>
+    <button class="bold">加粗</button>
+  </div>
+  <hr>
+  <div class="editor" contenteditable="true">
+    <p>richEditor富文本简化版，这是可编辑的</p>
+    <p contenteditable="false">这是不可编辑的</p>
+  </div>
   <script>
+    document.querySelector('.bold').addEventListener('click', () => {
+      let range = window.getSelection().getRangeAt(0);
+      console.log('bold', range);
+      document.execCommand('bold', false, null);
+    });
+  </script>
+
+  <script>
+    // MutationObserver  ResizeObserver  https://web.dev/i18n/en/resize-observer/
     // 使用 Performance https://web.dev/i18n/en/cls/ 监测异步 js 延迟渲染的 dom 元素稳定出现时间，不准确。
     const cls = (cb = () => {}) => {
       let clsValue = 0, clsEntries = [], sessionValue = 0, sessionEntries = [];
@@ -44,39 +66,6 @@
         // console.log('sss cls', location.href, document.body.clientHeight, document.body.scrollHeight);
       });
     });
-
-
-    const mutationObserver = (selector, cb = () => {}) => {
-      const observer = new MutationObserver((mutationList, observer) => {
-        for (const mutation of mutationList) {
-          if (mutation.type === 'childList') {
-            console.log('observeEle: A child node has been added or removed.');
-          } else if (mutation.type === 'attributes') {
-            console.log(`observeEle: The ${mutation.attributeName} attribute was modified.`);
-          }
-        }
-      });
-      observer.observe(document.querySelector(selector), { attributes: true, childList: true, subtree: true });
-      // Later, you can stop observing
-      // observer.disconnect();
-    }
-
-
-    // 元素尺寸变化时触发
-    // https://web.dev/i18n/en/resize-observer/
-    const ro = new ResizeObserver(entries => {
-      for (let entry of entries) {
-        const cr = entry.contentRect;
-        console.log('Element:', entry.target);
-        console.log(`Element size: ${cr.width}px x ${cr.height}px`);
-        console.log(`Element padding: ${cr.top}px ; ${cr.left}px`);
-      }
-    });
-    // Observe one or multiple elements
-    ro.observe(document.scrollingElement);
-    setTimeout(() => {
-      document.body.style.height = '200px';
-    }, 3000);
   </script>
 </body>
 </html>

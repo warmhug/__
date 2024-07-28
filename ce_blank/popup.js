@@ -84,9 +84,8 @@ async function popup () {
   const matchUrl = hl_extension_util.getMatchUrl(Object.keys(injectSites), decodeURIComponent(curTab.url));
   if (matchUrl && injectSites[matchUrl].allPage) {
     document.querySelector('#injectCode').innerHTML = `
-      此页面被插入 css 或 js 如下:
-      <pre>${injectSites[matchUrl].css}</pre>
-      <pre>${injectSites[matchUrl].js || ''}</pre>
+      ${injectSites[matchUrl].css ? `<pre>${injectSites[matchUrl].css}</pre>` : ''}
+      ${injectSites[matchUrl].js ? `<pre>${injectSites[matchUrl].js}</pre>` : ''}
     `;
   }
 
@@ -122,12 +121,57 @@ async function popup () {
     });
   });
 
+  document.querySelector('#top').addEventListener('click', () => {
+    window.open('http://localhost:7681/?disableLeaveAlert=true&arg=/Users/hua/inner/-/__/ce_blank/webshell.sh&arg=top');
+  });
+  document.querySelector('#ai').addEventListener('click', () => {
+    const urls = [
+      'https://app.chathub.gg/',
+      'https://chatgpt.com/',
+      'https://www.doubao.com/',
+      'https://tongyi.aliyun.com/qianwen/',
+      'https://kimi.moonshot.cn/',
+    ];
+    urls.forEach(url => chrome.tabs.create({ url, active: false }));
+  });
+
   chrome.proxy.settings.get({'incognito': false}, function(config) {
     console.log('chrome.proxy', JSON.stringify(config));
   });
-  const highLight = () => {
-    const proxyType = localStorage.getItem('hl_proxy');
-    document.querySelectorAll('#setProxy button').forEach(item => {
+  const popover = document.querySelector('[popover]');
+  const highLightMsg = async () => {
+    const { hl_proxy: proxyType } = await hl_extension_util.getStorage();
+    const msg = document.querySelector('#setProxy .msg');
+    msg.innerHTML = '';
+    if (proxyType === 'whistle') {
+      msg.innerHTML = '命令行运行 w2 start/proxy, 访问 &nbsp; <a href="http://127.0.0.1:8899" target="_blank">http://127.0.0.1:8899</a>';
+    } else if (proxyType === 'clash') {
+      const btn = document.createElement('button');
+      btn.innerHTML = '添加规则';
+      btn.addEventListener('click', async () => {
+        const host = new URL(curTab.url).host;
+        // console.log('curTab', curTab, host);
+        const response = await chrome.runtime.sendNativeMessage('nm_sh', {
+          message: 'addRule',
+          content: host,
+        });
+        console.log('接收到消息:', response);
+        // popover.togglePopover();
+        popover.showPopover();
+        setTimeout(() => popover.hidePopover(), 3000);
+      });
+      const span = document.createElement('span');
+      span.innerHTML = `访问
+        <a href="https://vscode.dev/" target="_blank">https://vscode.dev</a> &nbsp;
+        <a href="http://127.0.0.1:58147/ui/#/rules" target="_blank">http://127.0.0.1:58147</a>
+      `;
+      msg.appendChild(btn);
+      msg.appendChild(span);
+    }
+  };
+  const highLightBtn = async () => {
+    const { hl_proxy: proxyType } = await hl_extension_util.getStorage();
+    document.querySelectorAll('#setProxy .controls button').forEach(item => {
       if (item.textContent === proxyType) {
         item.style.backgroundColor = '#cddf8e';
       } else {
@@ -135,20 +179,25 @@ async function popup () {
       }
     });
   };
-  highLight();
-  document.querySelector('#setProxy').addEventListener('click', (evt) => {
+  highLightMsg();
+  highLightBtn();
+  document.querySelector('#setProxy .controls').addEventListener('click', async (evt) => {
     const proxyType = evt.target.tagName === 'BUTTON' ? evt.target.textContent : '';
+    if (proxyType) {
+      await hl_extension_util.setStorage({ hl_proxy: proxyType });
+    }
+    highLightMsg();
+
     // chrome.tabs.create({ url: 'chrome://settings/system' });
     // 单向通信
-    localStorage.setItem('hl_proxy', proxyType);
-    chrome.runtime.sendNativeMessage('nm_sh', { message: proxyType }, function (response) {
-      console.log('接收到消息:\n', response);
-      highLight();
+    try {
+      const response = await chrome.runtime.sendNativeMessage('nm_sh', { message: proxyType });
+      console.log('接收到消息:', response);
       // alert(JSON.stringify(response));
-      if (response?.message !== 'OK') {
-        // alert('设置失败');
-      }
-    });
+    } catch (error) {
+      console.log('error: ', error);
+    }
+    highLightBtn();
     return;
     connect('nm_sh');
     port.postMessage({ message: proxyType });
@@ -194,8 +243,9 @@ async function popup () {
   // });
 
   // https://developer.chrome.com/docs/extensions/reference/api/processes?hl=zh-cn
-  // 开发者版浏览器可用
-  // console.log('chrome.processes: ', chrome.processes);
+  // 开发者版浏览器可用 https://groups.google.com/a/chromium.org/g/chromium-extensions/c/pyAzuN4neHc
+  console.log('chrome.processes: ', chrome.processes);
+  console.log('chrome.processes: ', chrome?.experimental, chrome?.experimental?.processes);
   chrome.processes?.onUpdatedWithMemory.addListener(
     function(processes) {
       var table = "<table>\n" +

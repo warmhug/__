@@ -1,6 +1,145 @@
 
+# macOS
 
-# automate (Android)
+- call-another-programs-functions: [Accessibility APIs](https://stackoverflow.com/a/866389/2190503) [NSWorkspace](https://stackoverflow.com/q/20874893/2190503)
+
+```sh
+#!/bin/bash
+# [Run shortcuts from the command line](https://support.apple.com/en-gb/guide/shortcuts-mac/apd455c82f02/mac)
+shortcuts run 获取时间  # list
+
+# [open app using bash](https://stackoverflow.com/questions/55100327/how-to-open-and-close-apps-using-bash-in-macos)
+osascript -e 'tell application "Safari" to activate'
+osascript -e 'activate app "Safari"'
+osascript -e 'quit app "Safari"'
+
+# https://stackoverflow.com/questions/2296812/how-to-activate-mac-os-x-application-with-a-given-process-id
+# Pass the PID as the 1st (and only) argument.
+activateByPid()
+{
+  osascript -e "
+    tell application \"System Events\"
+      set frontmost of the first process whose unix id is ${1} to true
+    end tell
+  "
+}
+# activateByPid $(pgrep -x 'ClashX')
+# activateByPid 83570
+
+# https://apple.stackexchange.com/questions/103621/run-applescript-from-bash-script
+osascript <<EOD
+  tell application "Google Chrome"
+      activate
+  end tell
+  tell application "System Events"
+      key down {command}
+      keystroke "f"
+      key up {command}
+  end tell
+EOD
+```
+
+```sh
+#!/usr/bin/osascript
+
+# 调用 osascript /path/to/xx.scpt
+# 键盘码 https://eastmanreference.com/complete-list-of-applescript-key-codes
+
+tell application "System Events" to keystroke "r" using {option down, command down}
+
+tell application "System Events" to keystroke "l" using command down & shift down
+
+tell application "System Events"
+  key code {123, 124} using {shift down, command down} -- ⇧⌘←, ⇧⌘→
+  keystroke "c" using command down -- keystroke "C" would be treated as ⇧C
+end tell
+
+# -- Command Shift N
+tell application "System Events"
+	tell application "Safari" to activate
+	key code 45 using {command down, shift down}
+end tell
+
+# 打开 Chrome 的第一个标签页
+tell application "System Events"
+	tell application "Google Chrome" to activate
+	key code 18 using command down
+end tell
+
+# https://stackoverflow.com/questions/16492839/applescript-on-clicking-menu-bar-item-via-gui-script
+tell application "System Events" to tell process "ClashX"
+  tell menu bar item 1 of menu bar 2
+    # delay 1
+    click
+    # -- Command O
+    # key code 31 using command down
+    # -- Command R
+    key code 15 using command down
+    # click menu item "更多设置" of menu 1
+  end tell
+end tell
+
+# 打开子菜单 https://stackoverflow.com/questions/2111736/applescript-or-automator-to-click-on-menus-in-an-application
+set targetApp to "app_name"
+set theMenu to "menu_name"
+set theItem to "menu_item_name"
+set theSubItem to "sub_item_name"
+tell application targetApp
+    activate
+    tell application "System Events"
+        tell application process targetApp
+            tell menu bar 1
+                tell menu bar item theMenu
+                    tell menu theMenu
+                        tell menu item theItem
+                            tell menu theItem
+                                click menu item theSubItem
+                            end tell
+                        end tell
+                    end tell
+                end tell
+            end tell
+        end tell
+    end tell
+end tell
+
+# https://stackoverflow.com/questions/14386167/os-x-accessing-the-main-menu-of-the-frontmost-application
+tell application "System Events"
+    set frontProcess to name of first process whose frontmost = true
+    tell process frontProcess
+        get every menu item of menu 1 of menu bar item 2 of menu bar 1
+    end tell
+end tell
+
+```
+
+
+adb 解锁 android 手机
+```sh
+#!/bin/bash
+
+# https://stackoverflow.com/questions/30402582/how-to-verify-android-device-screen-on-or-off-using-adb-shell-command
+
+screenState=$(adb shell dumpsys nfc | grep -e 'mScreenState=' -e 'Screen State:' | tr : = | cut -d '=' -f2)
+if [ "$screenState" == "OFF_LOCKED" ] ; then
+    echo "Screen is off. Turning on."
+    adb shell input keyevent 26 # wakeup
+    sleep 0.8
+    adb shell input touchscreen swipe 540 1000 540 500 # unlock bottom->top
+    sleep 0.8
+    adb shell input text 0000 # pin
+    echo "OK, should be on now."
+else
+    echo "Screen is already on. Locking."
+    adb shell input keyevent 26 # sleep
+fi
+```
+
+
+
+
+
+# Android automate
 https://llamalab.com/automate/
 
 权限设置：开启无障碍 允许后台弹出界面 显示悬浮窗 桌面快捷方式。

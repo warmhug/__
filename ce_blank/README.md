@@ -31,20 +31,64 @@
 rules.json 里的 modifyHeaders 修改 responseHeaders 会生效，但是不显示在 Chrome DevTools 里。ref [issue](https://bugs.chromium.org/p/chromium/issues/detail?id=258064)
 
 
-### 2024-06 Native messaging
+### 2024-06~07 Native messaging
 
-运行 `./assets/nm_install_host.sh` 一键安装
-
-https://github.com/GoogleChrome/chrome-extensions-samples/tree/main/api-samples/nativeMessaging
-只使用shell https://stackoverflow.com/a/24777120/2190503
-
-Google 搜索 chrome extension native message nodejs
 https://developer.chrome.com/docs/extensions/develop/concepts/native-messaging?hl=zh-cn
-https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging
-
-参考
 https://github.com/guest271314/NativeMessagingHosts
 https://github.com/simov/native-messaging
+使用shell https://stackoverflow.com/a/24777120/2190503
+
+配置文件模版（HOST_PATH 会被 安装脚本 替换为 执行文件所在地址）
+
+```json
+{
+  "name": "nm_sh",
+  "description": "Chrome Native Messaging API Example Host",
+  "path": "HOST_PATH",
+  "type": "stdio",
+  "allowed_origins": ["chrome-extension://kafpfdegkmheageeldelgnnkegpkbpca/"]
+}
+```
+> 实际路径 '/Users/hua/Library/Application Support/Google/Chrome/NativeMessagingHosts/nm_sh.json'
+
+安装脚本 install_host.sh
+
+```sh
+#!/bin/sh
+# 改动自 https://github.com/GoogleChrome/chrome-extensions-samples/blob/main/api-samples/nativeMessaging/host/install_host.sh
+set -e
+DIR="$( cd "$( dirname "$0" )" && pwd )"
+if [ $(uname -s) == 'Darwin' ]; then
+  if [ "$(whoami)" == "root" ]; then
+    # Due to macOS permission changes we need to put the host in /Applications
+    HOST_PATH="/Applications/nm_sh"
+    cp "$DIR/nm_sh" $HOST_PATH
+    TARGET_DIR="/Library/Google/Chrome/NativeMessagingHosts"
+  else
+    # nm_sh 不需要放到 ~/Applications 目录里，改为自己的目录
+    # HOST_PATH="/Users/$USER/Applications/nm_sh"
+    HOST_PATH="/Users/hua/inner/-/__/ce_blank/nm_sh"
+    cp "$DIR/nm_sh" $HOST_PATH
+    TARGET_DIR="$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts"
+  fi
+else
+  HOST_PATH="$DIR/nm_sh"
+  if [ "$(whoami)" == "root" ]; then
+    TARGET_DIR="/etc/opt/chrome/native-messaging-hosts"
+  else
+    TARGET_DIR="$HOME/.config/google-chrome/NativeMessagingHosts"
+  fi
+fi
+chmod a+x "$DIR/nm_sh"
+HOST_NAME=nm_sh
+mkdir -p "$TARGET_DIR"
+cp "$DIR/$HOST_NAME.json" "$TARGET_DIR"
+ESCAPED_HOST_PATH=${HOST_PATH////\\/}
+sed -i -e "s/HOST_PATH/$ESCAPED_HOST_PATH/" "$TARGET_DIR/$HOST_NAME.json"
+chmod o+r "$TARGET_DIR/$HOST_NAME.json"
+
+echo Native messaging host $HOST_NAME has been installed.
+```
 
 
 ### 2022-09-17

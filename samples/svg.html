@@ -1,75 +1,133 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    .icon { margin: 40px; }
-    .icon-use {
-      /* fill: red; */
-      color: red;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  .icon { margin: 40px; }
+  .icon-use {
+    /* fill: red; */
+    color: red;
+  }
+  .container {
+  display: grid;
+  grid-template-columns: 300px 300px;
+  grid-template-rows: 300px 300px 300px;
+  grid-column-gap: 25px;
+  grid-row-gap: 25px;
+  }
+  .svg-background {
+    background-image: url(https://cdn.glitch.com/3b178055-c252-40d3-b2b8-69919fd392c5%2Fflag.svg?1522475211134);
+    height: 200px;
+    width: 300px;
+  }
+</style>
 </head>
 <body>
-  <!-- 
-    单独的 `xx.svg` 文件，必须要写 `<?xml version="1.0" encoding="UTF-8"?>` XML declaration，以及应该写 
-    `<!DOCTYPE svg PUBLIC ...>` DOCTYPE 声明。
-    包括通过 `img` or CSS `background-images` 外链引用的 svg 文件。
+svg 深入 https://flaviocopes.com/svg/
+- 包括通过 img 或 CSS background-images 引用的 单独 svg 文件，必须要写 XML declaration DOCTYPE 声明。
+- 直接写在 html 里的 svg 代码，不能写 XML declaration 和 DOCTYPE 声明。
+- 如果 svg 使用 img 标签加载，不能与 css/js 交互，其包含的外部链接如 images, stylesheets, scripts, fonts 不能被加载。
 
-    注意：直接写在 html 里的 svg 代码，不能写 `<?xml version="1.0" ...>` XML declaration 和 DOCTYPE 声明。
-  -->
-  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="0" height="0" style="display:none">
-    <!--made width and height zero and display none so that it won't interfere with the layout-->
-    <defs>
-      <!--put this in defs-->
-      <symbol id="icon-hamburger1" viewBox="0 0 24 14">
-        <!-- change the fill here to currentColor-->
-        <g fill="currentColor" fill-rule="evenodd">
-          <path d="M0 0h24v2H0zM0 6h24v2H0zM6 12h18v2H6z"/>
-        </g>
-      </symbol>
-    </defs>
-  </svg>
+<!-- sprites.svg 文件示例
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <symbol id="icon-hamburger" viewBox="0 0 24 14">
+    <g fill="#00f" fill-rule="evenodd">
+      <path d="M0 0h24v2H0zM0 6h24v2H0zM6 12h18v2H6z"/>
+    </g>
+  </symbol>
+</svg>
+-->
 
-  <svg class="icon" width="24" height="14" alt="Menu">
-    <use class="icon-use" xlink:href="./sprites.svg#icon-hamburger"></use>
-  </svg>
-  <svg class="icon" width="24" height="14" alt="Menu">
-    <use class="icon-use" xlink:href="#icon-hamburger1"></use>
-  </svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="0" height="0" style="display:none">
+  <!--made width and height zero and display none so that it won't interfere with the layout-->
+  <defs>
+    <symbol id="icon-hamburger1" viewBox="0 0 24 14">
+      <!-- change the fill here to currentColor-->
+      <g fill="currentColor" fill-rule="evenodd">
+        <path d="M0 0h24v2H0zM0 6h24v2H0zM6 12h18v2H6z"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
 
-  <script type="react">
-    function pieChart(percentage, size) {
-      // primary wedge
-      var unit = (Math.PI * 2) / 100;
-      var startangle = 0;
-      var ra = 4;
-      var endangle = percentage * unit - 0.001;
-      var x1 = (size / ra) + (size / ra) * Math.sin(startangle);
-      var y1 = (size / ra) - (size / ra) * Math.cos(startangle);
-      var x2 = (size / ra) + (size / ra) * Math.sin(endangle);
-      var y2 = (size / ra) - (size / ra) * Math.cos(endangle);
-      var big = 0;
-      if (endangle - startangle > Math.PI) {
-          big = 1;
-      }
-      var d = "M " + (size / ra) + "," + (size / ra) +  // Start at circle center
-          " L " + x1 + "," + y1 +     // Draw line to (x1,y1)
-          " A " + (size / ra) + "," + (size / ra) +       // Draw an arc of radius r
-          " 0 " + big + " 1 " +       // Arc details...
-          x2 + "," + y2 +             // Arc goes to to (x2,y2)
-          " Z";                       // Close path back to (cx,cy)
-    
-      return (
-        <svg width={size} height={size} viewBox={`0 0 ${size / 2} ${size / 2}`}>
-          <circle cx={size / ra} cy={size / ra} r={size / ra} fill="#ebebeb"></circle>
-          <path d={d} fill="red"></path>
-          <circle cx={size / ra} cy={size / ra} r={size * 0.17} fill="#fff"></circle>
-        </svg>
-      );
+<svg class="icon" width="24" height="14" alt="Menu">
+  <use class="icon-use" xlink:href="./sprites.svg#icon-hamburger"></use>
+</svg>
+<svg class="icon" width="24" height="14" alt="Menu">
+  <use class="icon-use" xlink:href="#icon-hamburger1"></use>
+</svg>
+
+<div class="container">
+  <div>
+    <img src="https://cdn.glitch.com/3b178055-c252-40d3-b2b8-69919fd392c5%2Fflag.svg?1522475211134" alt="Flag" />
+  </div>
+  <div class="svg-background"></div>
+  <div>
+    <svg width="300" height="200" viewbox="0 0 300 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <title>Italian Flag</title>
+      <desc>By Flavio Copes https://flaviocopes.com</desc>
+      <g id="flag">
+        <rect fill="green" x="0" y="0" width="100" height="200"></rect>
+        <rect fill="white" x="100" y="0" width="100" height="200"></rect>
+        <rect fill="red" x="200" y="0" width="100" height="200"></rect>
+      </g>
+    </svg>
+  </div>
+  <div>
+    <object data="https://cdn.glitch.com/3b178055-c252-40d3-b2b8-69919fd392c5%2Fflag.svg?1522475211134" type="image/svg+xml">
+    </object>
+  </div>
+  <div>
+    <iframe src="https://cdn.glitch.com/3b178055-c252-40d3-b2b8-69919fd392c5%2Fflag.svg?1522475211134" frameborder="0" width="300" height="200"></iframe>
+  </div>
+  <div>
+    <embed src="https://cdn.glitch.com/3b178055-c252-40d3-b2b8-69919fd392c5%2Fflag.svg?1522475211134" type="" />
+  <div>
+  <div>
+    <!-- <img src="svgstr" alt=""> -->
+    <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="25" cy="25" r="20"/>
+    </svg>
+  </div>
+</div>
+
+<script>
+  function pieChart(percentage, size) {
+    // primary wedge
+    var unit = (Math.PI * 2) / 100;
+    var startangle = 0;
+    var ra = 4;
+    var endangle = percentage * unit - 0.001;
+    var x1 = (size / ra) + (size / ra) * Math.sin(startangle);
+    var y1 = (size / ra) - (size / ra) * Math.cos(startangle);
+    var x2 = (size / ra) + (size / ra) * Math.sin(endangle);
+    var y2 = (size / ra) - (size / ra) * Math.cos(endangle);
+    var big = 0;
+    if (endangle - startangle > Math.PI) {
+        big = 1;
     }
-    pieChart(50, 72);
-  </script>
+    var d = "M " + (size / ra) + "," + (size / ra) +  // Start at circle center
+        " L " + x1 + "," + y1 +     // Draw line to (x1,y1)
+        " A " + (size / ra) + "," + (size / ra) +       // Draw an arc of radius r
+        " 0 " + big + " 1 " +       // Arc details...
+        x2 + "," + y2 +             // Arc goes to to (x2,y2)
+        " Z";                       // Close path back to (cx,cy)
+
+    return `
+      <svg width="${size}" height="${size}" viewBox="0 0 ${size / 2} ${size / 2}">
+        <circle cx="${size / ra}" cy="${size / ra}" r="${size / ra}" fill="#ebebeb"></circle>
+        <path d="${d}" fill="red"></path>
+        <circle cx="${size / ra}" cy="${size / ra}" r="${size * 0.17}" fill="#fff"></circle>
+      </svg>
+    `;
+  }
+  const pieHtml = pieChart(50, 72);
+  const div = document.createElement('div');
+  div.innerHTML = pieHtml;
+  document.body.appendChild(div);
+</script>
 </body>
 </html>

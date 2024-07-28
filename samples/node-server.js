@@ -1,3 +1,30 @@
+/*
+package.json
+{
+  "name": "server",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node ./server-my.js"
+  },
+  "dependencies": {
+    "fs-extra": "^0.30.0",
+    "node-static": "~0.7.9",
+    "probe-image-size": "~2.1.1",
+    "through2": "^2.0.3"
+  }
+}
+
+访问 http://localhost:9998/?joke=1/2
+
+```sh
+# 使用 forever 背景线程启动
+npm install forever -g
+forever start server.js
+forever stopall
+forever list
+```
+*/
+
 var http = require('http');
 var url = require('url');
 var fs = require('fs-extra');
@@ -84,4 +111,3 @@ http.createServer(function (request, response) {
 
 console.log('> main server running on port ' + port);
 console.log('> static server running on port ' + (port - 1));
-

@@ -1,10 +1,48 @@
 #!/bin/bash
 
-hl_input=""
+# 配置文件路径 '/Users/hua/Library/Application Support/Google/Chrome/NativeMessagingHosts/nm_sh.json'
 
-setProxy() {
-  if [[ "$1" == "clash" ]]; then
-  echo "clash proxy"
+hl_input=""
+hl_output='{"message": "OK"}'
+logFile="/Users/hua/log.txt"
+# noteFile="/Users/hua/inner/__note.txt"
+noteFile="/Users/hua/Library/CloudStorage/OneDrive-个人/__note.txt"
+clashFile="/Users/hua/.config/clash/ss.yaml"
+
+dealMsg() {
+  # echo `which echo` >> $logFile
+  # echo $1":arg1" >> $logFile
+
+  hl_input=${hl_input/#*'{'/'{'}
+  # hl_input=${hl_input%'"}'}
+  # echo $hl_input >> $logFile
+  msg_command=$(echo "$hl_input" | /usr/local/bin/yq '.message')
+  msg_content=$(echo "$hl_input" | /usr/local/bin/yq '.content')
+  echo $msg_command >> $logFile
+  # echo "$msg_content" >> $logFile
+
+  # 注意，如果 echo 的内容不被处理、会导致 Error when communicating with the native messaging host.
+  # https://stackoverflow.com/a/51551525/2190503
+  # echo something not handle
+
+  if [[ "$msg_command" == "setNote" ]]; then
+    echo "$msg_content" > $noteFile
+  elif [[ "$msg_command" == "getNote" ]]; then
+    noteFile_cont=$(cat $noteFile)
+    # echo $noteFile_cont >> $logFile
+    hl_output1='{"message": "OK", "content": '$noteFile_cont'}'
+    echo "$hl_output1" >> $logFile
+    hl_output="$hl_output1"
+  elif [[ "$msg_command" == "addRule" ]]; then
+    new_str=DOMAIN-SUFFIX,"${msg_content}",Proxy
+    # 豆包+通义千问: 使用 yq 判断 如果rules 里不存在 aaa，则前置插入aaa
+    rules_value=$(/usr/local/bin/yq '.rules' $clashFile)
+    if [[ "$rules_value" != *$new_str* ]]; then
+      echo $new_str >> $logFile
+      /usr/local/bin/yq e '.rules |= [ "'"$new_str"'" ] +.' $clashFile -i
+      osascript /Users/hua/inner/-/__/ce_blank/nm_ss.scpt
+    fi
+  elif [[ "$msg_command" == "clash" ]]; then
   networksetup -setproxyautodiscovery Wi-Fi off
   networksetup -setwebproxy Wi-Fi 127.0.0.1 7890
   networksetup -setsecurewebproxy Wi-Fi 127.0.0.1 7890
@@ -13,14 +51,12 @@ setProxy() {
   networksetup -setwebproxystate Wi-Fi on
   networksetup -setsecurewebproxystate Wi-Fi on
   networksetup -setsocksfirewallproxystate Wi-Fi on
-  elif [[ "$1" == "temu" ]]; then
-  echo "temu proxy"
+  elif [[ "$msg_command" == "temu" ]]; then
   networksetup -setproxyautodiscovery Wi-Fi on
   networksetup -setwebproxystate Wi-Fi off
   networksetup -setsecurewebproxystate Wi-Fi off
   networksetup -setsocksfirewallproxystate Wi-Fi off
-  elif [[ "$1" == "whistle" ]]; then
-  echo "whistle proxy"
+  elif [[ "$msg_command" == "whistle" ]]; then
   # w2 proxy
   # sleep 5
   networksetup -setproxyautodiscovery Wi-Fi off
@@ -29,15 +65,14 @@ setProxy() {
   networksetup -setwebproxystate Wi-Fi on
   networksetup -setsecurewebproxystate Wi-Fi on
   networksetup -setproxybypassdomains Wi-Fi Empty
-  elif [[ "$1" == "no" ]]; then
+  elif [[ "$msg_command" == "no" ]]; then
   networksetup -setproxyautodiscovery Wi-Fi off
   networksetup -setwebproxystate Wi-Fi off
   networksetup -setsecurewebproxystate Wi-Fi off
   networksetup -setsocksfirewallproxystate Wi-Fi off
   else
-  echo "open proxy config"
+  echo "open proxy config" >> $logFile
   open "x-apple.systempreferences:com.apple.Network-Settings.extension?Proxies"
-  # open "http://www.baidu.com?$1,$2"
   fi
 }
 
@@ -52,21 +87,14 @@ while IFS= read -r -n1 c; do
         continue
     fi
 
-    message='{"message": "OK"}'
-    # message=$hl_input
-    # echo $message >> log.txt
-
-    # 提取出 message 的值
-    hl_input=${hl_input#*'{"message":"'}
-    hl_input=${hl_input%'"}'}
-    echo $hl_input >> log.txt
-    setProxy $hl_input
+    # dealMsg aa
+    dealMsg
 
     # Calculate the byte size of the string.
     # NOTE: This assumes that byte length is identical to the string length!
     # Do not use multibyte (unicode) characters, escape them instead, e.g.
     # message='"Some unicode character:\u1234"'
-    messagelen=${#message}
+    messagelen=${#hl_output}
 
     # Convert to an integer in native byte order.
     # If you see an error message in Chrome's stdout with
@@ -80,6 +108,6 @@ while IFS= read -r -n1 c; do
 
     # Print the message byte length followed by the actual message.
     printf "$(printf '\\x%x\\x%x\\x%x\\x%x' \
-        $messagelen1 $messagelen2 $messagelen3 $messagelen4)%s" "$message"
+        $messagelen1 $messagelen2 $messagelen3 $messagelen4)%s" "$hl_output"
 
 done

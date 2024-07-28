@@ -1,21 +1,43 @@
 const hl_extension_util = {
-  setStorage: async (kv) => {
+  setStorage: async (kv, isSync = true) => {
+    if (!chrome?.storage?.local) {
+      Object.keys(kv).forEach(key => {
+        localStorage.setItem(key, kv[key]);
+      });
+      return;
+    }
+    // local 最大为 5m sync 最大为8k 超出报错 QUOTA_BYTES_PER_ITEM quota exceeded
     const localRes = await chrome.storage.local.set(kv);
     // console.log('local Value is set ', localRes);
-    const syncRes = await chrome.storage.sync.set(kv);
+    if (isSync) {
+      const syncRes = await chrome.storage.sync.set(kv);
+    }
     // console.log('sync Value is set ', syncRes);
   },
-  getStorage: async (kv) => {
-    const localRes = await chrome.storage.local.get(kv);
-    // console.log('local Value is get ', localRes);
-    const syncRes = await chrome.storage.sync.get(kv);
-    // console.log('sync Value is get', syncRes);
-    return localRes || syncRes;
+  getStorage: async (keys = null, isSync = true) => {
+    if (!chrome?.storage?.local) {
+      const res = {};
+      Object.keys(localStorage).forEach(key => {
+        res[key] = localStorage.getItem(key);
+      });
+      return res;
+    }
+    let res = await chrome.storage.local.get(keys);
+    // console.log('local Value is get ', res);
+    if (isSync) {
+      res = await chrome.storage.sync.get(keys);
+    }
+    // console.log('sync Value is get', res);
+    return res;
   },
-  removeStorage: async (kv) => {
-    const localRes = await chrome.storage.local.clear();
+  removeStorage: async (keys) => {
+    if (!chrome?.storage?.local) {
+      localStorage.removeItem(keys);
+      return;
+    }
+    const localRes = await chrome.storage.local.remove(keys);
     // console.log('local Value is get ', localRes);
-    const syncRes = await chrome.storage.sync.clear();
+    const syncRes = await chrome.storage.sync.remove(keys);
     // console.log('sync Value is get', syncRes);
     return localRes || syncRes;
   },
@@ -124,5 +146,25 @@ const hl_extension_util = {
       // 前者是后者的子集
       return equalUrl(url, matchUrl);
     });
+  },
+  // get local ip https://github.com/dlo83/local-ip-chrome-extension
+  getLocalIPs: (callback) => {
+    var ips = [];
+    var RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection;
+    var pc = new RTCPeerConnection({ iceServers: [] });
+    pc.createDataChannel('');
+    pc.onicecandidate = function (e) {
+      if (!e.candidate) { // Candidate gathering completed.
+        pc.close();
+        callback(ips);
+        return;
+      }
+      var ip = /^candidate:.+ (\S+) \d+ typ/.exec(e.candidate.candidate)[1];
+      if (ips.indexOf(ip) == -1) // avoid duplicate entries (tcp/udp)
+        ips.push(ip);
+    };
+    pc.createOffer(function (sdp) {
+      pc.setLocalDescription(sdp);
+    }, function onerror() { });
   },
 };

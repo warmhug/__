@@ -107,8 +107,8 @@ function mainFn(urlProps) {
 }
 
 void (async function () {
-  const { hl_injectSites } = await hl_extension_util.getStorage();
-  const injectSites = JSON.parse(hl_injectSites) || {};
+  const { hl_injectSites } = await hl_extension_util.getStorage(undefined, false);
+  const injectSites = hl_injectSites ? JSON.parse(hl_injectSites) : {};
   const matchUrl = hl_extension_util.getMatchUrl(Object.keys(injectSites), decodeURIComponent(location.href));
   // console.log('matchUrl', matchUrl, location.href);
   if (matchUrl) {
