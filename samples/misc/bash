@@ -1,0 +1,6 @@
+#!/bin/bash
+
+node bash-node.mjs
+# OUTPUT=`node bash-node.mjs`
+OUTPUT=$(node bash-node.mjs)
+echo $OUTPUT

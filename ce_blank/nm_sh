@@ -34,6 +34,9 @@ dealMsg() {
     echo "$hl_output1" >> $logFile
     hl_output="$hl_output1"
   elif [[ "$msg_command" == "addRule" ]]; then
+    if [[ $msg_content =~ ^www\. ]]; then
+      msg_content=${msg_content#www.}
+    fi
     new_str=DOMAIN-SUFFIX,"${msg_content}",Proxy
     # 豆包+通义千问: 使用 yq 判断 如果rules 里不存在 aaa，则前置插入aaa
     rules_value=$(/usr/local/bin/yq '.rules' $clashFile)
@@ -43,11 +46,16 @@ dealMsg() {
       osascript /Users/hua/inner/-/__/ce_blank/nm_ss.scpt
     fi
   elif [[ "$msg_command" == "clash" ]]; then
+  # bypassdomains 和 clash rule 哪个优先？
+  bypassdomains="127.0.0.1,localhost,gateway.icloud.com,gateway.icloud.com.cn,\
+10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,172.16.0.0/12,192.168.0.0/16,*.local,\
+timestamp.apple.com,sequoia.apple.com,seed-sequoia.siri.apple.com"
   networksetup -setproxyautodiscovery Wi-Fi off
   networksetup -setwebproxy Wi-Fi 127.0.0.1 7890
   networksetup -setsecurewebproxy Wi-Fi 127.0.0.1 7890
   networksetup -setsocksfirewallproxy Wi-Fi 127.0.0.1 7890
-  networksetup -setproxybypassdomains Wi-Fi 127.0.0.1,localhost
+  networksetup -setproxybypassdomains Wi-Fi "$bypassdomains"
+  # networksetup -setproxybypassdomains Wi-Fi *.local 169.254/16 baidu.com
   networksetup -setwebproxystate Wi-Fi on
   networksetup -setsecurewebproxystate Wi-Fi on
   networksetup -setsocksfirewallproxystate Wi-Fi on
@@ -70,8 +78,7 @@ dealMsg() {
   networksetup -setwebproxystate Wi-Fi off
   networksetup -setsecurewebproxystate Wi-Fi off
   networksetup -setsocksfirewallproxystate Wi-Fi off
-  else
-  echo "open proxy config" >> $logFile
+  elif [[ "$msg_command" == "openMacConfig" ]]; then
   open "x-apple.systempreferences:com.apple.Network-Settings.extension?Proxies"
   fi
 }

@@ -1,8 +1,49 @@
 # fe suffer
 
 
-## 2024-07 组件 pro-components
+## 2024-07~09 组件 pro-components
 
+### iframe 内页面操作父页面dom (不同域名)
+
+问题：文档网站域名是 https://pro.afe.team 使用 iframe 引用了 https://cdn.temu.com/dist/index.html 这个放在cdn上的静态html页面（css/js也是放在cdn上）也就是文档的实际内容。
+页面里的链接需要改变 URL 的 hash 地址，但这两个域名 完全不同、无法直接改变 pro.afe.team 这个 URL 的参数。
+
+几种方案
+- [html proxy](https://juejin.cn/post/7174065483014995981)
+- [window.postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage)
+- 微前端
+
+跨域和同源政策:
+> https://www.ruanyifeng.com/blog/2016/04/same-origin-policy.html
+- 同源: 协议、域名、端口都要相同；如果不同源，则 dom 和 storage 无法读取、Ajax 不能发送。
+- 使用 document.domain (已被废弃)，要求“一级域名”必须要一样、否则不行，设置后端口变为null。
+  - 能规避同源政策，两个网页可以共享Cookie、能够**互相获取和操作**对方的 dom 元素。
+  - 但是 LocalStorage 和 IndexDB 无法通过这种方法共享。
+- 设置 cors headers 解决的是 Ajax 问题，不能解决跨域 iframe 和父页面之间 dom 操作问题。
+
+### lerna
+
+- 流水线构建运行 lerna publish 问题
+  - lerna ERR! EUNCOMMIT Working tree has uncommitted changes, M pnpm-lock.yaml
+  - https://github.com/lerna/lerna/issues/1581
+  - https://github.com/lerna/lerna/issues/2329
+- https://lerna.js.org/docs/api-reference/commands
+- https://warmhug.github.io/2024/08/06/lerna-usage.html
+- https://github.com/warmhug/proj/blob/master/scripts/check-lerna.mjs
+
+### antd
+
+antd5 [发布日志](https://www.yuque.com/ant-design/ant-design/cy5nfvdo8oidvwmz)
+- less到cssvar和design-token，不需要按需加载插件，使用day.js
+- [releases/tag/5.0.0](https://github.com/ant-design/ant-design/releases/tag/5.0.0)
+- [迁移 less 到 cssinjs](https://ant-design.github.io/antd-style/zh-CN/guide/migrate-less-codemod)
+
+antd4 [发布日志](https://github.com/ant-design/ant-design/issues/21656)
+- 暗色主题 无边框组件 图标按需加载 form/table重做 内置虚拟滚动
+- [antd 3.x-stable](https://github.com/ant-design/ant-design/tree/3.x-stable)
+
+
+### less
 
 [less Playground](https://lesscss.org/less-preview)
 [analyze-css](https://www.projectwallace.com/analyze-css)
@@ -16,6 +57,8 @@
   }
 }
 ```
+
+### 打包构建
 
 - dumi 设置非根目录 [publicPath](https://github.com/umijs/dumi/issues/849)
 

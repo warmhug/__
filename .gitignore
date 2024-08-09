@@ -24,6 +24,7 @@ dist
 *.pem
 yarn.lock
 package-lock.json
+pnpm-lock.yaml
 
 # c / c++
 *.out

@@ -86,9 +86,9 @@ Charles 抓包 (2019 2024)
 
 ## vs code
 
+- 按`cmd shift p` 输入 code zoom reload(未知错误) diplay(修改语言) 等命令。
 - 搜索排除项 `.next, dist, .yaml, *-lock.json`
-- 按`cmd shift p` 输入 code、zoom 等命令。 在查找(替换)框里按 ctrl + enter 支持多行。 [tab group 建议](https://github.com/microsoft/vscode/issues/100335#issuecomment-964358943)
-- vscode 里 eslint 报错、找不到报错原因，使用 cmd+shift+p 输入 reload window 重启 vscode 即可。
+- 在查找(替换)框里按 ctrl + enter 支持多行。
 - 端口 [转发](https://code.visualstudio.com/docs/editor/port-forwarding) 实现 [内网穿透](https://51.ruyo.net/18562.html)，目前已被 [国内禁用](https://github.com/microsoft/vscode-remote-release/issues/9438)
 
 ```js
@@ -120,8 +120,9 @@ Charles 抓包 (2019 2024)
 }
 ```
 
+[tab group 建议](https://github.com/microsoft/vscode/issues/100335#issuecomment-964358943)
 扩展 [推荐](https://github.com/viatsko/awesome-vscode):
-plantuml(设置指定server) / Auto Hide / Live Preview / Markdown All in One / markdown-pdf / marp / filesize / EditorConfig / GitLens / Indent 4-to-2 / SVG Viewer / pangu / Hungry Delete / javascript console utils / Template String Converter / REST Client / Docs View / Terminal Keeper
+plantuml(设置指定server) / Auto Hide / Live Preview / Markdown All in One / markdown-pdf / marp / filesize / EditorConfig / GitLens / Indent 4-to-2 / SVG Viewer / pangu / Hungry Delete / javascript console utils / Template String Converter / REST Client / Docs View / Terminal Keeper / npm-dependency-links / Bookmarks / Editor Group Minimizer Plus
 
 ```json
 // 快捷键 设置
@@ -173,6 +174,7 @@ scrcpy --shortcut-mod=lctrl --stay-awake --turn-screen-off -m1024 -b2M --tcpip=1
 
 
 ## Git / Npm
+> [gitlab](https://gitlab.com/warmhug/test)
 
 [Git Aliases](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases)、[git-open](https://github.com/paulirish/git-open) 自动打开 git 远程仓库地址
 
@@ -294,6 +296,8 @@ git remote set-url origin xxx  # 改变远程地址为 xxx
 # 操作tag
 git tag 0.0.1       # 打轻量标签
 git tag -a 0.0.1 -m 'Release version 0.0.1'
+git tag -d <tag_name>  # 删除本地分支
+git push origin --delete <tag_name>  # 删除远程分支
 git push origin v1.5
 git push [origin] --tags    # 推送所有标签到服务器
 git fetch --all --tags    # 拉取远程 tags
@@ -307,11 +311,11 @@ npm config set sass_binary_site=https://npm.taobao.org/mirrors/node-sass
 npm login --registry=https://registry-cnpm.xx.work  # 命令行登录 registry
 
 # https://registry.npm.taobao.org/ -> https://registry.npmmirror.com
-npm i --registry https://registry.npmmirror.com
+npm config set registry https://registry.npmmirror.com -g
+npm i --registry https://registry.npmmirror.com  #指定源
 npm view lerna
-npx lerna list  # 免全局安装
-yarn config set registry <url-to-your-registry>
-yarn install --registry https://registry.npmmirror.com  #指定源
+npm --searchlimit=100 search @nestjs # 或 https://www.npmjs.com/org/ant-design
+npx lerna list  # 免全局安装 使用相应的 registry
 
 # 查看本地安装的模块，加 -g 为全局
 npm ls --depth 2
@@ -330,18 +334,19 @@ node hello.js &  # 后台运行程序 background process
 > 远程控制：菜单 -> 控制台 -> 右键 -> 检查元素 -> 查看网络 -> 端口和秘钥 (或者 设置 -> Api端口/秘钥)
 > 在浏览器打开 `http://127.0.0.1:58147/ui/#/proxies`
 
+绕过微信客户端网络限制/相关域名ip走proxy:
+- 先设为“全局模式”,点击Clash“控制台”,查看“日志”。
+- 在微信客户端里 发送文字和图片，查看抓包的相关域名和ip，用 https://db-ip.com 验证微信ip网段
+  - 登录和收发文字: qq.com / wechat.com / tenpay.com
+  - 收发图片: 43.153.165.235:80 / 43.175.127.21:443
+  - 豆包搜索"xx.0到xx.255怎么配置IP-CIDR"，或者[ip网段计算器](https://www.calculator.net/ip-subnet-calculator.html)
+  - 最终规则类似 `SRC-IP-CIDR,43.175.127.0/24,Proxy`
+- 在Clash配置文件"rules"添加规则。
+
 ```yaml
 # code ~/.config/clash/config.yaml
 rules:
-  # 设置 qq.com / wechat.com / pan.baidu.com 等走 proxy 相当于是 vps 能绕过公司访问限制
-  - DOMAIN-SUFFIX,ksyun.com,Proxy
-  - 'DOMAIN-KEYWORD,google,Proxy'
-  - DOMAIN-SUFFIX,cn,DIRECT
-  - DOMAIN-KEYWORD,-cn,DIRECT
-  - DOMAIN-SUFFIX,local,DIRECT
-  - IP-CIDR,192.168.0.0/16,DIRECT
   - GEOIP,CN,DIRECT
-  - MATCH,DIRECT
 ```
 
 bash 脚本自动设置代理
@@ -406,6 +411,7 @@ stdout_logfile = /tmp/ttyd.log
 ```
 - 运行 `sudo supervisorctl reread && sudo supervisorctl update`
 - 验证 `ps -ef | grep ttyd`
+- 电脑重启后运行 `sudo supervisord -c /usr/local/etc/supervisord.conf`
 
 安装 web shell [ttyd](https://github.com/tsl0922/ttyd)
 

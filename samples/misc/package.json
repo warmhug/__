@@ -1,0 +1,12 @@
+{
+  "name": "misc",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "",
+    "prepublish": "node ./prebuild.js"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "semver": "^7.6.3"
+  }
+}

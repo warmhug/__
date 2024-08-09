@@ -126,13 +126,53 @@ async function popup () {
   });
   document.querySelector('#ai').addEventListener('click', () => {
     const urls = [
-      'https://app.chathub.gg/',
-      'https://chatgpt.com/',
+      'https://cowizard.temu.team/chat/',
       'https://www.doubao.com/',
-      'https://tongyi.aliyun.com/qianwen/',
       'https://kimi.moonshot.cn/',
+      // 'https://tongyi.aliyun.com/qianwen/',
+      // 'https://app.chathub.gg/',
+      // 'https://chatgpt.com/',
     ];
-    urls.forEach(url => chrome.tabs.create({ url, active: false }));
+    const funcs = [
+      () => {
+        setTimeout(async () => {
+          const clipText = await hl_extension_util.readClipboardText();
+          const input = document.querySelector('.stChatInput textarea');
+          // console.log('input: ', input);
+          input.focus();
+          input.value = clipText;
+          // input.dispatchEvent(new Event('change'));
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          setTimeout(() => {
+            document.querySelector('.stChatInput button').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+          }, 500);
+        }, 5000);
+      },
+      () => {
+        setTimeout(async () => {
+          const clipText = await hl_extension_util.readClipboardText();
+          const input = document.querySelector('.semi-input-textarea-wrapper textarea');
+          // console.log('input: ', input);
+          input.focus();
+          input.value = clipText;
+          // input.dispatchEvent(new Event('change'));
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          setTimeout(() => {
+            document.querySelector('.send-btn-wrapper button').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+          }, 500);
+        }, 5000);
+      },
+    ];
+    urls.forEach((url, idx) => {
+      chrome.tabs.create({ url, active: false }, async (newTab) => {
+        const injectionResults = await chrome.scripting.executeScript({
+          target: { tabId : newTab.id },
+          func: funcs[idx],
+        });
+        console.log('newTab: ', newTab);
+        console.log('injectionResults: ', injectionResults);
+      });
+    });
   });
 
   chrome.proxy.settings.get({'incognito': false}, function(config) {
@@ -182,8 +222,8 @@ async function popup () {
   highLightMsg();
   highLightBtn();
   document.querySelector('#setProxy .controls').addEventListener('click', async (evt) => {
-    const proxyType = evt.target.tagName === 'BUTTON' ? evt.target.textContent : '';
-    if (proxyType) {
+    const proxyType = evt.target.tagName === 'BUTTON' ? evt.target.textContent : 'openMacConfig';
+    if (proxyType && evt.target.tagName === 'BUTTON') {
       await hl_extension_util.setStorage({ hl_proxy: proxyType });
     }
     highLightMsg();
